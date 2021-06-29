@@ -97,6 +97,7 @@ def readSerialUntilEnd():
 #if a timeout is received the return value is False
 def readSerialData():
     lines = []
+    scriptStartTime = time.time()
     ans = waitSerialStart()
     if ans == True:
         while True:
@@ -109,6 +110,10 @@ def readSerialData():
                 print("*",end="",flush=True)
                 if sys.getsizeof(lines) > 20971520:
                     print("\r\n" + "Max file Size archieved")
+                    print("\r\n" + str(len(lines)) + " lines read")
+                    return lines
+                if (time.time() - scriptStartTime) > 11100:
+                    print("\r\n" + "Max script time archived")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
     elif ans == False:
