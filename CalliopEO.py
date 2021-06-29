@@ -214,7 +214,7 @@ def main():
     #check flash disk
     #if getFlashDisk() == None:
     if not getFlashDisk():
-        print(MSG_FLASH_NOT_FOUND)
+        print(MSG_MINI_NOT_FOUND)
         sys.exit(0)
     #check serial
     if getMiniSerial() == None:
