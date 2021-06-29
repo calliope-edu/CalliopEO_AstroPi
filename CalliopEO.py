@@ -5,9 +5,10 @@ import glob
 import sys
 import serial
 import time
-#import blkinfo
+import blkinfo
+import re
 
-#blk = blkinfo.BlkDiskInfo()
+blk = blkinfo.BlkDiskInfo()
 
 #TEMP_MOUNT_MINI = "/tmp/mini"
 TEMP_MOUNT_MINI = "/home/calliope/mnt/mini"
@@ -15,7 +16,13 @@ TEMP_MOUNT_MINI = "/home/calliope/mnt/mini"
 TEMP_MOUNT_FLASH = "/home/calliope/mnt/flash"
 
 #MODEL_MINI_VALUE = "SEGGER MSD Volume"
+MODEL_MINI_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}Volume'
 #MODEL_FLASH_VALUE = "SEGGER MSD FLASH"
+MODEL_FLASH_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}FLASH'
+
+# Compile regexp match pattern objects
+MPO_MINI = re.compile(MODEL_MINI_REGEXP, re.IGNORECASE)
+MPO_FLASH = re.compile(MODEL_FLASH_REGEXP, re.IGNORECASE)
 
 #MSG_RUN_AS_ROOT = "please run as root"
 MSG_MINI_NOT_FOUND = "mini not found"
@@ -156,24 +163,28 @@ def listFiles(path, ending=None, recurse=False):
                 temp_list.extend(listFiles(os.path.join(path,file), ending))
     return temp_list
 
-#def getMiniDisk():
-#    MINI_DEVICE = ""
-#    disks = blk.get_disks()
-#    for disk in disks:
-#        #print(disk['model'])
-#        if disk['model'] == MODEL_MINI_VALUE:
-#            MINI_DEVICE = "/dev/" + disk['name']
-#            return MINI_DEVICE
-#    return None
-#
-#def getFlashDisk():
-#    FLASH_DEVICE = ""
-#    disks = blk.get_disks()
-#    for disk in disks:
-#        if disk['model'] == MODEL_FLASH_VALUE:
-#            FLASH_DEVICE = "/dev/" + disk['name']
-#            return FLASH_DEVICE
-#    return None
+def getMiniDisk():
+    MINI_DEVICE = ""
+    disks = blk.get_disks()
+    for disk in disks:
+        #print(disk['model'])
+        #if disk['model'] == MODEL_MINI_VALUE:
+        if MPO_MINI.match(disk['model']) is not None:
+            #MINI_DEVICE = "/dev/" + disk['name']
+            #return MINI_DEVICE
+            return True
+    return None
+
+def getFlashDisk():
+    FLASH_DEVICE = ""
+    disks = blk.get_disks()
+    for disk in disks:
+        #if disk['model'] == MODEL_FLASH_VALUE:
+        if MPO_FLASH.match(disk['model']) is not None:
+            #FLASH_DEVICE = "/dev/" + disk['name']
+            #return FLASH_DEVICE
+            return True
+    return None
 
 #programm mini
 def programmMini(hex):
@@ -203,13 +214,13 @@ def main():
 #        print(MSG_RUN_AS_ROOT)
 #        sys.exit(0)
     #check mini disk
-#    if getMiniDisk() == None:
-#        print(MSG_MINI_NOT_FOUND)
-#        sys.exit(0)
+    if getMiniDisk() == None:
+        print(MSG_MINI_NOT_FOUND)
+        sys.exit(0)
     #check flash disk
-#    if getFlashDisk() == None:
-#        print(MSG_FLASH_NOT_FOUND)
-#        sys.exit(0)
+    if getFlashDisk() == None:
+        print(MSG_FLASH_NOT_FOUND)
+        sys.exit(0)
     #check serial
     if getMiniSerial() == None:
         print(MSG_MINI_NO_SERIAL)
