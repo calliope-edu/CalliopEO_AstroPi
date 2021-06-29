@@ -107,6 +107,10 @@ def readSerialData():
             else:
                 lines.append(ans)
                 print("*",end="",flush=True)
+                if sys.getsizeof(lines) > 20971520:
+                    print("\r\n" + "Max file Size archieved")
+                    print("\r\n" + str(len(lines)) + " lines read")
+                    return lines
     elif ans == False:
         return False
 
