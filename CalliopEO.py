@@ -173,7 +173,8 @@ def getMiniDisk():
             #MINI_DEVICE = "/dev/" + disk['name']
             #return MINI_DEVICE
             return True
-    return None
+    #return None
+    return False
 
 def getFlashDisk():
     FLASH_DEVICE = ""
@@ -184,7 +185,8 @@ def getFlashDisk():
             #FLASH_DEVICE = "/dev/" + disk['name']
             #return FLASH_DEVICE
             return True
-    return None
+    #return None
+    return False
 
 #programm mini
 def programmMini(hex):
@@ -214,12 +216,14 @@ def main():
 #        print(MSG_RUN_AS_ROOT)
 #        sys.exit(0)
     #check mini disk
-    if getMiniDisk() == None:
+    #if getMiniDisk() == None:
+    if not getMiniDisk():
         print(MSG_MINI_NOT_FOUND)
         sys.exit(0)
     #check flash disk
-    if getFlashDisk() == None:
-        print(MSG_FLASH_NOT_FOUND)
+    #if getFlashDisk() == None:
+    if not getFlashDisk():
+        print(MSG_MINI_NOT_FOUND)
         sys.exit(0)
     #check serial
     if getMiniSerial() == None:
