@@ -81,7 +81,6 @@ def safe_decode(bytes, encoding=DEFAULT_ENCODING):
 def waitSerialStart():
     serialTime = time.time()
     line = ""
-    ser.write(b'@START@\r\n')
     while True:
         line = safe_decode(ser.readline())
         if SERIAL_START in line:
