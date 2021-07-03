@@ -10,10 +10,12 @@ import re
 
 blk = blkinfo.BlkDiskInfo()
 
-#TEMP_MOUNT_MINI = "/tmp/mini"
-TEMP_MOUNT_MINI = "/home/calliope/mnt/mini"
-#TEMP_MOUNT_FLASH = "/tmp/flash"
-TEMP_MOUNT_FLASH = "/home/calliope/mnt/flash"
+TEMP_MOUNT_MINI = "~/mnt/mini"
+TEMP_MOUNT_FLASH = "~/mnt/flash"
+
+# Expand mount path if they contain tilde
+TEMP_MOUNT_MINI = os.path.expanduser(TEMP_MOUNT_MINI)
+TEMP_MOUNT_FLASH = os.path.expanduser(TEMP_MOUNT_FLASH)
 
 #MODEL_MINI_VALUE = "SEGGER MSD Volume"
 MODEL_MINI_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}Volume'
