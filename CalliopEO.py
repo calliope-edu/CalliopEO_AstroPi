@@ -26,7 +26,6 @@ MODEL_FLASH_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}FLASH'
 MPO_MINI = re.compile(MODEL_MINI_REGEXP, re.IGNORECASE)
 MPO_FLASH = re.compile(MODEL_FLASH_REGEXP, re.IGNORECASE)
 
-#MSG_RUN_AS_ROOT = "please run as root"
 MSG_MINI_NOT_FOUND = "mini not found"
 MSG_FLASH_NOT_FOUND = "flash not found"
 MSG_MINI_NO_SERIAL = "no serial connection found"
@@ -204,10 +203,6 @@ def writeToFile(hex, data):
 ###################################################
 
 def main():
-    #we need root
-#    if os.geteuid() != 0:
-#        print(MSG_RUN_AS_ROOT)
-#        sys.exit(0)
     #check mini disk
     #if getMiniDisk() == None:
     if not getMiniDisk():
@@ -270,24 +265,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-#TODO
-## programm
-## safe to file
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
