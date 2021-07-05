@@ -26,7 +26,6 @@ MODEL_FLASH_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}FLASH'
 MPO_MINI = re.compile(MODEL_MINI_REGEXP, re.IGNORECASE)
 MPO_FLASH = re.compile(MODEL_FLASH_REGEXP, re.IGNORECASE)
 
-#MSG_RUN_AS_ROOT = "please run as root"
 MSG_MINI_NOT_FOUND = "mini not found"
 MSG_FLASH_NOT_FOUND = "flash not found"
 MSG_MINI_NO_SERIAL = "no serial connection found"
@@ -42,7 +41,8 @@ archive_ending = ".zip"
 DEFAULT_ENCODING = "utf-8"
 SERIAL_START = "@START@"
 SERIAL_END = "@END@"
-SERIAL_TIMEOUT = 10
+SERIAL_TIMEOUT = 1 # s
+REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 # MB
 
@@ -73,6 +73,7 @@ def serialConnect():
         ser.stopbits=serial.STOPBITS_ONE
         ser.timeout=10
         ser.open()
+        return True
 
 def safe_decode(bytes, encoding=DEFAULT_ENCODING):
     try:
@@ -85,13 +86,17 @@ def safe_decode(bytes, encoding=DEFAULT_ENCODING):
 def waitSerialStart():
     serialTime = time.time()
     line = ""
-    ser.write(b'@START@\r\n')
-    while True:
-        line = safe_decode(ser.readline())
-        if SERIAL_START in line:
-            return True
-        elif (time.time() - serialTime) > SERIAL_TIMEOUT:
-            return False
+    for x in range(REPEAT_START_SERIAL):
+        print("\r\n" + "Send " + SERIAL_START)
+        ser.write(b'@START@\r\n')
+        while True:
+            line = safe_decode(ser.readline())
+            if SERIAL_START in line:
+                print("\r\n" + "Received " + SERIAL_START)
+                return True
+            elif (time.time() - serialTime) > SERIAL_TIMEOUT:
+                break
+    return False
 
 #reads the data received from mini ans returns it
 #if SERIAL_END is received True is returnes indicating the end
@@ -204,9 +209,16 @@ def programmMini(hex):
     os.system(CMD_SYNC % TEMP_MOUNT_MINI)
     os.system(CMD_UNMOUNT % TEMP_MOUNT_MINI)
     #wait for mini disconect and reconnect
-    time.sleep(20)
+    #time.sleep(20)
     #connect to serial
-    serialConnect()
+    DEVICE_CONNECTED = False
+    while not DEVICE_CONNECTED:
+        try:
+            DEVICE_CONNECTED = serialConnect()
+        except Exception:
+            DEVICE_CONNECTED = False
+            time.sleep(1)
+    
 
 def writeToFile(hex, data):
     file = open(hex+".data","w")
@@ -217,10 +229,6 @@ def writeToFile(hex, data):
 ###################################################
 
 def main():
-    #we need root
-#    if os.geteuid() != 0:
-#        print(MSG_RUN_AS_ROOT)
-#        sys.exit(0)
     #check mini disk
     #if getMiniDisk() == None:
     if not getMiniDisk():
@@ -283,24 +291,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-#TODO
-## programm
-## safe to file
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
