@@ -43,6 +43,8 @@ SERIAL_START = "@START@"
 SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
 REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
+MAX_SCRIPT_EXECUTION_TIME = 11100 # s
+MAX_DATA_SIZE = 20 # MB
 
 def getMiniSerial():
     devices = glob.glob("/dev/ttyACM*")
@@ -112,6 +114,9 @@ def readSerialUntilEnd():
 def readSerialData():
     lines = []
     ans = waitSerialStart()
+    scriptStartTime = time.time()
+    scriptEndTime = scriptStartTime + MAX_SCRIPT_EXECUTION_TIME
+    print("\r\n" + "Start @ " + str(scriptStartTime) + "; Will stop @ " + str(scriptEndTime) )
     if ans == True:
         while True:
             ans = readSerialUntilEnd()
@@ -121,6 +126,14 @@ def readSerialData():
             else:
                 lines.append(ans)
                 print("*",end="",flush=True)
+                if len(lines) > ((MAX_DATA_SIZE * 1024 * 1024) / 17):
+                    print("\r\n" + "Max file Size archieved")
+                    print("\r\n" + str(len(lines)) + " lines read")
+                    return lines
+                if (time.time() > scriptEndTime):
+                    print("\r\n" + "Max script time archived")
+                    print("\r\n" + str(len(lines)) + " lines read")
+                    return lines
     elif ans == False:
         return False
 
