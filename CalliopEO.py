@@ -215,7 +215,8 @@ def programmMini(hex):
     while not DEVICE_CONNECTED:
         try:
             DEVICE_CONNECTED = serialConnect()
-        except Exception:
+        except Exception as Err:
+            print("Status:", Err)
             DEVICE_CONNECTED = False
             time.sleep(1)
     
