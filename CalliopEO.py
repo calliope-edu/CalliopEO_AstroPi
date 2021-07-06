@@ -59,7 +59,7 @@ ser = serial.Serial(
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
-    timeout=10)
+    timeout=SERIAL_TIMEOUT)
 
 def serialConnect():
     port = getMiniSerial()
@@ -71,7 +71,7 @@ def serialConnect():
         ser.bytesize=serial.EIGHTBITS
         ser.parity=serial.PARITY_NONE
         ser.stopbits=serial.STOPBITS_ONE
-        ser.timeout=10
+        ser.timeout=SERIAL_TIMEOUT
         ser.open()
         return True
 
