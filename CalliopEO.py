@@ -17,9 +17,7 @@ TEMP_MOUNT_FLASH = "~/mnt/flash"
 TEMP_MOUNT_MINI = os.path.expanduser(TEMP_MOUNT_MINI)
 TEMP_MOUNT_FLASH = os.path.expanduser(TEMP_MOUNT_FLASH)
 
-#MODEL_MINI_VALUE = "SEGGER MSD Volume"
 MODEL_MINI_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}Volume'
-#MODEL_FLASH_VALUE = "SEGGER MSD FLASH"
 MODEL_FLASH_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}FLASH'
 
 # Compile regexp match pattern objects
@@ -30,7 +28,6 @@ MSG_MINI_NOT_FOUND = "mini not found"
 MSG_FLASH_NOT_FOUND = "flash not found"
 MSG_MINI_NO_SERIAL = "no serial connection found"
 
-#CMD_MOUNT = "mount -t vfat %s %s"
 CMD_MOUNT = "mount %s"
 CMD_UNMOUNT = "umount %s"
 CMD_SYNC = "sync %s"
@@ -63,7 +60,6 @@ ser = serial.Serial(
 
 def serialConnect():
     port = getMiniSerial()
-    #if ser.getPort() != port:
     if ser.port != port:
         ser.close()
         ser.port=port
@@ -178,38 +174,27 @@ def getMiniDisk():
     MINI_DEVICE = ""
     disks = blk.get_disks()
     for disk in disks:
-        #print(disk['model'])
-        #if disk['model'] == MODEL_MINI_VALUE:
         if MPO_MINI.match(disk['model']) is not None:
-            #MINI_DEVICE = "/dev/" + disk['name']
-            #return MINI_DEVICE
             return True
-    #return None
     return False
 
 def getFlashDisk():
     FLASH_DEVICE = ""
     disks = blk.get_disks()
     for disk in disks:
-        #if disk['model'] == MODEL_FLASH_VALUE:
         if MPO_FLASH.match(disk['model']) is not None:
-            #FLASH_DEVICE = "/dev/" + disk['name']
-            #return FLASH_DEVICE
             return True
-    #return None
     return False
 
 #programm mini
 def programmMini(hex):
     #mount mini disk
-    #os.system(CMD_MOUNT % (getMiniDisk(), TEMP_MOUNT_MINI))
     os.system(CMD_MOUNT % (TEMP_MOUNT_MINI))
     #programm mini
     shutil.copy2(hex, TEMP_MOUNT_MINI)
     os.system(CMD_SYNC % TEMP_MOUNT_MINI)
     os.system(CMD_UNMOUNT % TEMP_MOUNT_MINI)
     #wait for mini disconect and reconnect
-    #time.sleep(20)
     #connect to serial
     DEVICE_CONNECTED = False
     while not DEVICE_CONNECTED:
@@ -219,7 +204,7 @@ def programmMini(hex):
             print("Status:", Err)
             DEVICE_CONNECTED = False
             time.sleep(1)
-    
+
 
 def writeToFile(hex, data):
     file = open(hex+".data","w")
@@ -231,12 +216,10 @@ def writeToFile(hex, data):
 
 def main():
     #check mini disk
-    #if getMiniDisk() == None:
     if not getMiniDisk():
         print(MSG_MINI_NOT_FOUND)
         sys.exit(0)
     #check flash disk
-    #if getFlashDisk() == None:
     if not getFlashDisk():
         print(MSG_MINI_NOT_FOUND)
         sys.exit(0)
