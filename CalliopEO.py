@@ -1,7 +1,6 @@
 import os
 import shutil
 import datetime
-import glob
 import sys
 import serial
 import serial.tools.list_ports
