@@ -54,7 +54,7 @@ In the above example, the two Calliope Mini mass storage devices are `/dev/sda` 
 ```
 # Calliope Mini
 /dev/disk/by-uuid/0123-4567 /home/calliope/mnt/mini vfat noauto,users 0 0
-/dev/disk/by-uuid/089A-BCDE /home/calliope/mnt/flash vfat noauto,users 0 0<Paste>
+/dev/disk/by-uuid/089A-BCDE /home/calliope/mnt/flash vfat noauto,users 0 0
 ```
 Finally, we create the mount points in the user directory of the user `calliope`. Therefore, execute as user `calliope`:
 ```
