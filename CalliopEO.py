@@ -1,9 +1,9 @@
 import os
 import shutil
 import datetime
-import glob
 import sys
 import serial
+import serial.tools.list_ports
 import time
 import blkinfo
 import re
@@ -17,20 +17,17 @@ TEMP_MOUNT_FLASH = "~/mnt/flash"
 TEMP_MOUNT_MINI = os.path.expanduser(TEMP_MOUNT_MINI)
 TEMP_MOUNT_FLASH = os.path.expanduser(TEMP_MOUNT_FLASH)
 
-#MODEL_MINI_VALUE = "SEGGER MSD Volume"
 MODEL_MINI_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}Volume'
-#MODEL_FLASH_VALUE = "SEGGER MSD FLASH"
 MODEL_FLASH_REGEXP = 'SEGGER[-_ ]{1}MSD[-_ ]{1}FLASH'
 
 # Compile regexp match pattern objects
-MPO_MINI = re.compile(MODEL_MINI_REGEXP, re.IGNORECASE)
-MPO_FLASH = re.compile(MODEL_FLASH_REGEXP, re.IGNORECASE)
+MODEL_MINI_MPO = re.compile(MODEL_MINI_REGEXP, re.IGNORECASE)
+MODEL_FLASH_MPO = re.compile(MODEL_FLASH_REGEXP, re.IGNORECASE)
 
 MSG_MINI_NOT_FOUND = "mini not found"
 MSG_FLASH_NOT_FOUND = "flash not found"
-MSG_MINI_NO_SERIAL = "no serial connection found"
+#MSG_MINI_NO_SERIAL = "no serial connection found"
 
-#CMD_MOUNT = "mount -t vfat %s %s"
 CMD_MOUNT = "mount %s"
 CMD_UNMOUNT = "umount %s"
 CMD_SYNC = "sync %s"
@@ -39,6 +36,8 @@ CMD_SYNC = "sync %s"
 archive_ending = ".zip"
 
 DEFAULT_ENCODING = "utf-8"
+MINI_SERIAL_REGEXP = "(/dev/tty[\w]+)[ -]+Calliope mini[ -]+CDC"
+MINI_SERIAL_MPO = re.compile(MINI_SERIAL_REGEXP, re.IGNORECASE)
 SERIAL_START = "@START@"
 SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
@@ -46,34 +45,50 @@ REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 # MB
 
+# Returns the port for the (first) Calliope mini or None
 def getMiniSerial():
-    devices = glob.glob("/dev/ttyACM*")
-    if  len(devices) > 0:
-        return devices[0]  # should only every be one
+    # Retrieve a list of serial ports
+    # The serial port for Calliope Mini is typically
+    # identified via "/dev/ttyACM0 - Calliope Mini - CDC"
+    all_ports = serial.tools.list_ports.comports()
+
+    # Iterate through all serial ports and return the first port
+    # found where a Calliope Mini is attached to
+    mini_port = None # Initialize
+    for p in all_ports:
+        m = re.match(MINI_SERIAL_MPO, str(p))
+        if m is not None:
+            mini_port = m.group(1)
+            break
+
+    return mini_port
+
+# Connect to serial port and return pySerial instance. If connection
+# is not successful, returns None
+def serialConnect(mini_port):
+    # Create pySerial instance with all the necessary parameters but
+    # with port = None. This way, the port is not opened immediately
+    ser = serial.Serial(
+        port = None,
+        baudrate = 115200,
+        bytesize = serial.EIGHTBITS,
+        parity = serial.PARITY_NONE,
+        stopbits = serial.STOPBITS_ONE,
+        timeout = SERIAL_TIMEOUT)
+
+    # try to connect
+    try:
+        ser.port = mini_port
+        if not ser.is_open:
+            ser.open()
+        mini_connected = True
+    except Exception as Err:
+        print("Error connecting serial port: %s" % Err)
+
+    if mini_connected:
+        return ser
     else:
         return None
-
-ser = serial.Serial(
-    port=getMiniSerial(),
-    baudrate=115200,
-    bytesize=serial.EIGHTBITS,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    timeout=SERIAL_TIMEOUT)
-
-def serialConnect():
-    port = getMiniSerial()
-    #if ser.getPort() != port:
-    if ser.port != port:
-        ser.close()
-        ser.port=port
-        ser.baudrate=115200
-        ser.bytesize=serial.EIGHTBITS
-        ser.parity=serial.PARITY_NONE
-        ser.stopbits=serial.STOPBITS_ONE
-        ser.timeout=SERIAL_TIMEOUT
-        ser.open()
-        return True
 
 def safe_decode(bytes, encoding=DEFAULT_ENCODING):
     try:
@@ -83,7 +98,7 @@ def safe_decode(bytes, encoding=DEFAULT_ENCODING):
 
 #waits for SERIAL_START
 #if a timeout is reached the return value is False
-def waitSerialStart():
+def waitSerialStart(ser):
     serialTime = time.time()
     line = ""
     for x in range(REPEAT_START_SERIAL):
@@ -100,7 +115,7 @@ def waitSerialStart():
 
 #reads the data received from mini ans returns it
 #if SERIAL_END is received True is returnes indicating the end
-def readSerialUntilEnd():
+def readSerialUntilEnd(ser):
     line = ""
     while True:
         line = safe_decode(ser.readline())
@@ -111,15 +126,15 @@ def readSerialUntilEnd():
 
 #waits for SERIAL_START and collects the data received from mini until SERIAL_END is received
 #if a timeout is received the return value is False
-def readSerialData():
+def readSerialData(ser):
     lines = []
-    ans = waitSerialStart()
+    ans = waitSerialStart(ser)
     scriptStartTime = time.time()
     scriptEndTime = scriptStartTime + MAX_SCRIPT_EXECUTION_TIME
     print("\r\n" + "Start @ " + str(scriptStartTime) + "; Will stop @ " + str(scriptEndTime) )
     if ans == True:
         while True:
-            ans = readSerialUntilEnd()
+            ans = readSerialUntilEnd(ser)
             if ans == True:
                 print("\r\n" + str(len(lines)) + " lines read")
                 return lines
@@ -178,48 +193,26 @@ def getMiniDisk():
     MINI_DEVICE = ""
     disks = blk.get_disks()
     for disk in disks:
-        #print(disk['model'])
-        #if disk['model'] == MODEL_MINI_VALUE:
-        if MPO_MINI.match(disk['model']) is not None:
-            #MINI_DEVICE = "/dev/" + disk['name']
-            #return MINI_DEVICE
+        if MODEL_MINI_MPO.match(disk['model']) is not None:
             return True
-    #return None
     return False
 
 def getFlashDisk():
     FLASH_DEVICE = ""
     disks = blk.get_disks()
     for disk in disks:
-        #if disk['model'] == MODEL_FLASH_VALUE:
-        if MPO_FLASH.match(disk['model']) is not None:
-            #FLASH_DEVICE = "/dev/" + disk['name']
-            #return FLASH_DEVICE
+        if MODEL_FLASH_MPO.match(disk['model']) is not None:
             return True
-    #return None
     return False
 
 #programm mini
 def programmMini(hex):
     #mount mini disk
-    #os.system(CMD_MOUNT % (getMiniDisk(), TEMP_MOUNT_MINI))
     os.system(CMD_MOUNT % (TEMP_MOUNT_MINI))
     #programm mini
     shutil.copy2(hex, TEMP_MOUNT_MINI)
     os.system(CMD_SYNC % TEMP_MOUNT_MINI)
     os.system(CMD_UNMOUNT % TEMP_MOUNT_MINI)
-    #wait for mini disconect and reconnect
-    #time.sleep(20)
-    #connect to serial
-    DEVICE_CONNECTED = False
-    while not DEVICE_CONNECTED:
-        try:
-            DEVICE_CONNECTED = serialConnect()
-        except Exception as Err:
-            print("Status:", Err)
-            DEVICE_CONNECTED = False
-            time.sleep(1)
-    
 
 def writeToFile(hex, data):
     file = open(hex+".data","w")
@@ -230,19 +223,15 @@ def writeToFile(hex, data):
 ###################################################
 
 def main():
+    print("-=# CalliopEO #=-")
+
     #check mini disk
-    #if getMiniDisk() == None:
     if not getMiniDisk():
         print(MSG_MINI_NOT_FOUND)
         sys.exit(0)
     #check flash disk
-    #if getFlashDisk() == None:
     if not getFlashDisk():
         print(MSG_MINI_NOT_FOUND)
-        sys.exit(0)
-    #check serial
-    if getMiniSerial() == None:
-        print(MSG_MINI_NO_SERIAL)
         sys.exit(0)
     #make mini mount dir
     if not os.path.exists(TEMP_MOUNT_MINI):
@@ -272,8 +261,43 @@ def main():
             print("programming: " + hex)
             programmMini(hex)
             print("done")
+
+            # After programming the Calliope Mini reboots. The serial ports
+            # shows up quite soon. But it takes some time (~ 15 seconds) before
+            # a read/write operation is possible, even if the Calliope Mini
+            # accepted a connect (ser.open()).
+            print("open serial port")
+            ser = None
+            mini_connected = False
+            no_tries = 0
+            while (not mini_connected and no_tries < 20):
+                mini_port = getMiniSerial()
+                if mini_port is not None:
+                    print("Calliope Mini found on", mini_port, " ", end="", flush=True)
+                    # Wait to give the Calliope Mini some time before
+                    # connect. When conecting too early, the first read/write
+                    # access will result in an I/O error.
+                    for w in range(10):
+                        print(".", end="", flush=True)
+                        time.sleep(1)
+                    ser = serialConnect(mini_port)
+                    mini_connected = True
+                else:
+                    # Retry to connect after one second
+                    no_tries += 1
+                    time.sleep(1)
+
+            print("\r\ndone")
+
+            # If ser is still None at this point, connection to Calliope cannot
+            # be established after flashing. Something serious might have
+            # happend. Exit the script.
+            if ser is None:
+                print("\r\nCannot establish serial conection to Calliope Mini. Exiting.")
+                exit()
+
             print("reading data")
-            data = readSerialData()
+            data = readSerialData(ser)
 
             if data == False:
                 print("Something went wrong retrying: " + str( tries ) + "/5")

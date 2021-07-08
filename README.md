@@ -7,7 +7,7 @@ Place any program(s) to be executed by the Calliope Mini as zipped file(s) in th
 
 In the directory a sub-folder named `run_DDMMYY-HHMM` will be created. The HEX files flashed and executed on the Calliope Mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
 
-The `CalliopEO.py` script can collect data sent by the program on the Calliope Mini via the USB serial port. Therefore, prepare the Calliope Mini program to wait for the string `@START@`. Then, the Calliope Mini program should respond by sending `@START@` back to the CalliopEO.py` script and only after this sending the data. After sending the data the Calliope Mini program should send the
+The `CalliopEO.py` script can collect data sent by the program on the Calliope Mini via the USB serial port. Therefore, prepare the Calliope Mini program to wait for the string `@START@`. Then, the Calliope Mini program should respond by sending `@START@` back to the `CalliopEO.py` script and only after this sending the data. After sending the data the Calliope Mini program should send the
 message `@END@`.
 
 ## Execute
@@ -68,9 +68,12 @@ The CalliopEO Python script has very few dependencies. At minimum, you need:
 * [pySerial](https://pyserial.readthedocs.io/en/latest/pyserial.html) module
 * [blkinfo](https://pypi.org/project/blkinfo/) module
 
-It is recommended to install [`pipenv`](https://pipenv.pypa.io/). With `pipenv` in place you can create a Python virtual environment equipped with all dependencies:
+It is recommended to install [`pipenv`](https://pipenv.pypa.io/). With `pipenv` in place you can create a Python virtual environment equipped with all dependencies. To install the needed packages according to the Pipfile execute:
 ```
 $ pipenv install
+```
+To install packages exactly as specified in Pipfile.lock use the sync command:
+```
 $ pipenv sync
 ```
 
