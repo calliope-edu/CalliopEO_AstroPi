@@ -44,7 +44,7 @@ SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
 REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
-MAX_DATA_SIZE = 20 # MB
+MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
 
 # Returns the port for the (first) Calliope mini or None
 def getMiniSerial():
@@ -142,7 +142,7 @@ def readSerialData(ser):
             else:
                 lines.append(ans)
                 print("*",end="",flush=True)
-                if sys.getsizeof(lines) > (MAX_DATA_SIZE * 1024 * 1024):
+                if sys.getsizeof(lines) > MAX_DATA_SIZE:
                     print("\r\n" + "Max file Size archieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
