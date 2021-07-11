@@ -1,6 +1,6 @@
 import os
 import shutil
-import datetime
+from datetime import datetime, timedelta
 import sys
 import serial
 import serial.tools.list_ports
@@ -130,9 +130,16 @@ def readSerialUntilEnd(ser):
 def readSerialData(ser):
     lines = []
     ans = waitSerialStart(ser)
-    scriptStartTime = time.time()
-    scriptEndTime = scriptStartTime + MAX_SCRIPT_EXECUTION_TIME
-    print("\r\n" + "Start @ " + str(scriptStartTime) + "; Will stop @ " + str(scriptEndTime) )
+    scriptStartTime = datetime.now()
+    scriptEndTime = (scriptStartTime
+            + timedelta(seconds=MAX_SCRIPT_EXECUTION_TIME))
+    tformat="%Y/%m/%d-%H:%M:%S"
+    print("\r\n"
+            + "Start @ "
+            + scriptStartTime.strftime(tformat)
+            + "; Will stop @ "
+            + scriptEndTime.strftime(tformat)
+            )
     if ans == True:
         while True:
             ans = readSerialUntilEnd(ser)
@@ -146,7 +153,7 @@ def readSerialData(ser):
                     print("\r\n" + "Max file Size archieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
-                if (time.time() > scriptEndTime):
+                if (datetime.now() > scriptEndTime):
                     print("\r\n" + "Max script time archived")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
@@ -165,7 +172,7 @@ def unpackArchives(archive_list, destname=None):
     if(destname == None):
         archive_folder = os.path.join(
                 os.getcwd(),
-                datetime.datetime.now().strftime("run_%d%m%y-%H%M")
+                datetime.now().strftime("run_%Y%m%d-%H%M%S")
                 )
     else:
         archive_folder = os.path.join(os.getcwd(),destname)
