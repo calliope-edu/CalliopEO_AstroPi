@@ -7,6 +7,7 @@ import serial.tools.list_ports
 import time
 import blkinfo
 import re
+import argparse
 
 blk = blkinfo.BlkDiskInfo()
 
@@ -222,8 +223,17 @@ def writeToFile(hex, data):
 
 ###################################################
 
-def main():
+def main(args):
     print("-=# CalliopEO #=-")
+
+    # If CLI paramater --max-data-size or --max-script-execution-time
+    # are set, update the global variables
+    if args.max_data_size > 0:
+        global MAX_DATA_SIZE
+        MAX_DATA_SIZE = args.max_data_size
+    if args.max_script_execution_time > 0:
+        global MAX_SCRIPT_EXECUTION_TIME
+        MAX_SCRIPT_EXECUTION_TIME = args.max_script_execution_time
 
     #check mini disk
     if not getMiniDisk():
@@ -315,4 +325,18 @@ def main():
                 break
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+            '--max-data-size',
+            default = 0,
+            dest = 'max_data_size',
+            type=int,
+            )
+    parser.add_argument(
+            '--max-script-execution-time',
+            default = 0,
+            dest = 'max_script_execution_time',
+            type=int,
+            )
+    args = parser.parse_args()
+    main(args)
