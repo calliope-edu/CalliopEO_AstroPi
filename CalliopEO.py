@@ -225,7 +225,7 @@ def programmMini(hex):
 def writeToFile(hex, data):
     file = open(hex+".data","w")
     for line in data:
-        file.write(line+"\r\n")
+        file.write(line+"\n")
     file.close()
 
 ###################################################
