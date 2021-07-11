@@ -62,7 +62,7 @@ fi
 
 # Directory contains a hex file?
 echo -n "Check: Output diretcory \"run_*\" contains .hex file ... "
-if [[ $(find ./run* -type f -name *.hex | wc -l) -ne 1 ]]; then
+if [[ $(find ./run* -type f -name "*.hex" | wc -l) -ne 1 ]]; then
     echo "NOT PASSED"
     tc_passed=0
 else
@@ -71,7 +71,7 @@ fi
 
 # Directory contains a data file?
 echo -n "Check: Output diretcory \"run_*\" contains .data file ... "
-if [[ $(find ./run* -type f -name *.data | wc -l) -ne 1 ]]; then
+if [[ $(find ./run* -type f -name "*.data" | wc -l) -ne 1 ]]; then
     echo "NOT PASSED"
     tc_passed=0
 else

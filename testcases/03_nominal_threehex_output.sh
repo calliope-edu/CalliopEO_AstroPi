@@ -3,7 +3,7 @@
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-hex_prog="./testfiles/10x_1hz_temp.zip" # prog for this testcase
+hex_prog="./testfiles/10x_1hz_temp.hex" # prog for this testcase
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -28,12 +28,13 @@ done
 ###############################################################################
 
 # Copy the Calliope Mini program for this testfile (defined above) to the
-# folder, where the CalliopEO.py script is located.
+# folder, where the CalliopEO.py script is located. Do this three times
 for n in {1..3}; do
-    cp ${hex_prog} ./${n}_$(basename ${hex_prog}) || {
-        echo "ERROR: Cannot copy ${hex_prog}. Exiting"
-        exit 1
-    }
+    cp ${hex_prog} ./${n}_$(basename ${hex_prog})
+done
+# ZIP all the hex files created above
+for file in *.hex; do
+    zip ${file%.hex}.zip ${file}
 done
 
 ###############################################################################
@@ -64,7 +65,7 @@ fi
 
 # Directory contains three hex file?
 echo -n "Check: Output diretcory \"run_*\" contains three .hex file ... "
-if [[ $(find ./run* -type f -name *.hex | wc -l) -ne 3 ]]; then
+if [[ $(find ./run* -type f -name "*.hex" | wc -l) -ne 3 ]]; then
     echo "NOT PASSED"
     tc_passed=0
 else
@@ -73,7 +74,7 @@ fi
 
 # Directory contains three data file?
 echo -n "Check: Output diretcory \"run_*\" contains three .data file ... "
-if [[ $(find ./run* -type f -name *.data | wc -l) -ne 3 ]]; then
+if [[ $(find ./run* -type f -name "*.data" | wc -l) -ne 3 ]]; then
     echo "NOT PASSED"
     tc_passed=0
 else
@@ -85,4 +86,5 @@ fi
 ###############################################################################
 
 rm *.done
+rm *.hex
 rm -rf run_*
