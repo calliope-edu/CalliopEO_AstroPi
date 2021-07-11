@@ -5,16 +5,16 @@ CalliopEO is a Python script to facilitate ineraction between a Raspberry Pi mic
 
 Place any program(s) to be executed by the Calliope Mini as zipped file(s) in the directory where the script `CalliopEO.py` resides. If executed the script will search for all zip archives, unpack the Calliope Mini program (HEX file) from the archive and flash the Calliope Mini with this program. After flashing, the Calliope Mini will reboot automatically and execute the program.
 
-In the directory a sub-folder named `run_DDMMYY-HHMM` will be created. The HEX files flashed and executed on the Calliope Mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
+In the directory a sub-folder named `run_YYYYMMDD-HHMMSS` will be created. The HEX files flashed and executed on the Calliope Mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
 
 The `CalliopEO.py` script can collect data sent by the program on the Calliope Mini via the USB serial port. Therefore, prepare the Calliope Mini program to wait for the string `@START@`. Then, the Calliope Mini program should respond by sending `@START@` back to the `CalliopEO.py` script and only after this sending the data. After sending the data the Calliope Mini program should send the
 message `@END@`.
 
 ## Execute
-It is recommended to use [`pipenv`](https://pipenv.pypa.io/en/latest/). If pipenv is in place and the Python virtual environment is established the script can be executed by:
 ```
-$ pipenv run python CalliopEO.py
+$ python3 CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds]
 ```
+`--max-data-size` is the maximum number of characters to be read from the Calliope Mini (except newline characters). With `--max-script-execution-time` you can specify a maximum time to accept input from the Calliope Mini program before terminating the connection.
 
 ## Setup
 The Calliope Mini should be connected via USB to the Raspberry Pi.
@@ -30,7 +30,7 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
 ### Operating system
 Install the latest [Raspberry Pi OS](https://www.raspberrypi.org/software/) to the Raspberry Pi. For CalliopEO, the "OS Lite" version without desktop is sufficient. Follow the standard installation procedure.
 
-### Create user calliope (optional)
+### Create user calliope
 In a terminal run the following comands to set up a user `calliope` and set the password:
 ```
 $ sudo useradd -m -g dialout calliope
@@ -58,8 +58,8 @@ In the above example, the two Calliope Mini mass storage devices are `/dev/sda` 
 ```
 Finally, we create the mount points in the user directory of the user `calliope`. Therefore, execute as user `calliope`:
 ```
-mkdir -p ~/mnt/mini
-mkdir -p ~/mnt/flash
+$ mkdir -p ~/mnt/mini
+$ mkdir -p ~/mnt/flash
 ```
 
 ### Install dependencies
@@ -67,13 +67,9 @@ The CalliopEO Python script has very few dependencies. At minimum, you need:
 * Python 3
 * [pySerial](https://pyserial.readthedocs.io/en/latest/pyserial.html) module
 * [blkinfo](https://pypi.org/project/blkinfo/) module
+* [argparse](https://docs.python.org/3/library/argparse.html) module
 
-It is recommended to install [`pipenv`](https://pipenv.pypa.io/). With `pipenv` in place you can create a Python virtual environment equipped with all dependencies. To install the needed packages according to the Pipfile execute:
+The required modules are defined in the file `requirements.txt`. Install the modules using pip with the following command:
 ```
-$ pipenv install
+$ python3 -m pip install --user -r requirements.txt
 ```
-To install packages exactly as specified in Pipfile.lock use the sync command:
-```
-$ pipenv sync
-```
-
