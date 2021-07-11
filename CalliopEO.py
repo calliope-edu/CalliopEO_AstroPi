@@ -149,16 +149,24 @@ def readSerialData(ser):
             else:
                 lines.append(ans)
                 print("*",end="",flush=True)
-                if sys.getsizeof(lines) > MAX_DATA_SIZE:
-                    print("\r\n" + "Max file Size archieved")
+                if charInLines(lines) > MAX_DATA_SIZE:
+                    print("\r\n" + "Max file size achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
                 if (datetime.now() > scriptEndTime):
-                    print("\r\n" + "Max script time archived")
+                    print("\r\n" + "Max script time achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
     elif ans == False:
         return False
+
+# Count the total number of characters for all lines
+def charInLines(lines):
+    chars = 0
+    for line in lines:
+        chars += len(line)
+    print("chars: ", chars)
+    return chars
 
 def listFolders(path):
     temp_list = []
@@ -225,7 +233,7 @@ def programmMini(hex):
 def writeToFile(hex, data):
     file = open(hex+".data","w")
     for line in data:
-        file.write(line+"\n")
+        file.write(line + "\n")
     file.close()
 
 ###################################################
