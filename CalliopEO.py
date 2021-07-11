@@ -129,7 +129,7 @@ def readSerialUntilEnd(ser):
 #if a timeout is received the return value is False
 def readSerialData(ser):
     lines = []
-    ans = waitSerialStart(ser)
+    #ans = waitSerialStart(ser)
     scriptStartTime = datetime.now()
     scriptEndTime = (scriptStartTime
             + timedelta(seconds=MAX_SCRIPT_EXECUTION_TIME))
@@ -140,15 +140,19 @@ def readSerialData(ser):
             + "; Will stop @ "
             + scriptEndTime.strftime(tformat)
             )
-    if ans == True:
+    # Received @START@?
+    if waitSerialStart(ser) == True:
         while True:
             ans = readSerialUntilEnd(ser)
+            # Received @END@?
             if ans == True:
                 print("\r\n" + str(len(lines)) + " lines read")
                 return lines
             else:
-                lines.append(ans)
-                print("*",end="",flush=True)
+                if ans != "":
+                    lines.append(ans)
+                    print("*",end="",flush=True)
+
                 if charInLines(lines) > MAX_DATA_SIZE:
                     print("\r\n" + "Max file size achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
@@ -157,7 +161,7 @@ def readSerialData(ser):
                     print("\r\n" + "Max script time achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
-    elif ans == False:
+    else:
         return False
 
 # Count the total number of characters for all lines
@@ -165,7 +169,6 @@ def charInLines(lines):
     chars = 0
     for line in lines:
         chars += len(line)
-    print("chars: ", chars)
     return chars
 
 def listFolders(path):
