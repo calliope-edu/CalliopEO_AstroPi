@@ -24,3 +24,7 @@ echo "# Mount points for Calliope Mini" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_mini} /home/calliope/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_flash} /home/calliope/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
 
+# Install all Python modules from folder /modules
+for module in ./modules/*.whl; do
+    python3 -m pip install --user ${module}
+done
