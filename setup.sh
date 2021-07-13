@@ -46,11 +46,18 @@ if [[ "${uuid_mini}" == "" || "${uuid_flash}" == "" ]]; then
     exit 1
 fi
 
-# Create mount point in /etc/fstab that can be mounted by user calliope
+# Copy all the files from the respository to the home directory of
+# user ${usernanme}
+cp -r . /home/${username}/.
+
+# Create mount points
 mkdir -p /home/${username}/mnt/mini
 mkdir -p /home/${username}/mnt/flash
-chown -R ${user_id}:${group_id} /home/${username}/mnt
 
+# Adjust the uid and gui for all files in user directory
+chown -R ${user_id}:${group_id} /home/${username}
+
+# Create mount point in /etc/fstab that can be mounted by user calliope
 echo "# Mount points for Calliope Mini" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_mini} /home/${username}/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
@@ -58,9 +65,6 @@ echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/mini vfat noauto,use
 # Install all Python modules from folder /modules
 # First, copy the folder /modules to the home directory of ${username}.
 # Then, install locally as user ${username}
-cp -r ./modules/ /home/${username}/.
-su - ${username} -c 'for m in ~/modules/*.whl; do python3 -m pip install --user ${m}; done'
-# Clean up
-rm -rf /home/${username}/modules
+su - ${username} -c 'cd && for m in ~/modules/*.whl; do python3 -m pip install --user ${m}; done'
 
 exit 0
