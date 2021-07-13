@@ -18,12 +18,16 @@ fi
 # command has no effect
 usermod -a -G ${groups} ${username}
 
+# Get user id and group id for later use
+user_id=$(id -u ${username})
+group_id=$(id -g ${username})
+
 # Ask to provide/change password for user
 read -p "Add/change password for ${username}? [yN]" ans
 if [[ ${ans} =~ [Yy]$ ]]; then
     passwd ${username}
 fi
-exit 0
+
 # Determine UUIDs
 uuid_mini=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Volume" | awk '{print $2}')
 uuid_flash=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Flash" | awk '{print $2}')
@@ -39,7 +43,7 @@ fi
 # Create mount point in /etc/fstab that can be mounted by user calliope
 mkdir -p /home/${username}/mnt/mini
 mkdir -p /home/${username}/mnt/flash
-chown -R calliope:calliope /home/${username}/mnt
+chown -R ${user_id}:${group_id} /home/${username}/mnt
 
 echo "# Mount points for Calliope Mini" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_mini} /home/${username}/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
