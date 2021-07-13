@@ -9,6 +9,12 @@ if [ "${EUID}" -ne 0 ]; then
   exit 1
 fi
 
+# If command line argument is passed to script assume this is the username
+# and overwrite variable ${username}
+if [[ "${1}" != "" ]]; then
+    username=${1}
+fi
+
 # If calliope user doesn't exist, create it
 if ! id -u ${username} > /dev/null 2>&1; then
     useradd -m ${username}
