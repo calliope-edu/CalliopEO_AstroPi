@@ -1,0 +1,4 @@
+-i https://pypi.org/simple
+argparse==1.4.0
+blkinfo==0.1.2
+pyserial==3.5

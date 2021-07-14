@@ -1,12 +1,13 @@
 import os
 import shutil
-import datetime
+from datetime import datetime, timedelta
 import sys
 import serial
 import serial.tools.list_ports
 import time
 import blkinfo
 import re
+import argparse
 
 blk = blkinfo.BlkDiskInfo()
 
@@ -43,7 +44,7 @@ SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
 REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
-MAX_DATA_SIZE = 20 # MB
+MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
 
 # Returns the port for the (first) Calliope mini or None
 def getMiniSerial():
@@ -128,29 +129,47 @@ def readSerialUntilEnd(ser):
 #if a timeout is received the return value is False
 def readSerialData(ser):
     lines = []
-    ans = waitSerialStart(ser)
-    scriptStartTime = time.time()
-    scriptEndTime = scriptStartTime + MAX_SCRIPT_EXECUTION_TIME
-    print("\r\n" + "Start @ " + str(scriptStartTime) + "; Will stop @ " + str(scriptEndTime) )
-    if ans == True:
+    #ans = waitSerialStart(ser)
+    scriptStartTime = datetime.now()
+    scriptEndTime = (scriptStartTime
+            + timedelta(seconds=MAX_SCRIPT_EXECUTION_TIME))
+    tformat="%Y/%m/%d-%H:%M:%S"
+    print("\r\n"
+            + "Start @ "
+            + scriptStartTime.strftime(tformat)
+            + "; Will stop @ "
+            + scriptEndTime.strftime(tformat)
+            )
+    # Received @START@?
+    if waitSerialStart(ser) == True:
         while True:
             ans = readSerialUntilEnd(ser)
+            # Received @END@?
             if ans == True:
                 print("\r\n" + str(len(lines)) + " lines read")
                 return lines
             else:
-                lines.append(ans)
-                print("*",end="",flush=True)
-                if len(lines) > ((MAX_DATA_SIZE * 1024 * 1024) / 17):
-                    print("\r\n" + "Max file Size archieved")
+                if ans != "":
+                    lines.append(ans)
+                    print("*",end="",flush=True)
+
+                if charInLines(lines) > MAX_DATA_SIZE:
+                    print("\r\n" + "Max file size achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
-                if (time.time() > scriptEndTime):
-                    print("\r\n" + "Max script time archived")
+                if (datetime.now() > scriptEndTime):
+                    print("\r\n" + "Max script time achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
                     return lines
-    elif ans == False:
+    else:
         return False
+
+# Count the total number of characters for all lines
+def charInLines(lines):
+    chars = 0
+    for line in lines:
+        chars += len(line)
+    return chars
 
 def listFolders(path):
     temp_list = []
@@ -164,7 +183,7 @@ def unpackArchives(archive_list, destname=None):
     if(destname == None):
         archive_folder = os.path.join(
                 os.getcwd(),
-                datetime.datetime.now().strftime("run_%d%m%y-%H%M")
+                datetime.now().strftime("run_%Y%m%d-%H%M%S")
                 )
     else:
         archive_folder = os.path.join(os.getcwd(),destname)
@@ -217,13 +236,22 @@ def programmMini(hex):
 def writeToFile(hex, data):
     file = open(hex+".data","w")
     for line in data:
-        file.write(line+"\r\n")
+        file.write(line + "\n")
     file.close()
 
 ###################################################
 
-def main():
+def main(args):
     print("-=# CalliopEO #=-")
+
+    # If CLI paramater --max-data-size or --max-script-execution-time
+    # are set, update the global variables
+    if args.max_data_size > 0:
+        global MAX_DATA_SIZE
+        MAX_DATA_SIZE = args.max_data_size
+    if args.max_script_execution_time > 0:
+        global MAX_SCRIPT_EXECUTION_TIME
+        MAX_SCRIPT_EXECUTION_TIME = args.max_script_execution_time
 
     #check mini disk
     if not getMiniDisk():
@@ -315,4 +343,18 @@ def main():
                 break
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+            '--max-data-size',
+            default = 0,
+            dest = 'max_data_size',
+            type=int,
+            )
+    parser.add_argument(
+            '--max-script-execution-time',
+            default = 0,
+            dest = 'max_script_execution_time',
+            type=int,
+            )
+    args = parser.parse_args()
+    main(args)
