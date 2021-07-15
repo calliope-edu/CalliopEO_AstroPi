@@ -1,0 +1,598 @@
+################## TESTING CALLOPEO.PY ##################
+Test started: Wed 24 Feb 17:06:16 UTC 2021
+
+Processing ./testcases/01_collect_sysinfo.sh file...
+  Hostname: astropiir
+  User: calliope
+  Working directory: /home/calliope/tmp/CalliopEO_AstroPi
+  System info: Linux astropiir 5.10.17-v7+ #1421 SMP Thu May 27 13:59:01 BST 2021 armv7l GNU/Linux
+  OS Release:
+PRETTY_NAME="Raspbian GNU/Linux 10 (buster)"
+NAME="Raspbian GNU/Linux"
+VERSION_ID="10"
+VERSION="10 (buster)"
+VERSION_CODENAME=buster
+ID=raspbian
+ID_LIKE=debian
+HOME_URL="http://www.raspbian.org/"
+SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
+BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
+
+
+
+Processing ./testcases/02_do_tests.sh file...
+Please disconnect the calliope mini
+Press [return] to continue...
+Run without Calliope mini
+-=# CalliopEO #=-
+mini not found
+Please connect the calliope mini
+Press [return] to continue...
+Run without Zip file
+-=# CalliopEO #=-
+no archives found in this directory
+make sure you have at least one archive in this directory
+Run with only corrupted Zip file
+-=# CalliopEO #=-
+Error while unpacking /home/calliope/tmp/CalliopEO_AstroPi/not.a.zip: /home/calliope/tmp/CalliopEO_AstroPi/not.a.zip is not a zip file
+Run all test files
+-=# CalliopEO #=-
+Unpacked /home/calliope/tmp/CalliopEO_AstroPi/logMuch.zip
+Unpacked /home/calliope/tmp/CalliopEO_AstroPi/log900s.zip
+Unpacked /home/calliope/tmp/CalliopEO_AstroPi/not.a.hex.zip
+Unpacked /home/calliope/tmp/CalliopEO_AstroPi/its.garbage.zip
+Unpacked /home/calliope/tmp/CalliopEO_AstroPi/log10s.zip
+Error while unpacking /home/calliope/tmp/CalliopEO_AstroPi/not.a.zip: /home/calliope/tmp/CalliopEO_AstroPi/not.a.zip is not a zip file
+Unpacked /home/calliope/tmp/CalliopEO_AstroPi/no-start.zip
+
+
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/no-start.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:07:06; Will stop @ 2021/02/24-17:07:36
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 1/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/no-start.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:07:23; Will stop @ 2021/02/24-17:07:53
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 2/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/no-start.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:07:41; Will stop @ 2021/02/24-17:08:11
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 3/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/no-start.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:07:59; Will stop @ 2021/02/24-17:08:29
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 4/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/no-start.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:08:16; Will stop @ 2021/02/24-17:08:46
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 5/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/not.a.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:08:28; Will stop @ 2021/02/24-17:08:58
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 1/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/not.a.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:08:40; Will stop @ 2021/02/24-17:09:10
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 2/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/not.a.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:08:52; Will stop @ 2021/02/24-17:09:22
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 3/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/not.a.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:09:03; Will stop @ 2021/02/24-17:09:33
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 4/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/not.a.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:09:15; Will stop @ 2021/02/24-17:09:45
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+
+Send @START@
+Something went wrong retrying: 5/5
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/log900s.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:09:33; Will stop @ 2021/02/24-17:10:03
+
+Send @START@
+
+Send @START@
+
+Received @START@
+**********************************************
+Max script time achieved
+
+46 lines read
+done
+############################################################################################################
+
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/logMuch.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:10:20; Will stop @ 2021/02/24-17:10:50
+
+Send @START@
+
+Received @START@
+**********************************************************************
+Max file size achieved
+
+70 lines read
+done
+############################################################################################################
+
+programming: /home/calliope/tmp/CalliopEO_AstroPi/run_20210224-170649/log10s.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-17:10:46; Will stop @ 2021/02/24-17:11:16
+
+Send @START@
+
+Received @START@
+**********************************************
+46 lines read
+done
+############################################################################################################
+
+All tests done
+
+Test ended: Wed 24 Feb 17:11:02 UTC 2021
