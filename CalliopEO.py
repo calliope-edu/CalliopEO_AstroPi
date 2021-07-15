@@ -189,8 +189,15 @@ def unpackArchives(archive_list, destname=None):
         archive_folder = os.path.join(os.getcwd(),destname)
 
     for file in archive_list:
-        shutil.unpack_archive(file, archive_folder)
-        shutil.move(file, file + ".done")
+        try:
+             shutil.unpack_archive(file, archive_folder)
+             shutil.move(file, file + ".done")
+             print("Unpacked " + file)
+        except Exception as Err:
+            shutil.move(file, file + ".failed")
+            print("Error while unpacking " + file + ": %s" % Err)
+
+       
     return archive_folder
 
 #list files in this path filtered by ending and recurse if desired
