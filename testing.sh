@@ -3,6 +3,10 @@
 # This bash script is used to perform testing on the
 # Python script CalliopEO.py.
 
+# Cd into the directory where testing.sh is located in the case
+# this script was called from somewhere else.
+cd $(dirname ${0})
+
 # If exists, source the file testing.conf which holds
 # definitions for some variables.
 testing_conf="./testing.conf"
@@ -20,8 +24,9 @@ fi
 echo "################## TESTING CALLIOPEO.PY ##################"
 echo "Test started: $(date)"
 
-# Loop over all testcases found in the folder ${tc_folder}
-for testcase in ${tc_folder%/}/*.sh; do
+# Loop over all testcases found in the folder ${tc_folder}. To disable
+# a testcase from being executed, let the file name start with "."
+for testcase in ${tc_folder%/}/*.*; do
     # If the variable ${tc_confirm} is set to true ask
     # before execute any testcase. If the variable is unset or set
     # to false, execute testcase immediately.
