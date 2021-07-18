@@ -3,6 +3,10 @@
 # This bash script is used to perform testing on the
 # Python script CalliopEO.py.
 
+# Cd into the directory where testing.sh is located in the case
+# this script was called from somewhere else.
+cd $(dirname ${0})
+
 # If exists, source the file testing.conf which holds
 # definitions for some variables.
 testing_conf="./testing.conf"
