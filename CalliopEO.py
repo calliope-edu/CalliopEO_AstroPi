@@ -188,6 +188,9 @@ def unpackArchives(archive_list, destname=None):
     else:
         archive_folder = os.path.join(os.getcwd(),destname)
 
+    # Create empty archive_folder
+    os.mkdir(archive_folder)
+
     for file in archive_list:
         try:
              shutil.unpack_archive(file, archive_folder)
