@@ -6,25 +6,27 @@
 
 # Description
 #   Execute the CalliopEO.py with a single zip archive nominally transmitting
-#   for 10 seconds.
+#   for 30 seconds.
 # Preparation
-#   Zip archive log10s.zip has to be provided
+#   Zip archive 30sec-counter.zip has to be provided
 # Expected result
 #   CalliopEO.py returns code 0.
-#   CalliopEO.py renames log10s.zip to log10s.zip.done
-#   CalliopEO.py created folder run_YYYYMMDD-HHMMSS
+#   CalliopEO.py renames 30sec-counter.zip to 30sec-counter.zip.done
+#   CalliopEO.py created folder run_*
+#   MD5 checksums of files in run_* match
 # Necessary clean-up
 #   Remove created *.done and folder run_*/
 
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-zipfile="testcases/testfiles/log10s.zip"
+zipfile="testcases/testfiles/30sec-counter.zip"
+md5file="testcases/testfiles/30sec-counter.md5"
 
 ###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
-echo "Test: Single, nominal ZIP artchive provided"
+echo "Test: Single, nominal ZIP archive provided"
 echo "-------------------------------------------"
 echo ""
 # Make sure, Calliope is connected to the Astro Pi
@@ -73,7 +75,7 @@ else
     echo "NOT PASSED"
 fi
 
-# Renamed log10s.zip to log10s.zip.done?
+# Renamed 30sec-counter.zip to 30sec-counter.done?
 zipfile_main=$(basename ${zipfile})
 zipfile_done="${zipfile_main}.done"
 echo -n "Check: ZIP archive renamed to .done ... "
@@ -91,12 +93,25 @@ else
     echo "NOT PASSED"
 fi
 
+# Check md5sums for hex and data file
+run_folder=$(find . -type d -ipath "./run_*")
+cp ${md5file} ${run_folder}/.
+cd ${run_folder}
+echo -n "Check: MD5 checksum in folder ${run_folder} ... "
+md5sum -c $(basename ${md5file}) >> /dev/null
+if [ $? -eq 0 ]; then
+    echo "PASSED"
+else
+    echo "NOT PASSED"
+fi
+cd ..
+
 ###############################################################################
 # Cleaning up
 ###############################################################################
 
 # Remove .done file
-rm *.done
+rm ${zipfile_done}
 
 # Remove folder run_*
 rm -rf run_*
