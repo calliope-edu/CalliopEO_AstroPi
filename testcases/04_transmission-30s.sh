@@ -79,7 +79,7 @@ fi
 zipfile_main=$(basename ${zipfile})
 zipfile_done="${zipfile_main}.done"
 echo -n "Check: ZIP archive renamed to .done ... "
-if [[ $(find . -maxdepth 1 -iname "${zipfile_main}" | wc -l) -eq 0 && $(find . -maxdepth 1 -iname "${zipfile_done}" | wc -l) -eq 1 ]]; then
+if [[ ! -e "${zipfile_main}" && -e "${zipfile_done}" ]]; then
     echo "PASSED"
 else
     echo "NOT PASSED"
