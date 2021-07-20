@@ -47,3 +47,23 @@ The setup script performs the following actions:
 * Copying necessary files to the user's home directory, in particular `CalliopEO.py`
 * Installing necessary Python modules from local wheel files. This is necessary due to security requirements set by ESA.
 
+## De-Installation
+The system can be cleaned up from the files necessary and the system settings done exclusively for CalliopEO using the procedure described as below. For this procedure it is assumed, that the username for the CalliopEO user is `calliope`. Replace `calliope` by the appropriate username if an alternative username was selected during the setup process (see above).
+
+1. Login to the Raspberry Pi using a user different from `calliope`.
+2. Remove the user `calliope` with the command
+```
+$ sudo userdel -r calliope
+```
+3. Verify that the above command successfully removed the home directory `/home/calliope` with the command `ls /home/`. If the home directory still exists, remove it using the command `$ sudo rm -rf /home/calliope`.
+4. Create a backup of the file `/etc/fstab` using the command
+```
+$ sudo cp /etc/fstab /etc/fstab.backup
+```
+5. Open the file `/etc/fstab` in a text editor. Remove (or uncomment) all mount point definitions in `/etc/fstab` for CalliopEO. The section with the moint point definitions should look like the following:
+```
+# Mount points for Calliope Mini
+/dev/disk/by-uuid/0123-4567 /home/calliope/mnt/mini vfat noauto,users 0 0
+/dev/disk/by-uuid/089A-BCDE /home/calliope/mnt/flash vfat noauto,users 0 0
+```
+6. Restart the operating system. The de-installation is complete.
