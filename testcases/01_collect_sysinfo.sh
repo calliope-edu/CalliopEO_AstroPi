@@ -8,12 +8,15 @@
 
 echo "  Hostname: $(cat /etc/hostname)"
 echo "  User: ${USER}"
+echo "  Group membership: $(groups)"
 echo "  Working directory: $(pwd)"
 echo "  System info: $(uname -a)"
 os_release="/etc/os-release"
 if [[ -f "${os_release}" ]]; then
     echo "  OS Release:"
-    cat ${os_release}
+    while read line; do
+        echo "    ${line}"
+    done < ${os_release}
     echo ""
 fi
 
