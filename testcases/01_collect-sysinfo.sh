@@ -1,10 +1,18 @@
 #!/bin/bash
 
-# Testcase name:
-#   01_collect_sysinfo
-# Testcase description:
+###############################################################################
+# Testcase Description
+###############################################################################
+
+# Description
 #   This is no real testcase but this script collects some system
 #   information
+# Preparation
+#   Nothing to prepare.
+# Expected result
+#   Collects and outputs system information for the test log file.
+# Necessary clean-up
+#   Nothing to clean up
 
 echo "  Hostname: $(cat /etc/hostname)"
 echo "  User: ${USER}"
