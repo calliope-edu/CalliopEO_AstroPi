@@ -27,4 +27,11 @@ if [[ -f "${os_release}" ]]; then
     done < ${os_release}
     echo ""
 fi
+echo "  Python3 version: $(python3 --version)"
+pip3 list > ~/python3_modules.list.tmp
+echo "  Installed Python3 modules"
+while read line; do
+    echo "    ${line}"
+done < ~/python3_modules.list.tmp
+rm ~/python3_modules.list.tmp
 
