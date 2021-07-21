@@ -150,13 +150,19 @@ def readSerialData(ser):
                 return lines
             else:
                 if ans != "":
-                    lines.append(ans)
-                    print("*",end="",flush=True)
-
-                if charInLines(lines) > MAX_DATA_SIZE:
-                    print("\r\n" + "Max file size achieved")
-                    print("\r\n" + str(len(lines)) + " lines read")
-                    return lines
+                    # Append the new line only if this will not exceed
+                    # the threshold MAX_DATA_SIZE
+                    if (
+                            charInLines(lines)
+                            + len(ans)
+                            + 1 # The newline character char of last line
+                            ) <= MAX_DATA_SIZE:
+                        lines.append(ans)
+                        print("*",end="",flush=True)
+                    else:
+                        print("\r\n" + "Max file size achieved")
+                        print("\r\n" + str(len(lines)) + " lines read")
+                        return lines
                 if (datetime.now() > scriptEndTime):
                     print("\r\n" + "Max script time achieved")
                     print("\r\n" + str(len(lines)) + " lines read")
