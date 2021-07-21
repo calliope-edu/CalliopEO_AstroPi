@@ -46,6 +46,10 @@ ${cmd_calliope_script}
 # Save return code
 ret_code=$?
 
+# Let things settle (not neede here, because no files are written)
+#sync
+#sleep 1
+
 ###############################################################################
 # Check if testcase was successfully
 ###############################################################################
