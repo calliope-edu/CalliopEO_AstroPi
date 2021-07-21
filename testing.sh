@@ -26,7 +26,7 @@ echo "Test started: $(date)"
 
 # Loop over all testcases found in the folder ${tc_folder}. To disable
 # a testcase from being executed, let the file name start with "."
-for testcase in ${tc_folder%/}/*.*; do
+for testcase in ${tc_folder%/}/*.sh; do
     # If the variable ${tc_confirm} is set to true ask
     # before execute any testcase. If the variable is unset or set
     # to false, execute testcase immediately.
