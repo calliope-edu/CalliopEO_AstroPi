@@ -227,7 +227,7 @@ def listFiles(path, ending=None, recurse=False):
         else:
             if recurse and os.path.isdir(os.path.join(path,file)):
                 temp_list.extend(listFiles(os.path.join(path,file), ending))
-    return temp_list
+    return sorted(temp_list)
 
 def getMiniDisk():
     MINI_DEVICE = ""
