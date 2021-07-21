@@ -168,7 +168,8 @@ def readSerialData(ser):
 def charInLines(lines):
     chars = 0
     for line in lines:
-        chars += len(line)
+        # Add one character for the newline at the end of each line
+        chars += len(line) + 1
     return chars
 
 def listFolders(path):
