@@ -73,7 +73,7 @@ chown -R ${user_id}:${group_id} /home/${username}
 echo "Adding mount point definitions to /etc/fstab"
 echo "# Mount points for Calliope Mini" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_mini} /home/${username}/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
-echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
+echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/flash vfat noauto,users 0 0" >> /etc/fstab
 
 # Install all Python modules from folder /modules
 # First, copy the folder /modules to the home directory of ${username}.

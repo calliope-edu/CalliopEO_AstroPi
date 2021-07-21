@@ -21,10 +21,11 @@ if [[ ${tc_folder} == "" ]]; then
     tc_folder="./testcases"
 fi
 
-echo "################## TESTING CALLOPEO.PY ##################"
+echo "################## TESTING CALLIOPEO.PY ##################"
 echo "Test started: $(date)"
 
-# Loop over all testcases found in the folder ${tc_folder}
+# Loop over all testcases found in the folder ${tc_folder}. To disable
+# a testcase from being executed, let the file name start with "."
 for testcase in ${tc_folder%/}/*.*; do
     # If the variable ${tc_confirm} is set to true ask
     # before execute any testcase. If the variable is unset or set

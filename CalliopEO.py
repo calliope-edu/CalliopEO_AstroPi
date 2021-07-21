@@ -188,6 +188,9 @@ def unpackArchives(archive_list, destname=None):
     else:
         archive_folder = os.path.join(os.getcwd(),destname)
 
+    # Create empty archive_folder
+    os.mkdir(archive_folder)
+
     for file in archive_list:
         try:
              shutil.unpack_archive(file, archive_folder)
@@ -197,7 +200,6 @@ def unpackArchives(archive_list, destname=None):
             shutil.move(file, file + ".failed")
             print("Error while unpacking " + file + ": %s" % Err)
 
-       
     return archive_folder
 
 #list files in this path filtered by ending and recurse if desired
@@ -263,11 +265,11 @@ def main(args):
     #check mini disk
     if not getMiniDisk():
         print(MSG_MINI_NOT_FOUND)
-        sys.exit(0)
+        sys.exit(10)
     #check flash disk
     if not getFlashDisk():
         print(MSG_MINI_NOT_FOUND)
-        sys.exit(0)
+        sys.exit(11)
     #make mini mount dir
     if not os.path.exists(TEMP_MOUNT_MINI):
         os.mkdir(TEMP_MOUNT_MINI)
@@ -280,7 +282,7 @@ def main(args):
     if len(archive_file_list) == 0:
         print("no archives found in this directory")
         print("make sure you have at least one archive in this directory")
-        sys.exit(0)
+        sys.exit(12)
     #unpack archives to a folder named with current date and time
     folder_name = unpackArchives(archive_file_list)
     #recursively search for .hex files
@@ -329,7 +331,7 @@ def main(args):
             # happend. Exit the script.
             if ser is None:
                 print("\r\nCannot establish serial conection to Calliope Mini. Exiting.")
-                exit()
+                sys.exit(13)
 
             print("reading data")
             data = readSerialData(ser)
@@ -349,6 +351,12 @@ def main(args):
                 print("############################################################################################################\r\n")
                 break
 
+# Exit status
+# 0     normally
+# 10    could not find mini disk (Calliope mini not attached)
+# 11    could not find flash disk (Calliope mini not attached)
+# 12    no archives in diretory
+# 13    could not establish serial connection
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
