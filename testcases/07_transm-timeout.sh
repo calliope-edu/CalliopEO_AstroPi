@@ -68,7 +68,7 @@ fi
 # long and set the --max-script-execution-time to ${max_exec_time}
 cp ${zipfile1} .
 s1start=$(date +%s)
-ret1=$(${cmd_calliope_script} --max-script-execution-time=${max_exec_time})
+${cmd_calliope_script} --max-script-execution-time=${max_exec_time} | tee ~/output.txt.tmp
 # Save return code
 ret_code_1=$?
 s1end=$(date +%s)
@@ -127,9 +127,14 @@ fi
 
 # Verify content of .data file after execution of 30sec-counter.hex
 echo -n "Check: Verify content of .data file ... "
-if [ ${#run_folders[@]} -eq 2 ]; then
-    cp ${md5file2} ${run_folders[1]}
-    cd ${run_folders[1]}
+# Determine the run_* folder to perform the verification (the folder run_*
+# containing file ${zipfile2_hex})
+zipfile2_hex=$(basename "${zipfile2%.zip}.hex")
+found_here=($(find . -maxdepth 2 -iname ${zipfile2_hex}))
+if [ ${#found_here[@]} -eq 1 ]; then
+    verify_here=$(dirname ${found_here[0]}) # path name only
+    cp ${md5file2} ${verify_here}/.
+    cd ${verify_here}
     md5sum -c $(basename ${md5file2}) >> /dev/null
     if [ $? -eq 0 ]; then
         echo "PASSED"
@@ -141,6 +146,9 @@ else
     echo "NOT PASSED"
 fi
 
+#stop_time=$(cat ~/output.txt.tmp | grep "Will stop @" | awk '{print $7}')
+#echo "Stop time: ${stop_time}"
+
 ###############################################################################
 # Cleaning up
 ###############################################################################
@@ -151,3 +159,5 @@ rm ${zipfile1_done} ${zipfile2_done}
 # Remove folder run_*
 rm -rf run_*
 
+# Remove temporary file with script output
+rm ~/output.txt.tmp

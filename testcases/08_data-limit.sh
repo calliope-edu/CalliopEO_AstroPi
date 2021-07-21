@@ -124,9 +124,14 @@ fi
 
 # Verify content of .data file after execution of 30sec-counter.hex
 echo -n "Check: Verify content of .data file ... "
-if [ ${#run_folders[@]} -eq 2 ]; then
-    cp ${md5file2} ${run_folders[1]}
-    cd ${run_folders[1]}
+# Determine the run_* folder to perform the verification (the folder run_*
+# containing file ${zipfile2_hex})
+zipfile2_hex=$(basename "${zipfile2%.zip}.hex")
+found_here=($(find . -maxdepth 2 -iname ${zipfile2_hex}))
+if [ ${#found_here[@]} -eq 1 ]; then
+    verify_here=$(dirname ${found_here[0]}) # path name only
+    cp ${md5file2} ${verify_here}/.
+    cd ${verify_here}
     md5sum -c $(basename ${md5file2}) >> /dev/null
     if [ $? -eq 0 ]; then
         echo "PASSED"
