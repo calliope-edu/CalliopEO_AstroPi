@@ -13,4 +13,4 @@ No | Nominal? | Calliope connected? | Short ID/Filename | Description | Necessar
 7 | no | yes | 07_transm-timeout | Calliope sends data for too long. The CalliopEO.py script shall terminate the connection and proceed with the next hex. | 900sec-counter.zip, 30sec-counter.zip | yes
 8 | no | yes | 08_data-limit | Calliope exeeds data limit. The CalliopEO.py script shall terminate the connection and proceed with the next hex. | burst.zip, 30sec-counter.zip | yes
 9 | no | yes | 09_no-response | Calliope does not respond to @START@ from the CalliopEO.py script. CalliopEO.py will resend @START@ a couple of times, then retry flashing in total 5 times and after this proceed with the next hex. | no-response.zip, 30sec-counter.zip | no
-10 | no | yes | 09_multi-zip | Provide CalliopEO.py script with zip archive containing multiple hex files. | 30sec-counter.zip (multiple times) | no
+10 | no | yes | 09_multi-zip | Provide CalliopEO.py script with zip archive containing multiple hex files. | 30sec-counter.zip (multiple times) | yes
