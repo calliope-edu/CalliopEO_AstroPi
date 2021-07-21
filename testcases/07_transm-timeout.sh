@@ -20,7 +20,8 @@
 #   CalliopEO.py creates two folders run_*
 #   CalliopEO.py creates .data files in both folders run_*
 #   Second .data file has correct MD5 checksum
-#   ToDo: Transmission of first hex file was terminated after specified time
+#   Transmission of first hex file was terminated not later than 5 seconds
+#   after specified time
 # Necessary clean-up
 #   Remove created *.done and folders run_*/
 
@@ -31,6 +32,7 @@ zipfile1="testcases/testfiles/900sec-counter.zip"
 max_exec_time=30 # seconds
 zipfile2="testcases/testfiles/30sec-counter.zip"
 md5file2="testcases/testfiles/30sec-counter.md5"
+max_tdiff=5 # seconds
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -146,8 +148,22 @@ else
     echo "NOT PASSED"
 fi
 
-#stop_time=$(cat ~/output.txt.tmp | grep "Will stop @" | awk '{print $7}')
-#echo "Stop time: ${stop_time}"
+# Extract stop time from output of CalliopEO.py (YYYY/MM/DD-HH:MM:SS)
+stop_time=$(cat ~/output.txt.tmp | grep "Will stop @" | awk '{print $7}')
+# Re-format ${stop_time}: MM/DD/YYYY HH:MM:SS
+stop_time2="${stop_time:5:2}/${stop_time:8:2}/${stop_time:0:4} ${stop_time:11:8}"
+# Convert ${stop_time} to unix time stamp
+stop_time_unix=$(date -d "${stop_time2}" +%s)
+# Calculate the difference between s1end and stop_time_unix (seconds)
+tdiff=$((s1end - stop_time_unix))
+tdiff=${tdiff#-} # absolute value
+# Time difference less-equal ${max_tdiff}?
+echo -n "Check: Transmission terminated in time ... "
+if [ "${tdiff}" -le "${max_tdiff}" ]; then
+    echo "PASSED"
+else
+    echo "NOT PASSED"
+fi
 
 ###############################################################################
 # Cleaning up
