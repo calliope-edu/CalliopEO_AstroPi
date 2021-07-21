@@ -200,6 +200,11 @@ def unpackArchives(archive_list, destname=None):
         except Exception as Err:
             shutil.move(file, file + ".failed")
             print("Error while unpacking " + file + ": %s" % Err)
+            # Wait a second. Otherwise the folder run_YYYYMMDD-HHMMSS
+            # for the next zip archive can have the time stamp which
+            # would result in trying to create the same diretory which
+            # in the end will cause the script to fail (Github issue #34).
+            time.sleep(1)
 
     return archive_folder
 
