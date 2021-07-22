@@ -94,9 +94,9 @@ fi
 
 # Renamed 30sec-counter.zip to 30sec-counter.done?
 zipfile1_main="01.zip"
-zipfile1_done="${zipfile_main}.done"
+zipfile1_done="${zipfile1_main}.done"
 zipfile2_main="02.zip"
-zipfile2_done="${zipfile_main}.done"
+zipfile2_done="${zipfile2_main}.done"
 echo -n "Check 2/5: ZIP archive renamed to .done ... "
 if [[ ! -e "${zipfile1_main}" && -e "${zipfile1_done}" && -e "${zipfile2_main}" && -e "${zipfile2_done}" ]]; then
     echo -e "${G}PASSED${NC}"
