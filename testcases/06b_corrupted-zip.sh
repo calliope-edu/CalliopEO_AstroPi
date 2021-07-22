@@ -20,12 +20,14 @@
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
+tmpdir="./tmp"
 corruptedzip="testcases/testfiles/not.a.zip"
 zipfile1="01.zip"
 zipfile2="02.zip"
-zipfile2="02.zip"
+zipfile3="03.zip"
 hexfile="05sec-counter.hex"
 datafile="05sec-counter.hex.data"
+checksumfile="checksum.md5"
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -54,7 +56,15 @@ fi
 ##############################################################################
 # Preparations
 ##############################################################################
-cp corruptedzip ./${zipfile2}
+cp ${corruptedzip} ./${zipfile2}
+
+# Ensure variable ${tmpdir} has no trailing /
+tmpdir=${tmpdir#/}
+# Remove old ${tmdir} if exists
+if [ -d ${tmpdir} ]; then
+    rm -r ${tmpdir}
+fi
+mkdir "${tmpdir}"
 
 # Copy Hex files to tmp
 cp "testcases/testfiles/${hexfile}" "${tmpdir}/01.hex"
@@ -145,4 +155,3 @@ rm ${zipfile_failed}
 
 # Remove folder run_*
 rm -rf run_*
-
