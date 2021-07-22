@@ -29,7 +29,7 @@
 # Variables and definitions for this testcase
 ###############################################################################
 hexfile="testcases/testfiles/900sec-counter.hex"
-datafile="testcases/testfiles/900sec-counter.hex.data.terminted30s"
+datafile="testcases/testfiles/900sec-counter.hex.data.terminated30s"
 max_exec_time=30 # seconds
 md5file="checksum.md5"
 zipfile="01.zip"
