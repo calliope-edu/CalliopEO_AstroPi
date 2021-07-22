@@ -150,6 +150,10 @@ def readSerialData(ser):
                 return lines
             else:
                 if ans != "":
+                    # Add time stamp to beginning of line (Github issue #45)
+                    ts = datetime.now().strftime("%Y/%m/%d-%H:%M:%S.%f ")
+                    ans = ts + ans
+
                     # Append the new line only if this will not exceed
                     # the threshold MAX_DATA_SIZE
                     if (
