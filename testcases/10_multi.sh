@@ -5,17 +5,19 @@
 ###############################################################################
 
 # Description
-#   Execute the CalliopEO.py with a single zip archive nominally transmitting
-#   for 30 seconds.
+#   Execute the CalliopEO.py with two zip archives. One nominally transmitting
+#   for 5 seconds. One containing two nominally files.
 # Preparation
-#   Zip archive 05sec-counter.zip has to be provided
+#   Hex file 05sec-counter.hex has to be provided
+#   .data file 05sec-counter.hex.data has to be provided
 # Expected result
 #   CalliopEO.py returns code 0.
-#   CalliopEO.py renames 05sec-counter.zip to 05sec-counter.zip.done
+#   CalliopEO.py renames 01.zip and 02.zip to 01.zip.done and 02.zip.done
 #   CalliopEO.py created folder run_*
+#   Folder run_* contains three .data files
 #   MD5 checksums of files in run_* match
 # Necessary clean-up
-#   Remove created *.done and folder run_*/
+#   Remove created *.done and folder run_*/ and folder tmp/
 
 ###############################################################################
 # Variables and definitions for this testcase
@@ -50,8 +52,6 @@ fi
 # Preparations
 ##############################################################################
 
-# Copy zip archive in the main directory
-
 # Ensure variable ${tmpdir} has no trailing /
 tmpdir=${tmpdir#/}
 # Remove old ${tmdir} if exists
@@ -60,15 +60,19 @@ if [ -d ${tmpdir} ]; then
 fi
 mkdir "${tmpdir}"
 
+# Copy Hex files to tmp
 cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/01.hex"
 cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/02.hex"
 cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/03.hex"
+# Copy Data files to tmp
 cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/01.hex.data"
 cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/02.hex.data"
 cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/03.hex.data"
+# Create MD5 for copyed fies
 cd "${tmpdir}"
 find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "checksum.md5"
 cd ..
+# Create zip archives in the main directory
 zip -mqj "01.zip" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
 zip -mqj "02.zip" "${tmpdir}/03.hex"
 
