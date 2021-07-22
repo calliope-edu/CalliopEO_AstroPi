@@ -5,34 +5,36 @@
 ###############################################################################
 
 # Description
-#   Execute the CalliopEO.py with two zip archives. The first contains a
+#   Execute the CalliopEO.py with two hex files. The first is a
 #   valid hex file, but transmitting longer than the configured transmission
 #   timeout in the CalliopEO.py script (cli option
-#   --max-script-execution-time). The second zip contains a hex file
+#   --max-script-execution-time). The second hex file is
 #   transmitting well below this threshold. This testcase demonstrates that
-#   the CalliopEO.py script handles the time out and proceeds with the next
-#   zip archive.
+#   the CalliopEO.py script handles the timeout as defined by the cli
+#   parameter.
 # Preparation
-#   Provide zip archives 900sec-counter.zip and 30sec-counter.zip.
+#   Provide a zip file containing 900sec-counter.hex
 # Expected result
-#   CalliopEO.py returns code 0 in all runs with the two zip archives
+#   CalliopEO.py returns code 0
 #   CalliopEO.py renames the the .zip to .zip.done
-#   CalliopEO.py creates two folders run_*
-#   CalliopEO.py creates .data files in both folders run_*
-#   Second .data file has correct MD5 checksum
+#   CalliopEO.py creates one folder run_*
+#   CalliopEO.py creates a .data files in the folder run_*
+#   ToDo: verfify correct MD5 checksum
 #   Transmission of first hex file was terminated not later than 5 seconds
 #   after specified time
 # Necessary clean-up
-#   Remove created *.done and folders run_*/
+#   Remove created *.done, folder run_*/ and tmp files
 
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-zipfile1="testcases/testfiles/900sec-counter.zip"
+hexfile="testcases/testfiles/900sec-counter.hex"
+datafile="testcases/testfiles/900sec-counter.hex.data.terminted30s"
 max_exec_time=30 # seconds
-zipfile2="testcases/testfiles/30sec-counter.zip"
-md5file2="testcases/testfiles/30sec-counter.md5"
+md5file="checksum.md5"
+zipfile="01.zip"
 max_tdiff=5 # seconds
+tmpdir="./tmp"
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -62,24 +64,36 @@ fi
 # Preparations
 ##############################################################################
 
+# Copy zip archive in the main directory
+
+# Ensure variable ${tmpdir} has no trailing /
+tmpdir=${tmpdir#/}
+# Remove old ${tmdir} if exists
+if [ -d ${tmpdir} ]; then
+    rm -r ${tmpdir}
+fi
+mkdir "${tmpdir}"
+
+cp "${hexfile1}" "${tmpdir}/01.hex"
+
+cp "${datafile}" "${tmpdir}/01.hex.data"
+
+cd "${tmpdir}"
+find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "${md5file}"
+cd ..
+
+zip -mqj "${zipfile}" "${tmpdir}/01.hex"
+
 ##############################################################################
 # Execute testcase
 ###############################################################################
 
-# 1. Stage: Execute the CalliopEO.py script with the hex file transmitting too
-# long and set the --max-script-execution-time to ${max_exec_time}
-cp ${zipfile1} .
-s1start=$(date +%s)
-${cmd_calliope_script} --max-script-execution-time=${max_exec_time} | tee ~/output.txt.tmp
+# Execute the CalliopEO.py script
+# set the --max-script-execution-time to ${max_exec_time}
+${cmd_calliope_script} --max-script-execution-time=${max_exec_time} | tee ./output.txt.tmp
 # Save return code
-ret_code_1=$?
-s1end=$(date +%s)
-
-# 2. Stage: Execute the CalliopEO.py script with nominal zip file
-cp ${zipfile2} .
-${cmd_calliope_script}
-# Save return code
-ret_code_2=$?
+ret_code=$?
+end=$(date +%s)
 
 # Let things settle
 sync
@@ -90,79 +104,68 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code in all cases is 0 ... "
-if [[ ${ret_code1} -eq 0 &&  ${ret_code2} -eq 0 ]]; then
-    echo "PASSED"
+echo -n "Check: Return code is 0 ... "
+if [[ ${ret_code} -eq 0 ]]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Renamed .zip to .zip.done?
-zipfile1_main=$(basename ${zipfile1})
-zipfile1_done="${zipfile1_main}.done"
-zipfile2_main=$(basename ${zipfile2})
-zipfile2_done="${zipfile2_main}.done"
+zipfile_done="${zipfile}.done"
 echo -n "Check: ZIP archive renamed to .done ... "
-if [[ ! -e "${zipfile1_main}" && -e "${zipfile1_done}" && ! -e "${zipfile2_main}" && -e "${zipfile2_done}" ]]; then
-    echo "PASSED"
+if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Created two folders run_*?
+# Created one folders run_*?
 run_folders=($(find . -type d -ipath "./run_*"))
 echo -n "Check: Folder run_* created ... "
-if [ ${#run_folders[@]} -eq 2 ]; then
-    echo "PASSED"
+if [ ${#run_folders[@]} -eq 1 ]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Created two .data files in the two folders run_*?
-data_files=($(find ./run_* -name "*.data"))
+# Created one .data files in the folder run_*?
+data_files=($(ls -1 ./run_*/*.data))
 echo -n "Check: Created two .data files ... "
-if [ ${#data_files[@]} -eq 2 ]; then
-    echo "PASSED"
+if [ ${#data_files[@]} -eq 1 ]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Verify content of .data file after execution of 30sec-counter.hex
-echo -n "Check: Verify content of .data file ... "
-# Determine the run_* folder to perform the verification (the folder run_*
-# containing file ${zipfile2_hex})
-zipfile2_hex=$(basename "${zipfile2%.zip}.hex")
-found_here=($(find . -maxdepth 2 -iname ${zipfile2_hex}))
-if [ ${#found_here[@]} -eq 1 ]; then
-    verify_here=$(dirname ${found_here[0]}) # path name only
-    cp ${md5file2} ${verify_here}/.
-    cd ${verify_here}
-    md5sum -c $(basename ${md5file2}) >> /dev/null
-    if [ $? -eq 0 ]; then
-        echo "PASSED"
-    else
-        echo "NOT PASSED"
-    fi
-    cd ..
+# Check md5sums for hex and data files
+run_folder=$(find . -type d -ipath "./run_*")
+mv "${tmpdir}/${md5file}" ${run_folder}/.
+cd ${run_folder}
+echo -n "Check: MD5 checksum in folder ${run_folder} ... "
+md5sum -c "${md5file}" >> /dev/null
+if [ $? -eq 0 ]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
+cd ..
 
 # Extract stop time from output of CalliopEO.py (YYYY/MM/DD-HH:MM:SS)
-stop_time=$(cat ~/output.txt.tmp | grep "Will stop @" | awk '{print $7}')
+stop_time=$(cat ./output.txt.tmp | grep "Will stop @" | head -1 | awk '{print $7}')
 # Re-format ${stop_time}: MM/DD/YYYY HH:MM:SS
 stop_time2="${stop_time:5:2}/${stop_time:8:2}/${stop_time:0:4} ${stop_time:11:8}"
 # Convert ${stop_time} to unix time stamp
 stop_time_unix=$(date -d "${stop_time2}" +%s)
-# Calculate the difference between s1end and stop_time_unix (seconds)
-tdiff=$((s1end - stop_time_unix))
+# Calculate the difference between ${end} and ${stop_time_unix} (seconds)
+tdiff=$((end - stop_time_unix))
 tdiff=${tdiff#-} # absolute value
 # Time difference less-equal ${max_tdiff}?
 echo -n "Check: Transmission terminated in time ... "
 if [ "${tdiff}" -le "${max_tdiff}" ]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 ###############################################################################
@@ -170,10 +173,13 @@ fi
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile1_done} ${zipfile2_done}
+#rm ${zipfile_done}
 
 # Remove folder run_*
-rm -rf run_*
+#rm -rf run_*
 
 # Remove temporary file with script output
-rm ~/output.txt.tmp
+#rm ./output.txt.tmp
+
+# Remove tmp dir
+#rm -rf "${tmpdir}"
