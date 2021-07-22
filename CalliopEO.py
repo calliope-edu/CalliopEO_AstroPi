@@ -152,9 +152,14 @@ def readSerialData(ser):
                 return lines
             else:
                 if ans != "":
-                    # Add time stamp to beginning of line (Github issue #45)
-                    ts = datetime.now().strftime("%Y/%m/%d-%H:%M:%S.%f ")
-                    ans = ts + ans
+                    # Add time stamp to beginning of line (Github issue #45).
+                    # If --fake-timestamp is set, then set the time stamp to
+                    # constant value 2000/01/01-00:00:00.000000
+                    if args.fake_timestamp:
+                        ts = "2000/01/01-00:00:00.000000"
+                    else:
+                        ts = datetime.now().strftime("%Y/%m/%d-%H:%M:%S.%f")
+                    ans = ts + " " + ans
 
                     # Append the new line only if this will not exceed
                     # the threshold MAX_DATA_SIZE
@@ -388,6 +393,15 @@ if __name__ == "__main__":
             default = 0,
             dest = 'max_script_execution_time',
             type=int,
+            )
+    parser.add_argument(
+            '--fake-timestamp',
+            action = 'store_true',
+            dest = 'fake_timestamp',
+            help = """
+            Set timestamp in output to constant value
+            2000/01/01-00:00:00.000000
+            """,
             )
     args = parser.parse_args()
     main(args)

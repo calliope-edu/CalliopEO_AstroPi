@@ -28,8 +28,8 @@
 # Variables and definitions for this testcase
 ###############################################################################
 hexfile1="testcases/testfiles/900sec-counter.hex"
-datafile1="testcases/testfiles/900sec-counter.hex.data.terminated30s"
-max_exec_time=30 # seconds
+datafile1="testcases/testfiles/900sec-counter.hex.data.terminated35s"
+max_exec_time=35 # seconds
 hexfile2="testcases/testfiles/05sec-counter.hex"
 datafile2="testcases/testfiles/05sec-counter.hex.data"
 zipfile="01.zip"
@@ -92,7 +92,9 @@ zip -mqj "${zipfile}" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
 
 # Execute the CalliopEO.py script
 # set the --max-script-execution-time to ${max_exec_time}
-${cmd_calliope_script} --max-script-execution-time=${max_exec_time} | tee ./output.txt.tmp
+${cmd_calliope_script} \
+    --fake-timestamp \
+    --max-script-execution-time=${max_exec_time} | tee ./output.txt.tmp
 # Save return code
 ret_code=$?
 

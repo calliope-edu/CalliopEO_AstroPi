@@ -36,8 +36,8 @@ tmpdir="./tmp"
 ###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
-echo "Test: Handle data limit treshold"
-echo "--------------------------------"
+echo "Test: Handle data limit threshold"
+echo "---------------------------------"
 echo ""
 # Make sure, Calliope is connected to the Astro Pi
 ans=""
@@ -86,7 +86,7 @@ zip -mqj "${zipfile}" "${tmpdir}/01.hex"
 ###############################################################################
 
 
-${cmd_calliope_script} --max-data-size=${max_data_size}
+${cmd_calliope_script} --fake-timestamp --max-data-size=${max_data_size}
 # Save return code
 ret_code_1=$?
 
