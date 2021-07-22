@@ -70,8 +70,8 @@ cp "testcases/testfiles/05sec-counter.hex.data" "tmp/03.hex.data"
 cd "tmp"
 find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "checksum.md5"
 cd ..
-zip -mqj "01.zip" "tmp/03.hex"
-zip -mqj "02.zip" "tmp/01.hex" "tmp/02.hex"
+zip -mqj "01.zip" "tmp/01.hex" "tmp/02.hex"
+zip -mqj "02.zip" "tmp/03.hex"
 
 ##############################################################################
 # Execute testcase
