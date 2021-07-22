@@ -20,11 +20,7 @@
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-# zipfile="testcases/testfiles/multi.zip"
-# zipfile2="02.zip"
-# md5file="testcases/testfiles/multi.md5"
-
-
+tmpdir="./tmp"
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -55,23 +51,26 @@ fi
 ##############################################################################
 
 # Copy zip archive in the main directory
-#cp ${zipfile} .
-# mv ${zipfile2} .
 
-rm -r "tmp"
-mkdir "tmp"
+# Ensure variable ${tmpdir} has no trailing /
+tmpdir=${tmpdir#/}
+# Remove old ${tmdir} if exists
+if [ -d ${tmpdir} ]; then
+    rm -r ${tmpdir}
+fi
+mkdir "${tmpdir}"
 
-cp "testcases/testfiles/05sec-counter.hex" "tmp/01.hex"
-cp "testcases/testfiles/05sec-counter.hex" "tmp/02.hex"
-cp "testcases/testfiles/05sec-counter.hex" "tmp/03.hex"
-cp "testcases/testfiles/05sec-counter.hex.data" "tmp/01.hex.data"
-cp "testcases/testfiles/05sec-counter.hex.data" "tmp/02.hex.data"
-cp "testcases/testfiles/05sec-counter.hex.data" "tmp/03.hex.data"
-cd "tmp"
+cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/01.hex"
+cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/02.hex"
+cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/03.hex"
+cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/01.hex.data"
+cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/02.hex.data"
+cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/03.hex.data"
+cd "${tmpdir}"
 find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "checksum.md5"
 cd ..
-zip -mqj "01.zip" "tmp/01.hex" "tmp/02.hex"
-zip -mqj "02.zip" "tmp/03.hex"
+zip -mqj "01.zip" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
+zip -mqj "02.zip" "${tmpdir}/03.hex"
 
 ##############################################################################
 # Execute testcase
@@ -147,4 +146,4 @@ rm ${zipfile2_done}
 # Remove folder run_*
 rm -rf run_*
 
-rm -r "tmp"
+rm -r "${tmpdir}"
