@@ -5,26 +5,17 @@
 ###############################################################################
 
 # Description
-#   Execute the CalliopEO.py with three zip archives. The first contains a
-#   valid hex file, the second one contains a corrupted zip file. The last
-#   zip file contains a valid hex, for simplicity identical to the first hex
-#   file. In the second case, the Calliope Mini will execute the previous
-#   valid hex file. The corrupted zip file is renamed to .zip.failed and the
-#   corresponding run_* folder is empty. The third zip archive is executed
-#   nominally.
+#   Execute the CalliopEO.py with a corrupted zip archive. The corrupted zip
+#   file is renamed to .zip.failed and the corresponding run_* folder is
+#   empty.
 # Preparation
-#   Provide zip archives 30sec-counter.zip (2x) and not.a.zip.
+#   Provide zip archive not.a.zip.
 # Expected result
-#   CalliopEO.py returns code 0 in all runs with the three zip archives
-#   CalliopEO.py renames the valid .zip to .zip.done
+#   CalliopEO.py returns code 0
 #   CalliopEO.py renames the corrupted .zip to .zip.failed
-#   CalliopEO.py creates in total three folders run_*
-#   CalliopEO.py creates a .data files in the first and last folder run_*
-#   The seconds folder run_* is empty
-#   The two .data files in the first and last folders run_* have the same
-#   content.
+#   The folder run_* is empty
 # Necessary clean-up
-#   Remove created *.done, *.failed and folders run_*/
+#   Remove created *.failed and folder run_*/
 
 ###############################################################################
 # Variables and definitions for this testcase
