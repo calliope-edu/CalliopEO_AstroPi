@@ -9,7 +9,7 @@
 #   for 5 seconds. One containing two nominally files.
 # Preparation
 #   Hex file 05sec-counter.hex has to be provided
-#   .data file 05sec-counter.hex.data has to be provided
+#   Data file 05sec-counter.hex.data has to be provided
 # Expected result
 #   CalliopEO.py returns code 0.
 #   CalliopEO.py renames 01.zip and 02.zip to 01.zip.done and 02.zip.done
@@ -27,7 +27,7 @@ tmpdir="./tmp"
 ###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
-echo -e "Test: Multi, nominal ZIP archive provided"
+echo -e "Test: Multi, provice two Zip containing three Hex"
 echo -e "-------------------------------------------"
 echo -e ""
 # Make sure, Calliope is connected to the Astro Pi

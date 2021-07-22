@@ -8,20 +8,20 @@
 #   Execute the CalliopEO.py with a single zip archive nominally transmitting
 #   for 30 seconds.
 # Preparation
-#   Zip archive 30sec-counter.zip has to be provided
+#   Hex file 30sec-counter.hex has to be provided
+#   Data file 30sec-counter.hex.data has to be provided
 # Expected result
 #   CalliopEO.py returns code 0.
-#   CalliopEO.py renames 30sec-counter.zip to 30sec-counter.zip.done
+#   CalliopEO.py renames 01.zip to 01.zip.done
 #   CalliopEO.py created folder run_*
 #   MD5 checksums of files in run_* match
 # Necessary clean-up
-#   Remove created *.done and folder run_*/
+#   Remove created *.done and folder run_*/ and folder tmp/
 
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-zipfile="testcases/testfiles/30sec-counter.zip"
-md5file="testcases/testfiles/30sec-counter.md5"
+tmpdir="./tmp"
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -51,8 +51,24 @@ fi
 # Preparations
 ##############################################################################
 
-# Copy zip archive in the main directory
-cp ${zipfile} .
+# Ensure variable ${tmpdir} has no trailing /
+tmpdir=${tmpdir#/}
+# Remove old ${tmdir} if exists
+if [ -d ${tmpdir} ]; then
+    rm -r ${tmpdir}
+fi
+mkdir "${tmpdir}"
+
+# Copy Hex files to tmp
+cp "testcases/testfiles/30sec-counter.hex" "${tmpdir}/01.hex"
+# Copy Data files to tmp
+cp "testcases/testfiles/30sec-counter.hex.data" "${tmpdir}/01.hex.data"
+# Create MD5 for copyed fies
+cd "${tmpdir}"
+find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "checksum.md5"
+cd ..
+# Create zip archives in the main directory
+zip -mqj "01.zip" "${tmpdir}/01.hex"
 
 ##############################################################################
 # Execute testcase
@@ -79,8 +95,8 @@ else
     echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Renamed 30sec-counter.zip to 30sec-counter.done?
-zipfile_main=$(basename ${zipfile})
+# Renamed 01.zip to 01.zip.done?
+zipfile_main="01.zip"
 zipfile_done="${zipfile_main}.done"
 echo -n "Check 2/4: ZIP archive renamed to .done ... "
 if [[ ! -e "${zipfile_main}" && -e "${zipfile_done}" ]]; then
@@ -99,10 +115,10 @@ fi
 
 # Check md5sums for hex and data file
 run_folder=$(find . -type d -ipath "./run_*")
-cp ${md5file} ${run_folder}/.
+mv "${tmpdir}/checksum.md5" ${run_folder}/.
 cd ${run_folder}
 echo -n "Check 4/4: MD5 checksum in folder ${run_folder} ... "
-md5sum -c $(basename ${md5file}) >> /dev/null
+md5sum -c "checksum.md5" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
