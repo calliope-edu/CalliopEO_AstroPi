@@ -68,11 +68,11 @@ ret_code=$?
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code of script is 0 ... "
+echo -n "Check 1/5: Return code of script is 0 ... "
 if [[ ${ret_code} -eq 0 ]]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Renamed 30sec-counter.zip to 30sec-counter.done?
@@ -86,32 +86,32 @@ else
 fi
 
 # Created folder run_*?
-echo -n "Check: Folder run_* created ... "
+echo -n "Check 3/5: Folder run_* created ... "
 if [ $(find . -type d -ipath "./run_*" | wc -l) -eq 1 ]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Created two .data files in the folder run_*?
 data_files=($(find ./run_* -name "*.data"))
-echo -n "Check: Created two .data files ... "
+echo -n "Check 4/5: Created two .data files ... "
 if [ ${#data_files[@]} -eq 2 ]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Check md5sums for hex and data files
 run_folder=$(find . -type d -ipath "./run_*")
 cp ${md5file} ${run_folder}/.
 cd ${run_folder}
-echo -n "Check: MD5 checksum in folder ${run_folder} ... "
-md5sum -c $(basename ${md5file}) >> /dev/null
+echo -n "Check 5/5: MD5 checksum in folder ${run_folder} ... "
+md5sum -c "tmp/checksum.md5" >> /dev/null
 if [ $? -eq 0 ]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 cd ..
 

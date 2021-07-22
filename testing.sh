@@ -3,6 +3,11 @@
 # This bash script is used to perform testing on the
 # Python script CalliopEO.py.
 
+# Colors for coloured output
+R='\033[0;31m'
+G='\033[0;32m'
+NC='\033[0m' # No Color
+
 # Cd into the directory where testing.sh is located in the case
 # this script was called from somewhere else.
 cd $(dirname ${0})
