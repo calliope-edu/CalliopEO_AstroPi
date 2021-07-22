@@ -68,7 +68,7 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code is 0 ... "
+echo -n "Check 1/3: Return code is 0 ... "
 if [[ ${ret_code} -eq 0 ]]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -78,7 +78,7 @@ fi
 # Renamed .zip to .zip.done or zip.failed?
 zipfile_main=$(basename ${zipfile})
 zipfile_failed="${zipfile_main}.failed"
-echo -n "Check: ZIP archive renamed to .failed ... "
+echo -n "Check 2/3: ZIP archive renamed to .failed ... "
 if [[ ! -e "${zipfile_main}" && -e "${zipfile_failed}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -86,7 +86,7 @@ else
 fi
 
 # Created an empty folder run_*?
-echo -n "Check: Empty folder run_* created ... "
+echo -n "Check 3/3: Empty folder run_* created ... "
 run_folders=($(find . -type d -ipath "./run_*"))
 if [ ${#run_folders[@]} -eq 1 ]; then
     if [ $(find ${run_folders[0]} -type f | wc -l) -eq 0 ]; then
