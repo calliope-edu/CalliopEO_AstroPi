@@ -29,8 +29,8 @@
 # Variables and definitions for this testcase
 ###############################################################################
 hexfile="testcases/testfiles/900sec-counter.hex"
-datafile="testcases/testfiles/900sec-counter.hex.data.terminted30s"
-max_exec_time=30 # seconds
+datafile="testcases/testfiles/900sec-counter.hex.data.terminated35s"
+max_exec_time=35 # seconds
 md5file="checksum.md5"
 zipfile="01.zip"
 max_tdiff=5 # seconds
@@ -90,7 +90,9 @@ zip -mqj "${zipfile}" "${tmpdir}/01.hex"
 
 # Execute the CalliopEO.py script
 # set the --max-script-execution-time to ${max_exec_time}
-${cmd_calliope_script} --max-script-execution-time=${max_exec_time} | tee ./output.txt.tmp
+${cmd_calliope_script} \
+    --fake-timestamp \
+    --max-script-execution-time=${max_exec_time} | tee ./output.txt.tmp
 # Save return code
 ret_code=$?
 end=$(date +%s)
@@ -173,13 +175,13 @@ fi
 ###############################################################################
 
 # Remove .done file
-#rm ${zipfile_done}
+rm ${zipfile_done}
 
 # Remove folder run_*
-#rm -rf run_*
+rm -rf run_*
 
 # Remove temporary file with script output
-#rm ./output.txt.tmp
+rm ./output.txt.tmp
 
 # Remove tmp dir
-#rm -rf "${tmpdir}"
+rm -rf "${tmpdir}"
