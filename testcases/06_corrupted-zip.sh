@@ -29,9 +29,7 @@
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-zipfile1="testcases/testfiles/30sec-counter.zip"
-zipfile2="testcases/testfiles/not.a.zip"
-zipfile3="testcases/testfiles/30sec-counter2.zip"
+zipfile="testcases/testfiles/not.a.zip"
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -60,28 +58,15 @@ fi
 ##############################################################################
 # Preparations
 ##############################################################################
+cp ${zipfile} .
 
 ##############################################################################
 # Execute testcase
 ###############################################################################
 
-# 1. Stage: Execute the CalliopEO.py script with nominal hex file
-cp ${zipfile1} .
 ${cmd_calliope_script}
 # Save return code
-ret_code_1=$?
-
-# 2. Stage: Execute the CalliopEO.py script with corrupted zip file
-cp ${zipfile2} .
-${cmd_calliope_script}
-# Save return code
-ret_code_2=$?
-
-# 3. Stage: Execute the CalliopEO.py script again with nominal zip file
-cp ${zipfile3} .
-${cmd_calliope_script}
-# Save return code
-ret_code_3=$?
+ret_code=$?
 
 # Let things settle
 sync
@@ -92,56 +77,34 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code in all three cases is 0 ... "
-if [[ ${ret_code1} -eq 0 &&  ${ret_code2} -eq 0 &&  ${ret_code3} -eq 0 ]]; then
-    echo "PASSED"
+echo -n "Check: Return code is 0 ... "
+if [[ ${ret_code} -eq 0 ]]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Renamed .zip to .zip.done or zip.failed?
-zipfile1_main=$(basename ${zipfile1})
-zipfile1_done="${zipfile1_main}.done"
-zipfile2_main=$(basename ${zipfile2})
-zipfile2_failed="${zipfile2_main}.failed"
-zipfile3_main=$(basename ${zipfile3})
-zipfile3_done="${zipfile3_main}.done"
-echo -n "Check: ZIP archive renamed to .done/.failed ... "
-if [[ ! -e "${zipfile1_main}" && -e "${zipfile1_done}" && ! -e "${zipfile2_main}" && -e "${zipfile2_failed}" && ! -e "${zipfile3_main}" && -e "${zipfile3_done}" ]]; then
-    echo "PASSED"
+zipfile_main=$(basename ${zipfile})
+zipfile_failed="${zipfile_main}.failed"
+echo -n "Check: ZIP archive renamed to .failed ... "
+if [[ ! -e "${zipfile_main}" && -e "${zipfile_failed}" ]]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Created three folders run_*?
-echo -n "Check: Folder run_* created ... "
-if [ $(find . -type d -ipath "./run_*" | wc -l) -eq 3 ]; then
-    echo "PASSED"
-else
-    echo "NOT PASSED"
-fi
-
-# Created two .data files in the two folders run_*?
-data_files=($(find ./run_* -name "*.data"))
-echo -n "Check: Created to .data files ... "
-if [ ${#data_files[@]} -eq 2 ]; then
-    echo "PASSED"
-else
-    echo "NOT PASSED"
-fi
-
-# The to .data files have same content?
-# Use command cmp to compare the files
-echo -n "Check: The two .data files have same content ... "
-if [ ${#data_files[@]} -eq 2 ]; then
-    cmp --silent ${data_files[@]}
-    if [ $? -eq 0 ]; then
-        echo "PASSED"
+# Created an empty folder run_*?
+echo -n "Check: Empty folder run_* created ... "
+run_folders=($(find . -type d -ipath "./run_*"))
+if [ ${#run_folders[@]} -eq 1 ]; then
+    if [ $(find ${run_folders[0]} -type f | wc -l) -eq 0 ]; then
+        echo -e "${G}PASSED${NC}"
     else
-        echo "NOT PASSED"
+        echo -e "${R}NOT PASSED${NC}"
     fi
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 ###############################################################################
@@ -149,7 +112,7 @@ fi
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile1_done} ${zipfile2_failed} ${zipfile3_done}
+rm ${zipfile_failed}
 
 # Remove folder run_*
 rm -rf run_*
