@@ -82,7 +82,7 @@ cd ..
 zip -mqj "01.zip" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
 
 # Execute the CalliopEO.py script
-${cmd_calliope_script}
+${cmd_calliope_script} --fake-timestamp
 # Save return code
 ret_code=$?
 

@@ -81,7 +81,7 @@ zip -mqj "02.zip" "${tmpdir}/03.hex"
 ###############################################################################
 
 # Execute the CalliopEO.py script
-${cmd_calliope_script}
+${cmd_calliope_script} --fake-timestamp
 # Save return code
 ret_code=$?
 

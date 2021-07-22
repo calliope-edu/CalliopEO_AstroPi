@@ -90,7 +90,7 @@ zip -mqj "${zipfile}" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
 ###############################################################################
 
 
-${cmd_calliope_script} --max-data-size=${max_data_size}
+${cmd_calliope_script} --fake-timestamp --max-data-size=${max_data_size}
 # Save return code
 ret_code_1=$?
 
