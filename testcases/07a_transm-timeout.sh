@@ -74,7 +74,7 @@ if [ -d ${tmpdir} ]; then
 fi
 mkdir "${tmpdir}"
 
-cp "${hexfile1}" "${tmpdir}/01.hex"
+cp "${hexfile}" "${tmpdir}/01.hex"
 
 cp "${datafile}" "${tmpdir}/01.hex.data"
 
