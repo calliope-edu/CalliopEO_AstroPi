@@ -20,15 +20,18 @@
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-zipfile="testcases/testfiles/multi.zip"
-md5file="testcases/testfiles/multi.md5"
+# zipfile="testcases/testfiles/multi.zip"
+# zipfile2="02.zip"
+# md5file="testcases/testfiles/multi.md5"
+
+
 
 ###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
-echo "Test: Multi, nominal ZIP archive provided"
-echo "-------------------------------------------"
-echo ""
+echo -e "Test: Multi, nominal ZIP archive provided"
+echo -e "-------------------------------------------"
+echo -e ""
 # Make sure, Calliope is connected to the Astro Pi
 ans=""
 while [[ ! ${ans} =~ [Yy] ]]; do
@@ -39,11 +42,11 @@ done
 # Exit script, if there is a ZIP archive or folder run_* in the main folder
 ##############################################################################
 if [ $(find . -maxdepth 1 -iname *.zip | wc -l) -ne 0 ]; then
-    echo "ERROR: Main folder contains zip archive. Exiting."
+    echo -e "${R}ERROR: ${NC}Main folder contains zip archive. Exiting."
     exit 1
 fi
 if [ $(find . -type d -ipath "./run_*" | wc -l) -ne 0 ]; then
-    echo "ERROR: Main folder contains folder run_*. Exiting."
+    echo -e "${R}ERROR: ${NC}Main folder contains folder run_*. Exiting."
     exit 1
 fi
 
@@ -52,7 +55,21 @@ fi
 ##############################################################################
 
 # Copy zip archive in the main directory
-cp ${zipfile} .
+#cp ${zipfile} .
+# mv ${zipfile2} .
+
+rm -r "tmp"
+mkdir "tmp"
+
+cp "testcases/testfiles/30sec-counter.hex" "tmp/01.hex"
+cp "testcases/testfiles/30sec-counter.hex" "tmp/02.hex"
+cp "testcases/testfiles/30sec-counter.hex" "tmp/03.hex"
+cp "testcases/testfiles/30sec-counter.hex.data" "tmp/01.hex.data"
+cp "testcases/testfiles/30sec-counter.hex.data" "tmp/02.hex.data"
+cp "testcases/testfiles/30sec-counter.hex.data" "tmp/03.hex.data"
+find "tmp/" -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "tmp/checksum.md5"
+zip -mqj "01.zip" "tmp/03.hex"
+zip -mqj "02.zip" "tmp/01.hex" "tmp/02.hex"
 
 ##############################################################################
 # Execute testcase
@@ -76,13 +93,15 @@ else
 fi
 
 # Renamed 30sec-counter.zip to 30sec-counter.done?
-zipfile_main=$(basename ${zipfile})
-zipfile_done="${zipfile_main}.done"
-echo -n "Check: ZIP archive renamed to .done ... "
-if [[ ! -e "${zipfile_main}" && -e "${zipfile_done}" ]]; then
-    echo "PASSED"
+zipfile1_main="01.zip"
+zipfile1_done="${zipfile_main}.done"
+zipfile2_main="02.zip"
+zipfile2_done="${zipfile_main}.done"
+echo -n "Check 2/5: ZIP archive renamed to .done ... "
+if [[ ! -e "${zipfile1_main}" && -e "${zipfile1_done}" && -e "${zipfile2_main}" && -e "${zipfile2_done}" ]]; then
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Created folder run_*?
@@ -104,7 +123,7 @@ fi
 
 # Check md5sums for hex and data files
 run_folder=$(find . -type d -ipath "./run_*")
-cp ${md5file} ${run_folder}/.
+# cp ${md5file} ${run_folder}/.
 cd ${run_folder}
 echo -n "Check 5/5: MD5 checksum in folder ${run_folder} ... "
 md5sum -c "tmp/checksum.md5" >> /dev/null
@@ -125,3 +144,4 @@ rm ${zipfile_done}
 # Remove folder run_*
 rm -rf run_*
 
+rm -r "tmp"
