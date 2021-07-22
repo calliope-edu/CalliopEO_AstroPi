@@ -33,7 +33,7 @@ done
 # Exit script, if there is a ZIP archive in the main folder
 ##############################################################################
 if [ $(find . -maxdepth 1 -iname *.zip | wc -l) -ne 0 ]; then
-    echo "ERROR: Main folder contains zip archive. Exiting."
+    echo -e "${R}ERROR:${NC} Main folder contains zip archive. Exiting."
     exit 1
 fi
 
@@ -55,11 +55,11 @@ ret_code=$?
 ###############################################################################
 
 # Return code of script is 12?
-echo -n "Check: Return code of script is 12 ... "
+echo -n "Check 1/1: Return code of script is 12 ... "
 if [[ ${ret_code} -eq 12 ]]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 ###############################################################################

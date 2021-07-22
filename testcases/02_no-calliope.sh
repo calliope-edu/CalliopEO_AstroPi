@@ -50,11 +50,11 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 10 or 11?
-echo -n "Check: Return code of script is 10 or 11 ... "
+echo -n "Check 1/1: Return code of script is 10 or 11 ... "
 if [[ ${ret_code} -eq 10 || ${ret_code} -eq 11 ]]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 ###############################################################################

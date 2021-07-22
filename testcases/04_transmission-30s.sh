@@ -39,11 +39,11 @@ done
 # Exit script, if there is a ZIP archive or folder run_* in the main folder
 ##############################################################################
 if [ $(find . -maxdepth 1 -iname *.zip | wc -l) -ne 0 ]; then
-    echo "ERROR: Main folder contains zip archive. Exiting."
+    echo -e "${R}ERROR:${NC} Main folder contains zip archive. Exiting."
     exit 1
 fi
 if [ $(find . -type d -ipath "./run_*" | wc -l) -ne 0 ]; then
-    echo "ERROR: Main folder contains folder run_*. Exiting."
+    echo -e "${R}ERROR:${NC} Main folder contains folder run_*. Exiting."
     exit 1
 fi
 
@@ -72,41 +72,41 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code of script is 0 ... "
+echo -n "Check 1/4: Return code of script is 0 ... "
 if [[ ${ret_code} -eq 0 ]]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Renamed 30sec-counter.zip to 30sec-counter.done?
 zipfile_main=$(basename ${zipfile})
 zipfile_done="${zipfile_main}.done"
-echo -n "Check: ZIP archive renamed to .done ... "
+echo -n "Check 2/4: ZIP archive renamed to .done ... "
 if [[ ! -e "${zipfile_main}" && -e "${zipfile_done}" ]]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Created folder run_*?
-echo -n "Check: Folder run_* created ... "
+echo -n "Check 3/4: Folder run_* created ... "
 if [ $(find . -type d -ipath "./run_*" | wc -l) -eq 1 ]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 
 # Check md5sums for hex and data file
 run_folder=$(find . -type d -ipath "./run_*")
 cp ${md5file} ${run_folder}/.
 cd ${run_folder}
-echo -n "Check: MD5 checksum in folder ${run_folder} ... "
+echo -n "Check 4/4: MD5 checksum in folder ${run_folder} ... "
 md5sum -c $(basename ${md5file}) >> /dev/null
 if [ $? -eq 0 ]; then
-    echo "PASSED"
+    echo -e "${G}PASSED${NC}"
 else
-    echo "NOT PASSED"
+    echo -e "${R}NOT PASSED${NC}"
 fi
 cd ..
 
