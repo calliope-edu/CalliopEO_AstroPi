@@ -124,7 +124,7 @@ fi
 
 # Check md5sums for hex and data files
 run_folder=$(find . -type d -ipath "./run_*")
-mv "tmp/checksum.md5" ${run_folder}/.
+mv "${tmpdir}/checksum.md5" ${run_folder}/.
 cd ${run_folder}
 echo -n "Check 5/5: MD5 checksum in folder ${run_folder} ... "
 md5sum -c "checksum.md5" >> /dev/null
