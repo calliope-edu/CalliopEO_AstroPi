@@ -112,10 +112,10 @@ else
     echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Created two .data files in the folder run_*?
+# Created three .data files in the folder run_*?
 data_files=($(find ./run_* -name "*.data"))
-echo -n "Check 4/5: Created two .data files ... "
-if [ ${#data_files[@]} -eq 2 ]; then
+echo -n "Check 4/5: Created three .data files ... "
+if [ ${#data_files[@]} -eq 3 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
@@ -126,7 +126,7 @@ run_folder=$(find . -type d -ipath "./run_*")
 # cp ${md5file} ${run_folder}/.
 cd ${run_folder}
 echo -n "Check 5/5: MD5 checksum in folder ${run_folder} ... "
-md5sum -c "tmp/checksum.md5" >> /dev/null
+md5sum -c "../tmp/checksum.md5" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
