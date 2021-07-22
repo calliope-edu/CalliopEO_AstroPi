@@ -22,6 +22,10 @@
 # Variables and definitions for this testcase
 ###############################################################################
 tmpdir="./tmp"
+zipfile="01.zip"
+hexfile="30sec-counter.hex"
+datafile="30sec-counter.hex.data"
+checksumfile="checksum.md5"
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -60,15 +64,15 @@ fi
 mkdir "${tmpdir}"
 
 # Copy Hex files to tmp
-cp "testcases/testfiles/30sec-counter.hex" "${tmpdir}/01.hex"
+cp "testcases/testfiles/${hexfile}" "${tmpdir}/01.hex"
 # Copy Data files to tmp
-cp "testcases/testfiles/30sec-counter.hex.data" "${tmpdir}/01.hex.data"
+cp "testcases/testfiles/${datafile}" "${tmpdir}/01.hex.data"
 # Create MD5 for copyed fies
 cd "${tmpdir}"
-find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "checksum.md5"
+find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "${checksumfile}"
 cd ..
 # Create zip archives in the main directory
-zip -mqj "01.zip" "${tmpdir}/01.hex"
+zip -mqj "${zipfile}" "${tmpdir}/01.hex"
 
 ##############################################################################
 # Execute testcase
@@ -96,10 +100,9 @@ else
 fi
 
 # Renamed 01.zip to 01.zip.done?
-zipfile_main="01.zip"
-zipfile_done="${zipfile_main}.done"
+zipfile_done="${zipfile}.done"
 echo -n "Check 2/4: ZIP archive renamed to .done ... "
-if [[ ! -e "${zipfile_main}" && -e "${zipfile_done}" ]]; then
+if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
@@ -115,10 +118,10 @@ fi
 
 # Check md5sums for hex and data file
 run_folder=$(find . -type d -ipath "./run_*")
-mv "${tmpdir}/checksum.md5" ${run_folder}/.
+mv "${tmpdir}/${checksumfile}" ${run_folder}/.
 cd ${run_folder}
 echo -n "Check 4/4: MD5 checksum in folder ${run_folder} ... "
-md5sum -c "checksum.md5" >> /dev/null
+md5sum -c "${checksumfile}" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
