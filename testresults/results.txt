@@ -1,0 +1,377 @@
+################## TESTING CALLIOPEO.PY ##################
+Test started: Wed 24 Feb 21:45:23 UTC 2021
+Execute testcase "01_collect-sysinfo.sh"? [y/N] 
+  Hostname: astropiir
+  User: calliope
+  Group membership: calliope dialout
+  Working directory: /home/calliope
+  System info: Linux astropiir 5.10.17-v7+ #1421 SMP Thu May 27 13:59:01 BST 2021 armv7l GNU/Linux
+  OS Release:
+    PRETTY_NAME="Raspbian GNU/Linux 10 (buster)"
+    NAME="Raspbian GNU/Linux"
+    VERSION_ID="10"
+    VERSION="10 (buster)"
+    VERSION_CODENAME=buster
+    ID=raspbian
+    ID_LIKE=debian
+    HOME_URL="http://www.raspbian.org/"
+    SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
+    BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
+
+  Python3 version: Python 3.7.3
+  Installed Python3 modules
+    Package         Version
+    --------------- ---------
+    asn1crypto      0.24.0
+    bcrypt          3.2.0
+    birthday        1.1.1
+    blkinfo         0.1.2
+    cffi            1.14.5
+    colorzero       1.1
+    cryptography    2.6.1
+    evdev           1.1.2
+    GDAL            2.4.0
+    gpiozero        1.6.2
+    logzero         1.6.3
+    mcpcron         2.0.7
+    menu            1.0.4
+    numpy           1.16.2
+    olefile         0.46
+    paramiko        2.7.2
+    picamera        1.13
+    Pillow          5.4.1
+    pip             18.1
+    pisense         0.2
+    profileswitcher 1.2.1
+    pycparser       2.20
+    PyGObject       3.30.4
+    PyNaCl          1.4.0
+    pyserial        3.5
+    pysftp          0.2.9
+    python-apt      1.8.4.3
+    pyxdg           0.25
+    RPi.GPIO        0.7.0
+    RTIMULib        7.2.1
+    SecretStorage   2.3.1
+    selftest        2.1.4
+    sense-hat       2.3.0
+    setuptools      40.8.0
+    six             1.12.0
+    smbus           1.1.post2
+    spidev          3.5
+    statusserver    2.0.0
+    stealthmode     1.1.0
+    ws4py           0.5.1
+
+Execute testcase "02_no-calliope.sh"? [y/N] 
+Test: No Calliope attached
+---------------------------------------
+
+Confirm, Calliope Mini is NOT attached to USB [y] -=# CalliopEO #=-
+mini not found
+Check: Return code of script is 10 or 11 ... PASSED
+
+Execute testcase "03_no-zip.sh"? [y/N] 
+Test: No ZIP artchive provided
+---------------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+no archives found in this directory
+make sure you have at least one archive in this directory
+Check: Return code of script is 12 ... PASSED
+
+Execute testcase "04_transmission-30s.sh"? [y/N] 
+Test: Single, nominal ZIP archive provided
+-------------------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+Unpacked /home/calliope/30sec-counter.zip
+
+
+programming: /home/calliope/run_20210224-214603/30sec-counter.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:46:19; Will stop @ 2021/02/25-00:51:19
+
+Send @START@
+
+Received @START@
+*****************************
+29 lines read
+done
+############################################################################################################
+
+Check: Return code of script is 0 ... PASSED
+Check: ZIP archive renamed to .done ... PASSED
+Check: Folder run_* created ... PASSED
+Check: MD5 checksum in folder ./run_20210224-214603 ... md5sum: '30sec-counter.hex'$'\r': No such file or directory
+md5sum: '30sec-counter.hex.data'$'\r': No such file or directory
+md5sum: WARNING: 2 listed files could not be read
+NOT PASSED
+
+Execute testcase "05_corrupted_hex.sh"? [y/N] 
+Test: Provide two ZIP archive, the last one corrupted
+-----------------------------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+Unpacked /home/calliope/30sec-counter.zip
+
+
+programming: /home/calliope/run_20210224-214711/30sec-counter.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:47:27; Will stop @ 2021/02/25-00:52:27
+
+Send @START@
+
+Received @START@
+*****************************
+29 lines read
+done
+############################################################################################################
+
+-=# CalliopEO #=-
+Unpacked /home/calliope/its.garbage.zip
+
+
+programming: /home/calliope/run_20210224-214759/its.garbage.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:48:09; Will stop @ 2021/02/25-00:53:09
+
+Send @START@
+
+Received @START@
+******************************
+30 lines read
+done
+############################################################################################################
+
+Check: Return code of script is 0 ... PASSED
+Check: ZIP archive renamed to .done ... PASSED
+Check: Folder run_* created ... PASSED
+Check: Created to .data files ... PASSED
+Check: The two .data files have same content ... NOT PASSED
+
+Execute testcase "06_corrupted-zip.sh"? [y/N] 
+Test: Provide three ZIP archive, the 2nd corrupted
+--------------------------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+Unpacked /home/calliope/01.zip
+Error while unpacking /home/calliope/02.zip: /home/calliope/02.zip is not a zip file
+Unpacked /home/calliope/03.zip
+
+
+programming: /home/calliope/run_20210224-214850/30sec-counter.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:49:07; Will stop @ 2021/02/25-00:54:07
+
+Send @START@
+
+Received @START@
+*****************************
+29 lines read
+done
+############################################################################################################
+
+programming: /home/calliope/run_20210224-214850/30sec-counter2.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:49:54; Will stop @ 2021/02/25-00:54:54
+
+Send @START@
+
+Received @START@
+******************************
+30 lines read
+done
+############################################################################################################
+
+Check: Return code in all three cases is 0 ... PASSED
+Check: ZIP archive renamed to .done/.failed ... PASSED
+Check: Folder run_* created ... NOT PASSED
+Check: Created to .data files ... PASSED
+Check: The two .data files have same content ... NOT PASSED
+
+Execute testcase "07_transm-timeout.sh"? [y/N] 
+Test: Handle transmission timeout
+---------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+Unpacked /home/calliope/30sec-counter.zip
+
+
+programming: /home/calliope/run_20210224-215123/30sec-counter.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:51:39; Will stop @ 2021/02/25-00:56:39
+
+Send @START@
+
+Received @START@
+******************************
+30 lines read
+done
+############################################################################################################
+
+Check: Return code in all cases is 0 ... PASSED
+Check: ZIP archive renamed to .done ... PASSED
+Check: Folder run_* created ... PASSED
+Check: Created two .data files ... PASSED
+Check: Verify content of .data file ... md5sum: '30sec-counter.hex'$'\r': No such file or directory
+md5sum: '30sec-counter.hex.data'$'\r': No such file or directory
+md5sum: WARNING: 2 listed files could not be read
+NOT PASSED
+
+Execute testcase "08_data-limit.sh"? [y/N] 
+Test: Handle data limit treshold
+--------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+Unpacked /home/calliope/burst.zip
+
+
+programming: /home/calliope/run_20210224-215224/burst.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:52:40; Will stop @ 2021/02/25-00:57:40
+
+Send @START@
+
+Received @START@
+*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+Max file size achieved
+
+727 lines read
+done
+############################################################################################################
+
+-=# CalliopEO #=-
+Unpacked /home/calliope/30sec-counter.zip
+
+
+programming: /home/calliope/run_20210224-215245/30sec-counter.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:53:02; Will stop @ 2021/02/25-00:58:02
+
+Send @START@
+
+Received @START@
+*****************************
+29 lines read
+done
+############################################################################################################
+
+Check: Return code in all cases is 0 ... PASSED
+Check: ZIP archive renamed to .done ... PASSED
+Check: Folder run_* created ... PASSED
+Check: Created two .data files ... PASSED
+Check: Verify content of .data file ... md5sum: '30sec-counter.hex'$'\r': No such file or directory
+md5sum: '30sec-counter.hex.data'$'\r': No such file or directory
+md5sum: WARNING: 2 listed files could not be read
+NOT PASSED
+Check: First .data meets the size threshold (8000 bytes) ... PASSED
+
+Execute testcase "10_multi.sh"? [y/N] 
+Test: Multi, nominal ZIP archive provided
+-------------------------------------------
+
+Confirm, Calliope Mini is attached to USB [y] -=# CalliopEO #=-
+Unpacked /home/calliope/01.zip
+Unpacked /home/calliope/02.zip
+
+
+programming: /home/calliope/run_20210224-215348/01.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:54:04; Will stop @ 2021/02/25-00:59:04
+
+Send @START@
+
+Received @START@
+*****
+5 lines read
+done
+############################################################################################################
+
+programming: /home/calliope/run_20210224-215348/02.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:54:26; Will stop @ 2021/02/25-00:59:26
+
+Send @START@
+
+Received @START@
+*****
+5 lines read
+done
+############################################################################################################
+
+programming: /home/calliope/run_20210224-215348/03.hex
+done
+open serial port
+Calliope Mini found on /dev/ttyACM0  ..........
+done
+reading data
+
+Start @ 2021/02/24-21:54:48; Will stop @ 2021/02/25-00:59:48
+
+Send @START@
+
+Received @START@
+*****
+5 lines read
+done
+############################################################################################################
+
+Check 1/5: Return code of script is 0 ... [0;32mPASSED[0m
+Check 2/5: ZIP archive renamed to .done ... [0;32mPASSED[0m
+Check 3/5: Folder run_* created ... [0;32mPASSED[0m
+Check 4/5: Created three .data files ... [0;32mPASSED[0m
+Check 5/5: MD5 checksum in folder ./run_20210224-215348 ... [0;32mPASSED[0m
+rm: cannot remove '30sec-counter.zip.done': No such file or directory
+
+Test ended: Wed 24 Feb 21:54:54 UTC 2021

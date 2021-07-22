@@ -141,7 +141,8 @@ cd ..
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile_done}
+rm ${zipfile1_done}
+rm ${zipfile2_done}
 
 # Remove folder run_*
 rm -rf run_*
