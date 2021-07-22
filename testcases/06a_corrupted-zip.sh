@@ -5,33 +5,28 @@
 ###############################################################################
 
 # Description
-#   Execute the CalliopEO.py with a single zip archive nominally transmitting
-#   for 30 seconds.
+#   Execute the CalliopEO.py with a corrupted zip archive. The corrupted zip
+#   file is renamed to .zip.failed and the corresponding run_* folder is
+#   empty.
 # Preparation
-#   Hex file 30sec-counter.hex has to be provided
-#   Data file 30sec-counter.hex.data has to be provided
+#   Provide zip archive not.a.zip.
 # Expected result
-#   CalliopEO.py returns code 0.
-#   CalliopEO.py renames 01.zip to 01.zip.done
-#   CalliopEO.py created folder run_*
-#   MD5 checksums of files in run_* match
+#   CalliopEO.py returns code 0
+#   CalliopEO.py renames the corrupted .zip to .zip.failed
+#   The folder run_* is empty
 # Necessary clean-up
-#   Remove created *.done and folder run_*/ and folder tmp/
+#   Remove created *.failed and folder run_*/
 
 ###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
-tmpdir="./tmp"
-zipfile="01.zip"
-hexfile="30sec-counter.hex"
-datafile="30sec-counter.hex.data"
-checksumfile="checksum.md5"
+zipfile="testcases/testfiles/not.a.zip"
 
 ###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
-echo "Test: Single, nominal ZIP archive provided"
-echo "-------------------------------------------"
+echo "Test: Provide three ZIP archive, the 2nd corrupted"
+echo "--------------------------------------------------"
 echo ""
 # Make sure, Calliope is connected to the Astro Pi
 ans=""
@@ -43,43 +38,24 @@ done
 # Exit script, if there is a ZIP archive or folder run_* in the main folder
 ##############################################################################
 if [ $(find . -maxdepth 1 -iname *.zip | wc -l) -ne 0 ]; then
-    echo -e "${R}ERROR:${NC} Main folder contains zip archive. Exiting."
+    echo "ERROR: Main folder contains zip archive. Exiting."
     exit 1
 fi
 if [ $(find . -type d -ipath "./run_*" | wc -l) -ne 0 ]; then
-    echo -e "${R}ERROR:${NC} Main folder contains folder run_*. Exiting."
+    echo "ERROR: Main folder contains folder run_*. Exiting."
     exit 1
 fi
 
 ##############################################################################
 # Preparations
 ##############################################################################
-
-# Ensure variable ${tmpdir} has no trailing /
-tmpdir=${tmpdir#/}
-# Remove old ${tmdir} if exists
-if [ -d ${tmpdir} ]; then
-    rm -r ${tmpdir}
-fi
-mkdir "${tmpdir}"
-
-# Copy Hex files to tmp
-cp "testcases/testfiles/${hexfile}" "${tmpdir}/01.hex"
-# Copy Data files to tmp
-cp "testcases/testfiles/${datafile}" "${tmpdir}/01.hex.data"
-# Create MD5 for copyed fies
-cd "${tmpdir}"
-find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "${checksumfile}"
-cd ..
-# Create zip archives in the main directory
-zip -mqj "${zipfile}" "${tmpdir}/01.hex"
+cp ${zipfile} .
 
 ##############################################################################
 # Execute testcase
 ###############################################################################
 
-# Execute the CalliopEO.py script
-${cmd_calliope_script} --fake-timestamp
+${cmd_calliope_script}
 # Save return code
 ret_code=$?
 
@@ -92,52 +68,43 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check 1/4: Return code of script is 0 ... "
+echo -n "Check 1/3: Return code is 0 ... "
 if [[ ${ret_code} -eq 0 ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Renamed 01.zip to 01.zip.done?
-zipfile_done="${zipfile}.done"
-echo -n "Check 2/4: ZIP archive renamed to .done ... "
-if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
+# Renamed .zip to .zip.done or zip.failed?
+zipfile_main=$(basename ${zipfile})
+zipfile_failed="${zipfile_main}.failed"
+echo -n "Check 2/3: ZIP archive renamed to .failed ... "
+if [[ ! -e "${zipfile_main}" && -e "${zipfile_failed}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
 fi
 
-# Created folder run_*?
-echo -n "Check 3/4: Folder run_* created ... "
-if [ $(find . -type d -ipath "./run_*" | wc -l) -eq 1 ]; then
-    echo -e "${G}PASSED${NC}"
+# Created an empty folder run_*?
+echo -n "Check 3/3: Empty folder run_* created ... "
+run_folders=($(find . -type d -ipath "./run_*"))
+if [ ${#run_folders[@]} -eq 1 ]; then
+    if [ $(find ${run_folders[0]} -type f | wc -l) -eq 0 ]; then
+        echo -e "${G}PASSED${NC}"
+    else
+        echo -e "${R}NOT PASSED${NC}"
+    fi
 else
     echo -e "${R}NOT PASSED${NC}"
 fi
-
-# Check md5sums for hex and data file
-run_folder=$(find . -type d -ipath "./run_*")
-mv "${tmpdir}/${checksumfile}" ${run_folder}/.
-cd ${run_folder}
-echo -n "Check 4/4: MD5 checksum in folder ${run_folder} ... "
-md5sum -c "${checksumfile}" >> /dev/null
-if [ $? -eq 0 ]; then
-    echo -e "${G}PASSED${NC}"
-else
-    echo -e "${R}NOT PASSED${NC}"
-fi
-cd ..
 
 ###############################################################################
 # Cleaning up
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile_done}
+rm ${zipfile_failed}
 
 # Remove folder run_*
 rm -rf run_*
 
-# Remove folder tmp
-rm -r "${tmpdir}"

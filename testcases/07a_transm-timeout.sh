@@ -106,7 +106,7 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code is 0 ... "
+echo -n "Check 1/6: Return code is 0 ... "
 if [[ ${ret_code} -eq 0 ]]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -115,7 +115,7 @@ fi
 
 # Renamed .zip to .zip.done?
 zipfile_done="${zipfile}.done"
-echo -n "Check: ZIP archive renamed to .done ... "
+echo -n "Check 2/6: ZIP archive renamed to .done ... "
 if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -124,7 +124,7 @@ fi
 
 # Created one folders run_*?
 run_folders=($(find . -type d -ipath "./run_*"))
-echo -n "Check: Folder run_* created ... "
+echo -n "Check 3/6: Folder run_* created ... "
 if [ ${#run_folders[@]} -eq 1 ]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -133,7 +133,7 @@ fi
 
 # Created one .data files in the folder run_*?
 data_files=($(ls -1 ./run_*/*.data))
-echo -n "Check: Created two .data files ... "
+echo -n "Check 4/6: Created two .data files ... "
 if [ ${#data_files[@]} -eq 1 ]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -144,7 +144,7 @@ fi
 run_folder=$(find . -type d -ipath "./run_*")
 mv "${tmpdir}/${md5file}" ${run_folder}/.
 cd ${run_folder}
-echo -n "Check: MD5 checksum in folder ${run_folder} ... "
+echo -n "Check 5/6: MD5 checksum in folder ${run_folder} ... "
 md5sum -c "${md5file}" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
@@ -163,7 +163,7 @@ stop_time_unix=$(date -d "${stop_time2}" +%s)
 tdiff=$((end - stop_time_unix))
 tdiff=${tdiff#-} # absolute value
 # Time difference less-equal ${max_tdiff}?
-echo -n "Check: Transmission terminated in time ... "
+echo -n "Check 6/6: Transmission terminated in time ... "
 if [ "${tdiff}" -le "${max_tdiff}" ]; then
     echo -e "${G}PASSED${NC}"
 else
