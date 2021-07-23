@@ -26,6 +26,10 @@
 # Variables and definitions for this testcase
 ###############################################################################
 tmpdir="./tmp"
+hexfile1 = "05sec-counter.hex"
+hexfile2 = "its.garbage.hex"
+datafile1 = "05sec-counter.hex.data"
+checksumfile = "checksum.md5"
 ERRORS=0
 
 ###############################################################################
@@ -73,14 +77,14 @@ fi
 mkdir "${tmpdir}"
 
 # Copy Hex files to tmp
-cp "testcases/testfiles/05sec-counter.hex" "${tmpdir}/01.hex"
-cp "testcases/testfiles/its.garbage.hex" "${tmpdir}/02.hex"
+cp "testcases/testfiles/${hexfile1}" "${tmpdir}/01.hex"
+cp "testcases/testfiles/${hexfile2}" "${tmpdir}/02.hex"
 # Copy Data files to tmp
-cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/01.hex.data"
-cp "testcases/testfiles/05sec-counter.hex.data" "${tmpdir}/02.hex.data"
+cp "testcases/testfiles/${datafile1}" "${tmpdir}/01.hex.data"
+cp "testcases/testfiles/${datafile1}" "${tmpdir}/02.hex.data"
 # Create MD5 for copyed fies
 cd "${tmpdir}"
-find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "checksum.md5"
+find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "${checksumfile}"
 cd ..
 # Create zip archives in the main directory
 zip -mqj "01.zip" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
@@ -155,10 +159,10 @@ fi
 
 # Check md5sums for hex and data files
 run_folder=$(find . -type d -ipath "./run_*")
-mv "${tmpdir}/checksum.md5" ${run_folder}/.
+mv "${tmpdir}/${checksumfile}" ${run_folder}/.
 cd ${run_folder}
 echo -n "Check 6/6: MD5 checksum in folder ${run_folder} ... "
-md5sum -c "checksum.md5" >> /dev/null
+md5sum -c "${checksumfile}" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
