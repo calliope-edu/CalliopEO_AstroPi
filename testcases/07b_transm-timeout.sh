@@ -35,6 +35,7 @@ datafile2="testcases/testfiles/05sec-counter.hex.data"
 zipfile="01.zip"
 md5file="check.md5"
 tmpdir="./tmp"
+ERRORS=0
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -42,11 +43,14 @@ tmpdir="./tmp"
 echo "Test: Continue with next hex after timeout"
 echo "------------------------------------------"
 echo ""
-# Make sure, Calliope is connected to the Astro Pi
-ans=""
-while [[ ! ${ans} =~ [Yy] ]]; do
-    read -p "Confirm, Calliope Mini is attached to USB [y] " ans
-done
+# Make sure, Calliope is disconnected from Astro Pi
+if [ "${CALLIOPE_ATTACHED}" != "yes" ]; then
+    ans=""
+    while [[ ! ${ans} =~ [Yy] ]]; do
+        read -p "Confirm, Calliope Mini is attached to USB [y] " ans
+    done
+    CALLIOPE_ATTACHED="yes"
+fi
 
 ##############################################################################
 # Exit script, if there is a ZIP archive or folder run_* in the main folder
@@ -112,6 +116,7 @@ if [[ ${ret_code} -eq 0 ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Renamed .zip to .zip.done?
@@ -121,6 +126,7 @@ if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Created one folder run_*?
@@ -130,6 +136,7 @@ if [ ${#run_folders[@]} -eq 1 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Created two .data files in the folder run_*?
@@ -139,6 +146,7 @@ if [ ${#data_files[@]} -eq 2 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Check md5sums for hex and data files
@@ -151,8 +159,18 @@ if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 cd ..
+
+# Track testcase result
+if [[ ${ERRORS} -eq 0 ]]; then
+    echo -e "${BG_G}Testcase passed.${BG_NC}"
+    TESTS_PASSED=$((TESTS_PASSED+1))
+else
+    echo -e "${BG_R}Testcase failed.${BG_NC}"
+    TESTS_FAILED=$((TESTS_FAILED+1))
+fi
 
 ###############################################################################
 # Cleaning up

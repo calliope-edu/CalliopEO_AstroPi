@@ -8,8 +8,8 @@
 #   Execute the CalliopEO.py with a single zip archive nominally transmitting
 #   for 30 seconds.
 # Preparation
-#   Hex file 30sec-counter.hex has to be provided
-#   Data file 30sec-counter.hex.data has to be provided
+#   Hex file 05sec-counter.hex has to be provided
+#   Data file 05sec-counter.hex.data has to be provided
 # Expected result
 #   CalliopEO.py returns code 0.
 #   CalliopEO.py renames 01.zip to 01.zip.done
@@ -23,9 +23,10 @@
 ###############################################################################
 tmpdir="./tmp"
 zipfile="01.zip"
-hexfile="30sec-counter.hex"
-datafile="30sec-counter.hex.data"
+hexfile="05sec-counter.hex"
+datafile="05sec-counter.hex.data"
 checksumfile="checksum.md5"
+ERRORS=0
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -33,11 +34,14 @@ checksumfile="checksum.md5"
 echo "Test: Single, nominal ZIP archive provided"
 echo "-------------------------------------------"
 echo ""
-# Make sure, Calliope is connected to the Astro Pi
-ans=""
-while [[ ! ${ans} =~ [Yy] ]]; do
-    read -p "Confirm, Calliope Mini is attached to USB [y] " ans
-done
+# Make sure, Calliope is disconnected from Astro Pi
+if [ "${CALLIOPE_ATTACHED}" != "yes" ]; then
+    ans=""
+    while [[ ! ${ans} =~ [Yy] ]]; do
+        read -p "Confirm, Calliope Mini is attached to USB [y] " ans
+    done
+    CALLIOPE_ATTACHED="yes"
+fi
 
 ##############################################################################
 # Exit script, if there is a ZIP archive or folder run_* in the main folder
@@ -97,6 +101,7 @@ if [[ ${ret_code} -eq 0 ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Renamed 01.zip to 01.zip.done?
@@ -106,6 +111,7 @@ if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Created folder run_*?
@@ -114,6 +120,7 @@ if [ $(find . -type d -ipath "./run_*" | wc -l) -eq 1 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 
 # Check md5sums for hex and data file
@@ -126,8 +133,18 @@ if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
+    ERRORS=$((ERRORS+1))
 fi
 cd ..
+
+# Track testcase result
+if [[ ${ERRORS} -eq 0 ]]; then
+    echo -e "${BG_G}Testcase passed.${BG_NC}"
+    TESTS_PASSED=$((TESTS_PASSED+1))
+else
+    echo -e "${BG_R}Testcase failed.${BG_NC}"
+    TESTS_FAILED=$((TESTS_FAILED+1))
+fi
 
 ###############################################################################
 # Cleaning up
