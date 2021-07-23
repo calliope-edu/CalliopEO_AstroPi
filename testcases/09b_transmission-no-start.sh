@@ -70,8 +70,8 @@ fi
 mkdir "${tmpdir}"
 
 # Copy Hex files to tmp
-cp "testcases/testfiles/${hexfil1}" "${tmpdir}/01.hex"
-cp "testcases/testfiles/${hexfil2}" "${tmpdir}/02.hex"
+cp "testcases/testfiles/${hexfile1}" "${tmpdir}/01.hex"
+cp "testcases/testfiles/${hexfile2}" "${tmpdir}/02.hex"
 # Copy Data files to tmp
 cp "testcases/testfiles/${datafile2}" "${tmpdir}/02.hex.data"
 # Create MD5 for copyed fies
