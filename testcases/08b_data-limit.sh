@@ -193,3 +193,5 @@ rm ${zipfile_done}
 # Remove folder run_*
 rm -rf run_*
 
+# Remove folder tmp
+rm -r "${tmpdir}"

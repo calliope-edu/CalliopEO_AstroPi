@@ -24,7 +24,6 @@
 tmpdir="./tmp"
 zipfile="01.zip"
 hexfile1="no-start.hex"
-datafile1="no-start.hex.data"
 checksumfile="checksum.md5"
 ERRORS=0
 
@@ -68,7 +67,7 @@ fi
 mkdir "${tmpdir}"
 
 # Copy Hex files to tmp
-cp "testcases/testfiles/${hexfil1}" "${tmpdir}/01.hex"
+cp "testcases/testfiles/${hexfile1}" "${tmpdir}/01.hex"
 # Copy Data files to tmp
 ## no data file created
 # Create MD5 for copyed fies
@@ -83,7 +82,7 @@ zip -mqj "${zipfile}" "${tmpdir}/01.hex"
 ###############################################################################
 
 # Execute the CalliopEO.py script
-${cmd_calliope_script}
+${cmd_calliope_script} --fake-timestamp
 # Save return code
 ret_code=$?
 

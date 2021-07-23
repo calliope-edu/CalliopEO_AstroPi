@@ -24,7 +24,7 @@
 tmpdir="./tmp"
 zipfile="01.zip"
 hexfile1="no-start.hex"
-datafile1="no-start.hex.data"
+#datafile1="no-start.hex.data" # Not used
 hexfile2="05sec-counter.hex"
 datafile2="05sec-counter.hex.data"
 checksumfile="checksum.md5"
@@ -73,7 +73,7 @@ mkdir "${tmpdir}"
 cp "testcases/testfiles/${hexfil1}" "${tmpdir}/01.hex"
 cp "testcases/testfiles/${hexfil2}" "${tmpdir}/02.hex"
 # Copy Data files to tmp
-cp "testcases/testfiles/${datafile1}" "${tmpdir}/02.hex.data"
+cp "testcases/testfiles/${datafile2}" "${tmpdir}/02.hex.data"
 # Create MD5 for copyed fies
 cd "${tmpdir}"
 find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "${checksumfile}"

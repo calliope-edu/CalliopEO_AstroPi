@@ -100,6 +100,7 @@ if [[ ${TESTS_FAILED} -eq 0 ]]; then
 else
     echo -e "${BG_R}"
 fi
+echo ""
 echo "          Test ended: $(date)"
 echo "${TEST_RESULTS}"
 echo "          ${TESTS_PERFORMED} FINISHED"

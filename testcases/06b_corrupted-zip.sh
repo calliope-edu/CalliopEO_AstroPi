@@ -88,7 +88,7 @@ zip -mqj "${zipfile3}" "${tmpdir}/02.hex"
 # Execute testcase
 ###############################################################################
 
-${cmd_calliope_script}
+${cmd_calliope_script} --fake-timestamp
 # Save return code
 ret_code=$?
 
@@ -168,7 +168,9 @@ fi
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile_failed}
+rm ${zipfile1_done}
+rm ${zipfile2_failed}
+rm ${zipfile3_done}
 
 # Remove folder run_*
 rm -rf run_*
