@@ -103,7 +103,7 @@ sleep 1
 ###############################################################################
 
 # Return code of script is 0?
-echo -n "Check: Return code is 0 ... "
+echo -n "Check 1/6: Return code is 0 ... "
 if [[ ${ret_code1} -eq 0 ]]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -113,7 +113,7 @@ fi
 
 # Renamed .zip to .zip.done?
 zipfile_done="${zipfile}.done"
-echo -n "Check: ZIP archive renamed to .done ... "
+echo -n "Check 2/6: ZIP archive renamed to .done ... "
 if [[ ! -e "${zipfile}" && -e "${zipfile_done}" ]]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -123,7 +123,7 @@ fi
 
 # Created folder run_*?
 run_folders=($(find . -type d -ipath "./run_*"))
-echo -n "Check: Folder run_* created ... "
+echo -n "Check 3/6: Folder run_* created ... "
 if [ ${#run_folders[@]} -eq 1 ]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -133,7 +133,7 @@ fi
 
 # Created one .data files in the two folders run_*?
 data_files=($(find ./run_* -name "*.data"))
-echo -n "Check: Created two .data files ... "
+echo -n "Check 4/6: Created two .data files ... "
 if [ ${#data_files[@]} -eq 1 ]; then
     echo -e "${G}PASSED${NC}"
 else
@@ -145,7 +145,7 @@ fi
 run_folder=$(find . -type d -ipath "./run_*")
 mv "${tmpdir}/${md5file}" ${run_folder}/.
 cd ${run_folder}
-echo -n "Check: MD5 checksum in folder ${run_folder} ... "
+echo -n "Check5/6: MD5 checksum in folder ${run_folder} ... "
 md5sum -c "${md5file}" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
@@ -156,7 +156,7 @@ fi
 cd ..
 
 # Verify that the first .data file meets the size threshold
-echo -n "Check: First .data meets the size threshold (${max_data_size} bytes) ... "
+echo -n "Check 6/6: First .data meets the size threshold (${max_data_size} bytes) ... "
 if [ ${#data_files[@]} -eq 1 ]; then
     data_size2=$(wc -c ${data_files[0]} | awk '{print $1}') # size in bytes
     if [ "${data_size2}" -le "${max_data_size}" ]; then
