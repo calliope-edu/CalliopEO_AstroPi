@@ -80,7 +80,7 @@ echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/flash vfat noauto,us
 # First, copy the folder /modules to the home directory of ${username}.
 # Then, install locally as user ${username}
 echo "Installing Python modules"
-su - ${username} -c 'cd && for m in ~/modules/*.whl; do python3 -m pip install --user ${m}; done'
+su - ${username} -c 'cd && for m in ~/calliopEO/modules/*.whl; do python3 -m pip install --user ${m}; done'
 
 echo "Finished!"
 exit 0
