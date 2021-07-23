@@ -26,10 +26,10 @@
 # Variables and definitions for this testcase
 ###############################################################################
 tmpdir="./tmp"
-hexfile1 = "05sec-counter.hex"
-hexfile2 = "its.garbage.hex"
-datafile1 = "05sec-counter.hex.data"
-checksumfile = "checksum.md5"
+hexfile1="05sec-counter.hex"
+hexfile2="its.garbage.hex"
+datafile1="05sec-counter.hex.data"
+checksumfile="checksum.md5"
 ERRORS=0
 
 ###############################################################################
