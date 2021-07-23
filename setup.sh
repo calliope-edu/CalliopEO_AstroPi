@@ -59,6 +59,7 @@ fi
 # Copy all the files from the respository to the home directory of
 # user ${usernanme}
 echo "Copying files to /home/${username}/calliopEO"
+mkdir -p /home/${username}/calliopEO/
 cp -r . /home/${username}/calliopEO/.
 
 # Create mount points
