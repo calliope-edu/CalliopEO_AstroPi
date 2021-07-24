@@ -31,7 +31,7 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
 
 ## Testing
 To select and run tests execute `./testing.sh`. To get an overview of availbable tests see [Testcases.md](testcases/testcases.md).
-Sample testresults can be found in [./testcases](testcases)
+Sample testresults can be found in [./testresults](testresults)
 
 ## HEX Boilerplate
 
