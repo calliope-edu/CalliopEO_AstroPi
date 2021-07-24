@@ -1,4 +1,7 @@
-# CalliopEO
+**CalliopEO**
+
+*[README](README.md)* | [Program Description](ProgramDescription.md) | [Testcases](testcases/testcases.md)
+# Readme
 
 ## Description
 CalliopEO is a Python script to facilitate ineraction between a Raspberry Pi microcomputer and a [Calliope Mini microcontroller board](https://calliope.cc/). If executed, the script detects, if a Calliope Mini is attached to a USB board of the Raspbery Pi and determins the serial port to communicate the Calliope Mini.
@@ -26,6 +29,9 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
      +--------------+                
 ```
 
+## Testing
+To select and run tests execute `./testing.sh`. To get an overview of availbable tests see [Testcases.md](testcases/testcases.md).
+
 ## Software Installation
 ### Operating system
 The project is intended to be used with the ESA [Astro Pi IR](https://astro-pi.org/) onboard the International Space Station ISS. The Astro Pi SBCs are running a dedicated flavour of Raspberry Pi OS not available for the public. But this software can also be installed on the publicly available [Raspberry Pi OS](https://www.raspberrypi.org/software/) running on any Raspberry Pi. For CalliopEO, the "OS Lite" version without desktop is sufficient. Follow the standard installation procedure.
@@ -44,7 +50,7 @@ The setup script performs the following actions:
 * Add user to group `dialout` to be able to perform communication with the Calliope Mini over the serial port
 * Set password for the new user
 * Determine UUIDs for Calliope Mini's block devices and creating mount points in `/etc/fstab`. Later, this is used to mount the block devices for flashing the Calliope Mini. The mount points are defined in `/etc/fstab` in order to allow unprivileged users like `calliope` to mount/unmount the block devices.
-* Copying necessary files to the user's home directory, in particular `CalliopEO.py`
+* Copying necessary files to the user's home directory into a subfolder `~/calliopEO`, in particular `CalliopEO.py`
 * Installing necessary Python modules from local wheel files. This is necessary due to security requirements set by ESA.
 
 ## De-Installation
