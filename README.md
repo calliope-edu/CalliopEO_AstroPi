@@ -13,11 +13,15 @@ In the directory a sub-folder named `run_YYYYMMDD-HHMMSS` will be created. The H
 The `CalliopEO.py` script can collect data sent by the program on the Calliope Mini via the USB serial port. Therefore, prepare the Calliope Mini program to wait for the string `@START@`. Then, the Calliope Mini program should respond by sending `@START@` back to the `CalliopEO.py` script and only after this sending the data. After sending the data the Calliope Mini program should send the
 message `@END@`.
 
+Each line in the `.data` files will have a leading time stamp of the format `YYYY/MM/DD-HH/MM/SS.ssssss`.
+
 ## Execute
 ```
-$ python3 CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds]
+$ python3 CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
 ```
-`--max-data-size` is the maximum number of characters to be read from the Calliope Mini (except newline characters). With `--max-script-execution-time` you can specify a maximum time to accept input from the Calliope Mini program before terminating the connection.
+* `--max-data-size` is the maximum number of characters to be read from the Calliope Mini.
+* With `--max-script-execution-time` you can specify a maximum time to accept input from the Calliope Mini program before terminating the connection.
+* `--fake-timestamp` adds to the beginning of each line a constant time stamp `2000/01/01-00:00:00.000000` instead of the current time stamp. This feature is primarily meant for testing purposes.
 
 ## Hardware Setup
 The Calliope Mini should be connected via USB to the Raspberry Pi.
@@ -31,7 +35,7 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
 
 ## Testing
 To select and run tests execute `./testing.sh`. To get an overview of availbable tests see [Testcases.md](testcases/testcases.md).
-Sample testresults can be found in [./testresults](testresults)
+Sample testresults can be found in [./testresults](testresults).
 
 ## HEX Boilerplate
 
