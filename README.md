@@ -32,6 +32,10 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
 ## Testing
 To select and run tests execute `./testing.sh`. To get an overview of availbable tests see [Testcases.md](testcases/testcases.md).
 
+## HEX Boilerplate
+
+For a sample implementation of the Boilerplate code for the Calliope mini please have a look at the [JS File](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.js), the [Compiled HEX ](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.hex) or edit it on [makecode.calliope.cc](https://makecode.calliope.cc/_KJT7WkEcwaDi). The .data file on the Raspberry Pi should look like this [this](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.hex.data)
+
 ## Software Installation
 ### Operating system
 The project is intended to be used with the ESA [Astro Pi IR](https://astro-pi.org/) onboard the International Space Station ISS. The Astro Pi SBCs are running a dedicated flavour of Raspberry Pi OS not available for the public. But this software can also be installed on the publicly available [Raspberry Pi OS](https://www.raspberrypi.org/software/) running on any Raspberry Pi. For CalliopEO, the "OS Lite" version without desktop is sufficient. Follow the standard installation procedure.
