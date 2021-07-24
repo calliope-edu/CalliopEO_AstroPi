@@ -1,6 +1,6 @@
 **CalliopEO**
 
-[README](README.md) | *[Program Description](ProgramDescription.md)* | [Testcases](testcases/testcases.md)
+[README](README.md) | ***[Program Description](ProgramDescription.md)*** | [Testcases](testcases/testcases.md)
 
 # Program Description
 ## 1 Scope
@@ -105,7 +105,7 @@ Managed types that help keep programs safe from the complexities of memory manag
 
 #### 5.1.2 Editor
 
-Microsoft MakeCode will be available to use as an editor to build the programs. The generated hex files contain the compiled hex part as well as an importable JavaScript part. We never use the compiled part of files which are not compiled by us. When we receive Hex files, we import them to a special version of MakeCode, check the code for unsupported parts and wrap the start and stop signals for the Python Script around. This way we make sure to know what code gets sent to the Calliope mini and are able to prove it line by line.
+Microsoft MakeCode will be available to use as an editor to build the programs. The generated hex files contain the compiled hex part as well as an importable JavaScript part. We never use the compiled part of files which are not compiled by us. When we receive Hex files, we import them to a special version of MakeCode, check the code for unsupported parts and wrap the start and stop signals for the Python Script around. This way we make sure to know what code gets sent to the Calliope mini and are able to prove it line by line. The detailed review process of the students code is not in scope of this documentation.
 The JavaScript file as an example can be found as an appendix (A.2).
      
 #### 5.1.3 J-Link/DAPLink
@@ -114,7 +114,7 @@ The Calliope mini presents itself as a USB disk when it is connected over USB an
 
 #### 5.1.4 Python Script
      
-The Python script will run on the current Astro Pi hardware.
+The Python 3 script will run on the current Astro Pi hardware.
 However, the minimum dependencies are documented in [requirements.txt](requirements.txt).
 
 The installation, execution and de-installation process is documented in the [Readme.md](README.md)
@@ -127,5 +127,6 @@ The student experiments will be uploaded in the same way. Once programs that col
 ## A. Appendices
 
 - A.1 [Dokumentation of CalliopeEO Phyton Script](README.md)
-- A.2 [A.2	 Example JavaScript code of the preinstalled file on the Calliope mini](testcaes/testfiles/30sec-iss-sensors.js)
-- A.3 [A.2	 Example of saved Data file](testcaes/testfiles/30sec-iss-sensors.hex.data)
+- A.2 [Example JavaScript code of the preinstalled file on the Calliope mini](testcaes/testfiles/30sec-iss-sensors.js)
+- A.3 [Example of saved Data file](testcaes/testfiles/30sec-iss-sensors.hex.data)
+- A.4 [Minimum requirements](requirements.txt)

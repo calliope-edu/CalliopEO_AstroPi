@@ -1,6 +1,6 @@
 **CalliopEO**
 
-*[README](README.md)* | [Program Description](ProgramDescription.md) | [Testcases](testcases/testcases.md)
+***[README](README.md)*** | [Program Description](ProgramDescription.md) | [Testcases](testcases/testcases.md)
 # Readme
 
 ## Description
