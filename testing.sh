@@ -37,16 +37,12 @@ if [[ ${tc_folder} == "" ]]; then
     tc_folder="./testcases"
 fi
 
-echo "################## TESTING CALLIOPEO.PY ##################"
-echo "Test started: $(date)"
-
 whiptail_args+=(
     --backtitle "CalliopEO Test"
     --title "Select Tests"
     --clear
-    --nocancel
-    --ok-button "Press enter to start selected Tests"
-    --checklist  ""
+    --ok-button "Start"
+    --checklist  "\nSelect the testcases to be executed"
     26 80 16
 )
 
@@ -57,6 +53,16 @@ do
 done
 
 selected=$(whiptail  "${whiptail_args[@]}" 3>&1 1>&2 2>&3)
+
+# Exit if user selected "Cancel"
+dialog_status=$?
+if [ "${dialog_status}" -eq 1 ]; then
+    echo "No tests executed: ${dialog_status}"
+    exit 1
+fi
+
+echo "################## TESTING CALLIOPEO.PY ##################"
+echo "Test started: $(date)"
 
 echo "Selected Tests: ${selected}"
 
