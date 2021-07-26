@@ -40,14 +40,13 @@ fi
 echo "################## TESTING CALLIOPEO.PY ##################"
 echo "Test started: $(date)"
 
-tc_folder="./testcases"
-whiptail_args+=( 
-    --backtitle "CalliopEO Test" 
-    --title "Select Tests" 
+whiptail_args+=(
+    --backtitle "CalliopEO Test"
+    --title "Select Tests"
     --clear
     --nocancel
     --ok-button "Press enter to start selected Tests"
-    --checklist  "" 
+    --checklist  ""
     26 80 16
 )
 
