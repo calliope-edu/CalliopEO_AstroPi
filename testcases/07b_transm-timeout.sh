@@ -20,7 +20,7 @@
 #   CalliopEO.py renames the the .zip to .zip.done
 #   CalliopEO.py creates one folder run_*
 #   CalliopEO.py creates two .data files in the folder run_*
-#   The MD5 checksum in the folder run_* is verified
+#   Check output .data file
 # Necessary clean-up
 #   Remove created *.done, folder run_*/ and tmp files
 
@@ -29,13 +29,18 @@
 ###############################################################################
 hexfile1="testcases/testfiles/900sec-counter.hex"
 datafile1="testcases/testfiles/900sec-counter.hex.data.terminated35s"
+allow_lines_differ_percent=10
 max_exec_time=35 # seconds
 hexfile2="testcases/testfiles/05sec-counter.hex"
 datafile2="testcases/testfiles/05sec-counter.hex.data"
 zipfile="01.zip"
-md5file="check.md5"
 tmpdir="./tmp"
 ERRORS=0
+
+###############################################################################
+# Import necessary functions
+###############################################################################
+source testcases/shfuncs/comp.sh
 
 ###############################################################################
 # Information and instructions for the test operator
@@ -83,10 +88,6 @@ cp "${hexfile2}" "${tmpdir}/02.hex"
 
 cp "${datafile1}" "${tmpdir}/01.hex.data"
 cp "${datafile2}" "${tmpdir}/02.hex.data"
-
-cd "${tmpdir}"
-find  -type f \( -name "*.hex" -o -name "*.hex.data" \) -exec md5sum "{}" + > "${md5file}"
-cd ..
 
 zip -mqj "${zipfile}" "${tmpdir}/01.hex" "${tmpdir}/02.hex"
 
@@ -151,17 +152,18 @@ fi
 
 # Check md5sums for hex and data files
 run_folder=$(find . -type d -ipath "./run_*")
-mv "${tmpdir}/${md5file}" ${run_folder}/.
-cd ${run_folder}
-echo -n "Check 5/5: MD5 checksum in folder ${run_folder} ... "
-md5sum -c "${md5file}" >> /dev/null
-if [ $? -eq 0 ]; then
+echo -n "Check 5/5: Check .data file in ${run_folder} ... "
+# Compare .data file created in test with "template" data file in folder
+# ${tmpdir}. Due to timing issues, the number of lines in both files can
+# differ. Hence, declare the test also successful if the files differ by
+# ${allow_lines_differ_percent} of lines.
+ret=$(comp "${run_folder}/01.hex.data" "${tmpdir}/01.hex.data" ${allow_lines_differ_percent})
+if [ ${ret} -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
 else
     echo -e "${R}NOT PASSED${NC}"
     ERRORS=$((ERRORS+1))
 fi
-cd ..
 
 # Track testcase result
 if [[ ${ERRORS} -eq 0 ]]; then
