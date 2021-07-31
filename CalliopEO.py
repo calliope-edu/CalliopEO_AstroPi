@@ -44,7 +44,7 @@ MINI_SERIAL_MPO = re.compile(MINI_SERIAL_REGEXP, re.IGNORECASE)
 SERIAL_START = "@START@"
 SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
-REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
+MAX_SERIAL_WAIT_REPLY = 10 # Max time in s to wait for answer
 MAX_RETRY_FLASHING = 3 # Max. number to retry flashing if no serial data
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
@@ -103,19 +103,22 @@ def safe_decode(bytes, encoding=DEFAULT_ENCODING):
 #waits for SERIAL_START
 #if a timeout is reached the return value is False
 def waitSerialStart(ser):
-    serialTime = time.time()
+    serialStartConnect = time.time()
     line = ""
-    for x in range(REPEAT_START_SERIAL):
-        print("\r\n" + "Send " + SERIAL_START)
+    serialConnected=False
+
+    # Repeatedly send SERIAL_START and wait for response.
+    # Timeout after SERIAL_TIMEOUT
+    print("\r\n" + "Sending " + SERIAL_START)
+    while ((time.time() - serialStartConnect) < MAX_SERIAL_WAIT_REPLY):
         ser.write(b'@START@\r\n')
-        while True:
-            line = safe_decode(ser.readline())
-            if SERIAL_START in line:
-                print("\r\n" + "Received " + SERIAL_START)
-                return True
-            elif (time.time() - serialTime) > SERIAL_TIMEOUT:
-                break
-    return False
+        line = safe_decode(ser.readline())
+        if SERIAL_START in line:
+            print("\r\n" + "Received " + SERIAL_START)
+            serialConnected = True
+            break # exit while loop
+
+    return serialConnected
 
 #reads the data received from mini ans returns it
 #if SERIAL_END is received True is returnes indicating the end
@@ -368,7 +371,7 @@ def main(args):
                     #repeat programming
                     count_try_flashing += 1
                     print(
-                            "Something went wrong. Retrying flashing ("
+                            "\r\nSomething went wrong. Retrying flashing ("
                             + str(count_try_flashing)
                             + "/"
                             + str(MAX_RETRY_FLASHING)
