@@ -45,6 +45,7 @@ SERIAL_START = "@START@"
 SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
 REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
+MAX_RETRY_FLASHING = 3 # Max. number to retry flashing if no serial data
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
 
@@ -316,7 +317,7 @@ def main(args):
         if os.path.exists(hex + ".data"):
             print("skipping: " + hex)
             continue
-        tries  = 1
+        count_try_flashing  = 1 # Max: MAX_RETRY_FLASHING
         while True:
             print("programming: " + hex)
             programmMini(hex)
@@ -360,13 +361,19 @@ def main(args):
             data = readSerialData(ser)
 
             if data == False:
-                print("Something went wrong retrying: " + str( tries ) + "/5")
-                tries = tries + 1
-                if tries > 5:
+                if count_try_flashing >= MAX_RETRY_FLASHING:
                     #give up
                     break
                 else:
                     #repeat programming
+                    count_try_flashing += 1
+                    print(
+                            "Something went wrong. Retrying flashing ("
+                            + str(count_try_flashing)
+                            + "/"
+                            + str(MAX_RETRY_FLASHING)
+                            + ")"
+                            )
                     continue
             else:
                 writeToFile(hex, data)
