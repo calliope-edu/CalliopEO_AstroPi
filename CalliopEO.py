@@ -99,9 +99,9 @@ def serialConnect(mini_port):
     else:
         return None
 
-def safe_decode(bytes, encoding=DEFAULT_ENCODING):
+def safe_decode(data, encoding=DEFAULT_ENCODING):
     try:
-        return bytes.decode(encoding).strip()
+        return data.decode(encoding).strip()
     except:
         return ""
 
