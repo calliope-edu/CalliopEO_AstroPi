@@ -111,7 +111,7 @@ def waitSerialStart(ser):
     # Timeout after SERIAL_TIMEOUT
     print("\r\n" + "Sending " + SERIAL_START)
     while ((time.time() - serialStartConnect) < MAX_SERIAL_WAIT_REPLY):
-        ser.write(b'@START@\r\n')
+        ser.write((SERIAL_START + '\r\n').encode(DEFAULT_ENCODING))
         line = safe_decode(ser.readline())
         if SERIAL_START in line:
             print("\r\n" + "Received " + SERIAL_START)
