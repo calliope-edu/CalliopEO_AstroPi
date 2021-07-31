@@ -138,7 +138,7 @@ def readSerialUntilEnd(ser):
 
 #waits for SERIAL_START and collects the data received from mini until SERIAL_END is received
 #if a timeout is received the return value is False
-def readSerialData(ser):
+def readSerialData(ser, fake_timestamp=False):
     lines = []
     #ans = waitSerialStart(ser)
     scriptStartTime = datetime.now()
@@ -164,7 +164,7 @@ def readSerialData(ser):
                     # Add time stamp to beginning of line (Github issue #45).
                     # If --fake-timestamp is set, then set the time stamp to
                     # constant value 2000/01/01-00:00:00.000000
-                    if args.fake_timestamp:
+                    if fake_timestamp == True:
                         ts = "2000/01/01-00:00:00.000000"
                     else:
                         ts = datetime.now().strftime("%Y/%m/%d-%H:%M:%S.%f")
@@ -366,7 +366,7 @@ def main(args):
                 sys.exit(13)
 
             print("reading data")
-            data = readSerialData(ser)
+            data = readSerialData(ser, args.fake_timestamp)
 
             if data == False:
                 if count_try_flashing >= MAX_RETRY_FLASHING:
