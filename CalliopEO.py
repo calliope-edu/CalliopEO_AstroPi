@@ -43,6 +43,11 @@ MINI_SERIAL_REGEXP = "(/dev/tty[\w]+)[ -]+Calliope mini[ -]+CDC"
 MINI_SERIAL_MPO = re.compile(MINI_SERIAL_REGEXP, re.IGNORECASE)
 SERIAL_START = "@START@"
 SERIAL_END = "@END@"
+# SERIAL_TIMEOUT and MAX_SERIAL_WAIT_REPLY are different! SERIAL_TIMEOUT is
+# the timeout defined for operations performed on the pySerial object.
+# MAX_SERIAL_WAIT_REPLY is the maximum time in seconds to wait for a propper
+# reply on the serial port after sending the start identifier SERIAL_START.
+# SERIAL_TIMEOUT << MAX_SERIAL_WAIT_REPLY
 SERIAL_TIMEOUT = 1 # s
 MAX_SERIAL_WAIT_REPLY = 10 # Max time in s to wait for answer
 MAX_RETRY_FLASHING = 3 # Max. number to retry flashing if no serial data
