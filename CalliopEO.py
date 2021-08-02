@@ -43,8 +43,14 @@ MINI_SERIAL_REGEXP = "(/dev/tty[\w]+)[ -]+Calliope mini[ -]+CDC"
 MINI_SERIAL_MPO = re.compile(MINI_SERIAL_REGEXP, re.IGNORECASE)
 SERIAL_START = "@START@"
 SERIAL_END = "@END@"
+# SERIAL_TIMEOUT and MAX_SERIAL_WAIT_REPLY are different! SERIAL_TIMEOUT is
+# the timeout defined for operations performed on the pySerial object.
+# MAX_SERIAL_WAIT_REPLY is the maximum time in seconds to wait for a propper
+# reply on the serial port after sending the start identifier SERIAL_START.
+# SERIAL_TIMEOUT << MAX_SERIAL_WAIT_REPLY
 SERIAL_TIMEOUT = 1 # s
-REPEAT_START_SERIAL = 20 # n times SERIAL_TIMEOUT
+MAX_SERIAL_WAIT_REPLY = 10 # Max time in s to wait for answer
+MAX_RETRY_FLASHING = 3 # Max. number to retry flashing if no serial data
 MAX_SCRIPT_EXECUTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
 
@@ -102,19 +108,22 @@ def safe_decode(bytes, encoding=DEFAULT_ENCODING):
 #waits for SERIAL_START
 #if a timeout is reached the return value is False
 def waitSerialStart(ser):
-    serialTime = time.time()
+    serialStartConnect = time.time()
     line = ""
-    for x in range(REPEAT_START_SERIAL):
-        print("\r\n" + "Send " + SERIAL_START)
-        ser.write(b'@START@\r\n')
-        while True:
-            line = safe_decode(ser.readline())
-            if SERIAL_START in line:
-                print("\r\n" + "Received " + SERIAL_START)
-                return True
-            elif (time.time() - serialTime) > SERIAL_TIMEOUT:
-                break
-    return False
+    serialConnected=False
+
+    # Repeatedly send SERIAL_START and wait for response.
+    # Timeout after SERIAL_TIMEOUT
+    print("\r\n" + "Sending " + SERIAL_START)
+    while ((time.time() - serialStartConnect) < MAX_SERIAL_WAIT_REPLY):
+        ser.write((SERIAL_START + '\r\n').encode(DEFAULT_ENCODING))
+        line = safe_decode(ser.readline())
+        if SERIAL_START in line:
+            print("\r\n" + "Received " + SERIAL_START)
+            serialConnected = True
+            break # exit while loop
+
+    return serialConnected
 
 #reads the data received from mini ans returns it
 #if SERIAL_END is received True is returnes indicating the end
@@ -316,7 +325,7 @@ def main(args):
         if os.path.exists(hex + ".data"):
             print("skipping: " + hex)
             continue
-        tries  = 1
+        count_try_flashing  = 1 # Max: MAX_RETRY_FLASHING
         while True:
             print("programming: " + hex)
             programmMini(hex)
@@ -360,13 +369,19 @@ def main(args):
             data = readSerialData(ser)
 
             if data == False:
-                print("Something went wrong retrying: " + str( tries ) + "/5")
-                tries = tries + 1
-                if tries > 5:
+                if count_try_flashing >= MAX_RETRY_FLASHING:
                     #give up
                     break
                 else:
                     #repeat programming
+                    count_try_flashing += 1
+                    print(
+                            "\r\nSomething went wrong. Retrying flashing ("
+                            + str(count_try_flashing)
+                            + "/"
+                            + str(MAX_RETRY_FLASHING)
+                            + ")"
+                            )
                     continue
             else:
                 writeToFile(hex, data)
