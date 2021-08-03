@@ -67,8 +67,11 @@ USOS | US Space Segment (on ISS)
 
 ## 3 Introduction
 To run the CalliopEO payload, the Calliope mini microcontroller inside CALLIOPE MINI will be connected to ESA’s Astro Pi IR. Besides powering the CALLIOPE MINI payload this USB connection will also provide the ability to copy Hex-files from ESA’s Astro Pi IR to the Calliope mini microcontroller and for the Calliope mini microcontroller to send back serial data to ESA’s Astro Pi IR for storage and downlink.
+
 The programming runs whenever a new file package has been sent to the Astro Pi. If the latest program has been finished the Calliope mini sends a serial information to the Astro Pi. The serial communication from the Calliope mini to the Astro Pi features also a start and data information (only if data have to be recorded).
+
 The interaction between the two devices is done with a single Python script called CalliopEO.py. 
+
 The  Python script facilitates an interaction between Astro Pi and the Calliope mini microcontroller board. If executed the script detects if a Calliope mini is attached to a USB port of the Astro Pi and determines the serial port to communicate with the Calliope mini. Any program(s) to be executed by the Calliope mini will need to be placed as zipped file(s) in the directory where the script CalliopEO.py resides. If executed the script will search for all zip archives, unpack the Calliope mini program (HEX file) from the archive and flashes the Calliope mini with this program. After flashing the Calliope mini will reboot automatically and execute the program. In the directory a sub-folder named run_DDMMYY-HHMM will be created. The HEX files flashed and executed on the Calliope mini will be copied to this folder along with any data sent back by the program (files will end with .data). The initial zip archive in the main folder is renamed (additional suffix .done) to exclude this file from being processed again. The CalliopEO.py script can collect data sent by the program on the Calliope mini via the USB serial port. Therefore prepare the Calliope mini program to wait for the string @START@. Then the Calliope mini program should respond by sending @START@ back to the CalliopEO.py script and only after this sending the data. After sending the data the Calliope mini program should send the message @END@`.
  
 
@@ -88,7 +91,7 @@ Software for the Calliope mini consists of two main groups: software that runs o
 Different types of software:     
 - The master program (CalliopEO.py) is the Python programming that initiate the
 communication from the Astro Pi.
-- The initial Hex file that is running the main experiments from the CalliopEO. This Hex file will also be sent as the first batch to the Astro Pi.
+- The initial Hex file that is running the main experiments from the CalliopEO. This Hex file will also be sent as the first batch to the Astro Pi. More info on this hex file can be found in a dedicated chapter below.
 - Hex files that will be sent by students to run their experiments on the Calliope mini. The files will be sent in batches/sets of Hex files.
 - The bootloader file. This file is already running on the interface chip of the Calliope mini and ensures USB and serial connection from and to the Calliope mini. This file is already installed on the hardware and there is no need to change it.
 
@@ -118,7 +121,28 @@ The Python 3 script will run on the current Astro Pi hardware.
 However, the minimum dependencies are documented in [requirements.txt](requirements.txt).
 
 The installation, execution and de-installation process is documented in the [Readme.md](README.md)
-                                                  
+
+### 5.1.5 The initial HEX file (30s-iss-sensors.hex)
+
+The initial HEX file provided with the upload of CalliopEO to the ISS is named `30s-iss-sensors.hex`. The HEX file can be found in [./testcases/testfiles/](testcases/testfiles) and the source of the program can be found [here](testcases/testfiles/30sec-iss-sensors.js).
+
+The program runs for 30 seconds (programmable via the variable `runMaxSeconds`) and can be used to test the sensors as well as the buttons of the CalliopEO. The program polls the sensors and button state every second (programmable via the variable `updatePeriod`). The polling of individual sensors can be disabled via boolean variables (example: `testSCD30 = true`).
+
+If `runMaxSeconds` is set to zero, the program runs infinite.
+
+Due to the time needed to poll every sensor/actuator and to output the result over the serial port do not set `updatePeriod` to values below ~ 300 ms. Values for `updatePeriod` lower than 1000 ms however can be used to set the CalliopEO into a burst mode e.g. for an electromagnetic compatibility test.
+
+According to the current availability of drivers for the Calliope and the availability of sensors/actuators present on the CalliopEO hardware (some parts had to be removed or deactivated due to ISS safety regulations) the following sensors/actuators are supported:
+
+* CalliopEO onboard temperature sensor
+* CalliopEO onboard light sensor
+* BMX055 accelerometer (x, y, z, total)
+* SCD30 temperature, humidity and CO2 concentration
+* SI1145 IR intensity, light intensity and UV index
+* TCS34725 red, green, blue and white color values
+* State of CalliopEO buttons A and B (pressed/not pressed)
+* Test of the CalliopEO 5x5 LED matrix. In every cycle one more LED is set on of off.
+
 ### 5.2. Data transmission
 
 The Calliope mini comes preinstalled with the experiments, so that it immediately can send data once connected and the CalliopEO.py script is executed, but no .zip file is directly available. However, this program is also part of the first ones to be uploaded from the Astro Pi, to check if the connectivity does work. In this case the programs for the Columbus Module Position (COL1A2/A3) and Window Position (Node 1/2 Nadir Hatch Window or any available Nadir facing Window) will run respectively in the order of the experiments. After the experiments have been run, the data files (as seen in 5.1.1) should be sent back as soon as possible. 
