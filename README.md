@@ -34,7 +34,18 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
 ```
 
 ## Testing
-To select and run tests execute `./testing.sh`. To get an overview of available tests see [Testcases.md](testcases/testcases.md).
+
+![Selection of testcases](assets/select_testcases.png)
+
+To perform software system tests a suite of testcases were established. To select and run individual testcases execute `./testing.sh`. The following dialog allows to select or deselect individual testcases, but the order of tests cannot be changed. To get an overview of available testcases see [Testcases.md](testcases/testcases.md).
+
+Important: Before executing `./testing.sh` please remove all existing ZIP files
+and `run_` folders from the main directory. `./testing.sh` will abort if those
+files or diretories are present.
+
+The test suite is primarily meant to support the development and maintenance of
+the software.
+
 Sample testresults can be found in [./testresults](testresults).
 
 ## HEX Boilerplate
