@@ -4,16 +4,16 @@
 # Readme
 
 ## Description
-CalliopEO is a Python script to facilitate ineraction between a Raspberry Pi microcomputer and a [Calliope Mini microcontroller board](https://calliope.cc/). If executed, the script detects, if a Calliope Mini is attached to a USB board of the Raspbery Pi and determins the serial port to communicate the Calliope Mini.
+CalliopEO is a Python script to facilitate interaction between a Raspberry Pi microcomputer and a [Calliope Mini microcontroller board](https://calliope.cc/). If executed, the script detects, if a Calliope Mini is attached to a USB board of the Raspbery Pi and determins the serial port to communicate with the Calliope Mini.
 
-Place any program(s) to be executed by the Calliope Mini as zipped file(s) in the directory where the script `CalliopEO.py` resides. If executed the script will search for all zip archives, unpack the Calliope Mini program (HEX file) from the archive and flash the Calliope Mini with this program. After flashing, the Calliope Mini will reboot automatically and execute the program.
+The directory, in which the `CalliopEO.py` script is located is called the main directory. Place any program(s) to be executed by the Calliope Mini as zipped HEX file(s) in this main directory. If executed the script will search for all zip archives, unpack the Calliope Mini program (HEX file) from the archive and flash the Calliope Mini with this program. After flashing, the Calliope Mini will reboot automatically and execute the program.
 
-In the directory a sub-folder named `run_YYYYMMDD-HHMMSS` will be created. The HEX files flashed and executed on the Calliope Mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
+In the main directory a sub-folder named `run_YYYYMMDD-HHMMSS` will be created. The HEX files flashed and executed on the Calliope Mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
 
 The `CalliopEO.py` script can collect data sent by the program on the Calliope Mini via the USB serial port. Therefore, prepare the Calliope Mini program to wait for the string `@START@`. Then, the Calliope Mini program should respond by sending `@START@` back to the `CalliopEO.py` script and only after this sending the data. After sending the data the Calliope Mini program should send the
 message `@END@`.
 
-Each line in the `.data` files will have a leading time stamp of the format `YYYY/MM/DD-HH/MM/SS.ssssss`.
+Each line in the `.data` files will have a leading time stamp of the format `YYYY/MM/DD-HH/MM/SS.ssssss`. A boilerplate for the Calliope Mini programs is described below.
 
 ## Execute
 ```
@@ -34,7 +34,7 @@ The Calliope Mini should be connected via USB to the Raspberry Pi.
 ```
 
 ## Testing
-To select and run tests execute `./testing.sh`. To get an overview of availbable tests see [Testcases.md](testcases/testcases.md).
+To select and run tests execute `./testing.sh`. To get an overview of available tests see [Testcases.md](testcases/testcases.md).
 Sample testresults can be found in [./testresults](testresults).
 
 ## HEX Boilerplate
@@ -59,7 +59,7 @@ The setup script performs the following actions:
 * Add user to group `dialout` to be able to perform communication with the Calliope Mini over the serial port
 * Set password for the new user
 * Determine UUIDs for Calliope Mini's block devices and creating mount points in `/etc/fstab`. Later, this is used to mount the block devices for flashing the Calliope Mini. The mount points are defined in `/etc/fstab` in order to allow unprivileged users like `calliope` to mount/unmount the block devices.
-* Copying necessary files to the user's home directory into a subfolder `~/calliopEO`, in particular `CalliopEO.py`
+* Create the main directory below the user's home directory `~/calliopEO` and copy all necessary files to this directory, in particular the Python script `CalliopEO.py`.
 * Installing necessary Python modules from local wheel files. This is necessary due to security requirements set by ESA.
 
 ## De-Installation
