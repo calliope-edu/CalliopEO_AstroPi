@@ -65,16 +65,16 @@ cp -r . /home/${username}/calliopEO/.
 # Create mount points
 echo "Creating local mount points in /home/${username}/mnt/"
 mkdir -p /home/${username}/mnt/mini
-mkdir -p /home/${username}/mnt/flash
+#mkdir -p /home/${username}/mnt/flash
 
 # Adjust the uid and gui for all files in user directory
 chown -R ${user_id}:${group_id} /home/${username}
 
 # Create mount point in /etc/fstab that can be mounted by user calliope
-echo "Adding mount point definitions to /etc/fstab"
-echo "# Mount points for Calliope Mini" >> /etc/fstab
+echo "Adding mount point definition to /etc/fstab"
+echo "# Mount point for Calliope Mini" >> /etc/fstab
 echo "/dev/disk/by-uuid/${uuid_mini} /home/${username}/mnt/mini vfat noauto,users 0 0" >> /etc/fstab
-echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/flash vfat noauto,users 0 0" >> /etc/fstab
+#echo "/dev/disk/by-uuid/${uuid_flash} /home/${username}/mnt/flash vfat noauto,users 0 0" >> /etc/fstab
 
 # Install all Python modules from folder /modules
 # First, copy the folder /modules to the home directory of ${username}.

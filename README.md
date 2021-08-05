@@ -102,7 +102,7 @@ The setup script performs the following actions:
 * Create a dedicated user (default: `calliope`)
 * Add user to group `dialout` to be able to perform communication with the Calliope Mini over the serial port
 * Set password for the new user
-* Determine UUIDs for Calliope Mini's block devices and creating mount points in `/etc/fstab`. Later, this is used to mount the block devices for flashing the Calliope Mini. The mount points are defined in `/etc/fstab` in order to allow unprivileged users like `calliope` to mount/unmount the block devices.
+* Determine UUIDs for Calliope Mini's block devices and creating mount point in `/etc/fstab`. Later, this is used to mount the block devices for flashing the Calliope Mini. The mount point is defined in `/etc/fstab` in order to allow unprivileged users like `calliope` to mount/unmount the block device.
 * Create the main directory below the user's home directory `~/calliopEO` and copy all necessary files to this directory, in particular the Python script `CalliopEO.py`.
 * Installing necessary Python modules from local wheel files. This is necessary due to security requirements set by ESA.
 
@@ -119,10 +119,9 @@ $ sudo userdel -r calliope
 ```
 $ sudo cp /etc/fstab /etc/fstab.backup
 ```
-5. Open the file `/etc/fstab` in a text editor. Remove (or uncomment) all mount point definitions in `/etc/fstab` for CalliopEO. The section with the moint point definitions should look like the following:
+5. Open the file `/etc/fstab` in a text editor. Remove (or uncomment) mount point definitions in `/etc/fstab` for CalliopEO. The line(s) with the moint point definitions should look like the following:
 ```
 # Mount points for Calliope Mini
 /dev/disk/by-uuid/0123-4567 /home/calliope/mnt/mini vfat noauto,users 0 0
-/dev/disk/by-uuid/089A-BCDE /home/calliope/mnt/flash vfat noauto,users 0 0
 ```
 6. Restart the operating system. The de-installation is complete.
