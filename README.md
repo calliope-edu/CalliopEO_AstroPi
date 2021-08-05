@@ -16,6 +16,39 @@ message `@END@`.
 Each line in the `.data` files will have a leading time stamp of the format `YYYY/MM/DD-HH/MM/SS.ssssss`. A boilerplate for the Calliope Mini programs is described below.
 
 ## Execute
+### Important considerations when using on Astro Pi onboard the ISS
+Due to the movement of the ISS around the Earth a loss of signal (LOS) between a Ground Control Center and the Astro Pi can occur. This can result in a loss of the running SSH session running `CalliopEO.py`. To ease the process of gaining back access, it is highly recommended to use a terminal multiplexer. On Astro Pi OS the screen multiplexer [`screen`](https://www.gnu.org/software/screen/) is available.
+
+To establish a terminal session via `screen` that can be resumed after a LOS follow the following steps:
+```
+# Establish a SSH connection to Astro Pi with the hostname or IP address <astropi> using a SSH-enabled user account on Astro Pi (assuming root:
+ssh root@<astropi>
+# Change to the user calliope and cd in it's home directory
+su calliope
+cd
+# List all currently running screen sessions:
+screen -ls
+```
+With multiple sessions the ouput could be similar to:
+```
+There are screens on:
+    10474.calliope1 (Detached)
+    10427.testing   (Detached)
+    10321.other_session     (Detached)
+3 Sockets in /var/run/screen/S-thiht.
+```
+To connect to an existing but detached session you can use the Process ID (PID, first collumn) or the session name (second column). For example:
+```
+screen -x calliope1
+```
+In case a new screen session has to be created, execute the followinf command and select a propper session name `<name>`:
+```
+screen -S <name>
+```
+At any time a running session can be detached using the keyboard sequence `CTRL+a, d`. Resume a session detached either manually or by a LOS using `screen -x <name>` (see above).
+
+### Command Syntax of CalliopEO.py
+The syntax of the script `CalliopEO.py` is:
 ```
 $ python3 CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
 ```
