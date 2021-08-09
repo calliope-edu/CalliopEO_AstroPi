@@ -70,9 +70,9 @@ To run the CalliopEO payload, the Calliope mini microcontroller inside CALLIOPE 
 
 The programming runs whenever a new file package has been sent to the Astro Pi. If the latest program has been finished the Calliope mini sends a serial information to the Astro Pi. The serial communication from the Calliope mini to the Astro Pi features also a start and data information (only if data have to be recorded).
 
-The interaction between the two devices is done with a single Python script called CalliopEO.py. 
+The interaction between the two devices is done with a single Python script called `CalliopEO.py`. 
 
-The  Python script facilitates an interaction between Astro Pi and the Calliope mini microcontroller board. If executed the script detects if a Calliope mini is attached to a USB port of the Astro Pi and determines the serial port to communicate with the Calliope mini. Any program(s) to be executed by the Calliope mini will need to be placed as zipped file(s) in the directory where the script CalliopEO.py resides. If executed the script will search for all zip archives, unpack the Calliope mini program (HEX file) from the archive and flashes the Calliope mini with this program. After flashing the Calliope mini will reboot automatically and execute the program. In the directory a sub-folder named run_DDMMYY-HHMM will be created. The HEX files flashed and executed on the Calliope mini will be copied to this folder along with any data sent back by the program (files will end with .data). The initial zip archive in the main folder is renamed (additional suffix .done) to exclude this file from being processed again. The CalliopEO.py script can collect data sent by the program on the Calliope mini via the USB serial port. Therefore prepare the Calliope mini program to wait for the string @START@. Then the Calliope mini program should respond by sending @START@ back to the CalliopEO.py script and only after this sending the data. After sending the data the Calliope mini program should send the message @END@`.
+The Python script facilitates an interaction between Astro Pi and the Calliope mini microcontroller board. If executed the script detects if a Calliope mini is attached to a USB port of the Astro Pi and determines the serial port to communicate with the Calliope mini. Any program(s) to be executed by the Calliope mini will need to be placed as zipped file(s) in the main directory where the script `CalliopEO.py` resides. If executed the script will search for all zip archives, unpack the Calliope mini program (HEX file) from the archive and flashes the Calliope mini with this program. After flashing the Calliope mini will reboot automatically and execute the program. In the main directory a sub-folder named `run_DDMMYY-HHMM` will be created. The HEX files flashed and executed on the Calliope mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again. The `CalliopEO.py` script can collect data sent by the program on the Calliope mini via the USB serial port. Therefore prepare the Calliope mini program to wait for the string `@START@`. Then the Calliope mini program should respond by sending `@START@` back to the CalliopEO.py script and only after this sending the data. After sending the data the Calliope mini program should send the message `@END@`.
  
 
 ## 4 Software Flow Astro Pi to CALLIOPE MINI
@@ -100,15 +100,16 @@ The bootloader of the Calliope mini can be delivered as source code directly fro
 
 #### 5.1.1 Device Abstraction Layer DAL
 
-The Calliope mini runtime provides a Device Abstraction Layer (DAL) that is built using Arm Mbed. Lancaster University has written this runtime as part of its ongoing efforts to support the adoption of Computer Science in schools. It provides a useful set of functions for higher level languages to consume and make programming the Calliope mini in C or C++ easier. Many of the ‘blocks’ you use in the visual editor are directly calling functions provided by the DAL. The Calliope mini runtime DAL is written in C/C++ and builds on the Arm Mbed HAL.
+The Calliope mini runtime provides a Device Abstraction Layer (DAL) that is built using Arm Mbed. Lancaster University has written this runtime as part of its ongoing efforts to support the adoption of Computer Science in schools (see [here](https://tech.microbit.org/software/runtime/)). It provides a useful set of functions for higher level languages to consume and make programming the Calliope mini in C or C++ easier. Many of the ‘blocks’ you use in the visual editor are directly calling functions provided by the DAL. The Calliope mini runtime DAL is written in C/C++ and builds on the Arm Mbed HAL.
+
 Key components of the Calliope mini DAL are:
-a scheduler that lets Calliope mini do more than one task at a time. An eventing system called the message bus that lets you write reactive code. It can inform your program when things happen on your Calliope.
-Device drivers representing the major hardware blocks on the Calliope mini including the LED display sensors and file system.
-Managed types that help keep programs safe from the complexities of memory management.
+* a scheduler that lets Calliope mini do more than one task at a time. An eventing system called the message bus that lets you write reactive code. It can inform your program when things happen on your Calliope.
+* Device drivers representing the major hardware blocks on the Calliope mini including the LED display sensors and file system.
+* Managed types that help keep programs safe from the complexities of memory management.
 
 #### 5.1.2 Editor
 
-Microsoft MakeCode will be available to use as an editor to build the programs. The generated hex files contain the compiled hex part as well as an importable JavaScript part. We never use the compiled part of files which are not compiled by us. When we receive Hex files, we import them to a special version of MakeCode, check the code for unsupported parts and wrap the start and stop signals for the Python Script around. This way we make sure to know what code gets sent to the Calliope mini and are able to prove it line by line. The detailed review process of the students code is not in scope of this documentation.
+[Microsoft MakeCode](https://www.microsoft.com/en-us/makecode/about) will be available to use as an editor to build the programs. The generated hex files contain the compiled hex part as well as an importable JavaScript part. We never use the compiled part of files which are not compiled by us. When we receive Hex files, we import them to a special version of MakeCode, check the code for unsupported parts and wrap the start and stop signals for the Python Script around. This way we make sure to know what code gets sent to the Calliope mini and are able to prove it line by line. The detailed review process of the students code is not in scope of this documentation.
 The JavaScript file as an example can be found as an appendix (A.2).
      
 #### 5.1.3 J-Link/DAPLink
@@ -122,15 +123,27 @@ However, the minimum dependencies are documented in [requirements.txt](requireme
 
 The installation, execution and de-installation process is documented in the [Readme.md](README.md)
 
-### 5.1.5 The initial HEX file (30s-iss-sensors.hex)
+### 5.1.5 The initial HEX file (30sec-iss-sensors.hex)
 
-The initial HEX file provided with the upload of CalliopEO to the ISS is named `30s-iss-sensors.hex`. The HEX file can be found in [./testcases/testfiles/](testcases/testfiles) and the source of the program can be found [here](testcases/testfiles/30sec-iss-sensors.js).
+The initial HEX file provided with the upload of CalliopEO to the ISS is named `30sec-iss-sensors.hex`. The HEX file can be found in [./testcases/testfiles/](testcases/testfiles) and the source of the program can be found [here](testcases/testfiles/30sec-iss-sensors.js). The program is primarily meant to perform System Validation Tests to ensure propper functionality of hardware and software also remotely from Ground.
 
-The program runs for 30 seconds (programmable via the variable `runMaxSeconds`) and can be used to test the sensors as well as the buttons of the CalliopEO. The program polls the sensors and button state every second (programmable via the variable `updatePeriod`). The polling of individual sensors can be disabled via boolean variables (example: `testSCD30 = true`).
+To execute `30sec-iss-sensors.hex` execute the following steps from the main directory (`~/calliopEO`):
+
+```
+# Copy the ZIp archive containing the 30sec-iss-sensors.hex to the main diretory
+cp testcases/testfiles/30sec-iss-sensors.zip .
+# Execute the Python script
+./CalliopEO.py
+```
+
+The program runs for 30 seconds (programmable via the variable `runMaxSeconds`) and can be used to test the sensors as well as the buttons of the CalliopEO. The program polls the sensors and button state every second (programmable via the variable `updatePeriod`). The polling of individual sensors can be disabled via boolean variables (example: `testSCD30 = false`).
 
 If `runMaxSeconds` is set to zero, the program runs infinite.
 
 Due to the time needed to poll every sensor/actuator and to output the result over the serial port do not set `updatePeriod` to values below ~ 300 ms. Values for `updatePeriod` lower than 1000 ms however can be used to set the CalliopEO into a burst mode e.g. for an electromagnetic compatibility test.
+
+To create a modified version of a HEX program derived from `30sec-iss-sensors.hex` copy/paste the content of the JavaScript source file [`30sec-iss-sensors.js`](testcases/testfiles/30sec-iss-sensors.js) to the Microsoft Mikrocode editor, apply the necessary changes and export the corresponding HEX file using the functions in Makecode. Create a ZIP archive from this HEX file, place it
+in the main diretory and execute `CalliopEO.py`.
 
 According to the current availability of drivers for the Calliope and the availability of sensors/actuators present on the CalliopEO hardware (some parts had to be removed or deactivated due to ISS safety regulations) the following sensors/actuators are supported:
 
