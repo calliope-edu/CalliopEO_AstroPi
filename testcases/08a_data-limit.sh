@@ -183,10 +183,10 @@ fi
 ###############################################################################
 
 # Remove .done file
-#rm ${zipfile_done}
+rm ${zipfile_done}
 
 # Remove folder run_*
-#rm -rf run_*
+rm -rf run_*
 
 # Remove folder tmp
-#rm -r "${tmpdir}"
+rm -r "${tmpdir}"
