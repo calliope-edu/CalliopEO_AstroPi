@@ -184,7 +184,7 @@ fi
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile1_done} ${zipfile2_done}
+rm ${zipfile_done}
 
 # Remove folder run_*
 rm -rf run_*
