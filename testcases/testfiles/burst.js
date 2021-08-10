@@ -18,6 +18,7 @@ basic.forever(function () {
     // Student code goes here.
     while (runProgram) {
         serial.writeLine("plzkillme!")
+        control.waitMicros(100000)
     }
 })
 
