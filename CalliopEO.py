@@ -210,6 +210,7 @@ def readSerialData(ser, outFileName, fake_timestamp=False):
                         dataSize += (len(line) + 1)
                     else:
                         # Exit while loop
+                        print("\r\n" + "Max file size achieved")
                         break
 
                 # Update serial_buffer
@@ -223,6 +224,7 @@ def readSerialData(ser, outFileName, fake_timestamp=False):
             connTimeout = True
         # See if we are behind connEndTime
         if (receivedStart == True and now > connEndTime):
+            print("\r\n" + "Max script time achieved")
             connTimeout = True
 
     return dataSize
