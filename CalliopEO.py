@@ -92,6 +92,9 @@ def serialConnect(mini_port):
         ser.port = mini_port
         if not ser.is_open:
             ser.open()
+        # Flush incoming buffer of serial port as a preventive measure
+        # (see issue #74)
+        ser.reset_input_buffer()
         mini_connected = True
     except Exception as Err:
         print("Error connecting serial port: %s" % Err)
