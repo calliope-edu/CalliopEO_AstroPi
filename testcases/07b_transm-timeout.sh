@@ -25,6 +25,12 @@
 #   Remove created *.done, folder run_*/ and tmp files
 
 ###############################################################################
+# Import necessary functions
+###############################################################################
+source testcases/shfuncs/comp.sh
+source testcases/shfuncs/wait_for_calliope.sh
+
+###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
 hexfile1="testcases/testfiles/900sec-counter.hex"
@@ -38,11 +44,6 @@ tmpdir="./tmp"
 ERRORS=0
 
 ###############################################################################
-# Import necessary functions
-###############################################################################
-source testcases/shfuncs/comp.sh
-
-###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
 echo "Test: Continue with next hex after timeout"
@@ -54,6 +55,9 @@ if [ "${CALLIOPE_ATTACHED}" != "yes" ]; then
     while [[ ! ${ans} =~ [Yy] ]]; do
         read -p "Confirm, Calliope Mini is attached to USB [y] " ans
     done
+    if [ ${WAIT_AFTER_CALL_ATTACHED} -eq 1 ]; then
+        wait_for_calliope
+    fi
     CALLIOPE_ATTACHED="yes"
 fi
 

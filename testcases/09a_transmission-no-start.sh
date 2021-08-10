@@ -19,6 +19,11 @@
 #   Remove created *.done and folder run_*/ and folder tmp/
 
 ###############################################################################
+# Import necessary functions
+###############################################################################
+source testcases/shfuncs/wait_for_calliope.sh
+
+###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
 tmpdir="./tmp"
@@ -39,6 +44,9 @@ if [ "${CALLIOPE_ATTACHED}" != "yes" ]; then
     while [[ ! ${ans} =~ [Yy] ]]; do
         read -p "Confirm, Calliope Mini is attached to USB [y] " ans
     done
+    if [ ${WAIT_AFTER_CALL_ATTACHED} -eq 1 ]; then
+        wait_for_calliope
+    fi
     CALLIOPE_ATTACHED="yes"
 fi
 
