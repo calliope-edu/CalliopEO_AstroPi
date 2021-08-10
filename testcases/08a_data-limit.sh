@@ -5,21 +5,20 @@
 ###############################################################################
 
 # Description
-#   Execute the CalliopEO.py with two zip archives. The first contains a
-#   valid hex file, but transmitting more data than configured via the cli
-#   option --max-data-size). The second zip contains a hex file
-#   transmitting well below this threshold. This testcase demonstrates that
-#   the CalliopEO.py script handles the data limit thtreshold and proceeds
-#   with the next zip archive.
+#   Execute the CalliopEO.py script with a hex file producing a lot of data
+#   and setting the setting the command line paranmeter of CalliopEO.py
+#   --max-data-size to provoke a termination by CalliopEO.py due to
+#   exeedance of the data threshold. This testcase demonstrates that
+#   the CalliopEO.py script handles the data limit threshold.
 # Preparation
-#   Provide zip archives 900sec-counter.zip and 30sec-counter.zip.
+#   Provide zip archive burst.zip.
 # Expected result
-#   CalliopEO.py returns code 0 in all runs with the two zip archives
+#   CalliopEO.py returns code 0
 #   CalliopEO.py renames the the .zip to .zip.done
-#   CalliopEO.py creates two folders run_*
-#   CalliopEO.py creates .data files in both folders run_*
-#   Second .data file has correct MD5 checksum
-#   Size of first data file is meets the size treshold
+#   CalliopEO.py creates a folder run_*
+#   CalliopEO.py creates a .data files in the folder run_*
+#   The .data file has correct MD5 checksum
+#   Size of .data file is meets the size treshold
 # Necessary clean-up
 #   Remove created *.done and folders run_*/
 
@@ -145,7 +144,7 @@ fi
 run_folder=$(find . -type d -ipath "./run_*")
 mv "${tmpdir}/${md5file}" ${run_folder}/.
 cd ${run_folder}
-echo -n "Check5/6: MD5 checksum in folder ${run_folder} ... "
+echo -n "Check 5/6: MD5 checksum in folder ${run_folder} ... "
 md5sum -c "${md5file}" >> /dev/null
 if [ $? -eq 0 ]; then
     echo -e "${G}PASSED${NC}"
@@ -184,10 +183,10 @@ fi
 ###############################################################################
 
 # Remove .done file
-rm ${zipfile_done}
+#rm ${zipfile_done}
 
 # Remove folder run_*
-rm -rf run_*
+#rm -rf run_*
 
 # Remove folder tmp
-rm -r "${tmpdir}"
+#rm -r "${tmpdir}"
