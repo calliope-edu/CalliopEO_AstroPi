@@ -116,19 +116,19 @@ The JavaScript file as an example can be found as an appendix (A.2).
 
 The Calliope mini presents itself as a USB disk when it is connected over USB and can be programmed through this interface. Furthermore, no matter what code you run on your Calliope mini you can always put a new program on using the USB connection. This is made possible by having a separate ‘interface chip’ on the Calliope mini dedicated to USB connections programming and debugging. The Interface MCU is a Freescale KL26Z. The chip that developers’ code runs on and that all the peripherals are connected to is called the ‘target MCU’. The Target MCU is a Nordic Semiconductor nRF51822. Due to the number of pins on the Nordic Semiconductor chip only the uart TX and RX lines are connected between the interface MCU and the target MCU. This means that there is no hardware flow control possible. This means that at higher serial speeds (baud rates above 9600) the Calliope mini may drop characters being sent to it.
 
-#### Bootloader
+#### 5.1.4 Bootloader
 
 The Calliope mini uses the default bootloader for the mini REV2 as available on [calliope.cc/en/start/tips](https://calliope.cc/en/start/tips).
 The Checksum for the file [jlink_ob_calliope_mini.hex](https://calliope.cc/media/pages/start/tipps/96fe22d2a5-1602240640/jlink_ob_calliope_mini.hex) is `441caf250939d9130c20a749936ae4df`
 
-#### 5.1.4 Python Script
+#### 5.1.5 Python Script
      
 The Python 3 script will run on the current Astro Pi hardware.
 However, the minimum dependencies are documented in [requirements.txt](requirements.txt).
 
 The installation, execution and de-installation process is documented in the [Readme.md](README.md)
 
-### 5.1.5 The initial HEX file (30sec-iss-sensors.hex)
+### 5.1.6 The initial HEX file (30sec-iss-sensors.hex)
 
 The initial HEX file provided with the upload of CalliopEO to the ISS is named `30sec-iss-sensors.hex`. The HEX file can be found in [./testcases/testfiles/](testcases/testfiles) and the source of the program can be found [here](testcases/testfiles/30sec-iss-sensors.js). The program is primarily meant to perform System Validation Tests to ensure propper functionality of hardware and software also remotely from Ground.
 
