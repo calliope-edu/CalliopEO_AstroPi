@@ -41,6 +41,14 @@ if [[ ${tc_folder} == "" ]]; then
     tc_folder="./testcases"
 fi
 
+# If there are no testcases files in ${tc_folder} exit with message
+# See issue #78
+if [ $(ls -l ${tc_folder%/}/*.sh | wc -l) -eq 0 ]; then
+    message="No testcases found in ${tc_folder}."
+    whiptail --msgbox --title "CalliopEO Test" "${message}" 10 70
+    exit 1
+fi
+
 whiptail_args+=(
     --backtitle "CalliopEO Test"
     --title "Select Tests"
@@ -50,12 +58,14 @@ whiptail_args+=(
     26 80 16
 )
 
+# Add testcase files as selection list to dialogue box
 i=0
 for f in ${tc_folder%/}/*.sh
 do
     whiptail_args+=( "$((++i))" "${f##*/}" "on" )
 done
 
+# Show dialog box to let the user select the testcases
 selected=$(whiptail  "${whiptail_args[@]}" 3>&1 1>&2 2>&3)
 
 # Exit if user selected "Cancel"
