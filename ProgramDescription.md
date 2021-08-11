@@ -1,6 +1,6 @@
 **CalliopEO**
 
-[README](README.md) | ***[Program Description](ProgramDescription.md)*** | [Testcases](testcases/testcases.md)
+[README](README.md) | ***[Program Description](ProgramDescription.md)*** | [Testcases](testcases/testcases.md) | [CHANGELOG.md](CHANGELOG.md)
 
 # Program Description
 ## 1 Scope
@@ -114,7 +114,12 @@ The JavaScript file as an example can be found as an appendix (A.2).
      
 #### 5.1.3 J-Link/DAPLink
 
-The Calliope mini presents itself as a USB disk when it is connected over USB and can be programmed through this interface. Furthermore, no matter what code you run on your Calliope mini you can always put a new program on using the USB connection. This is made possible by having a separate ‘interface chip’ on the Calliope mini dedicated to USB connections programming and debugging. The Interface MCU is a Freescale KL26Z.The chip that developers’ code runs on and that all the peripherals are connected to is called the ‘target MCU’. The Target MCU is a Nordic Semiconductor nRF51822. Due to the number of pins on the Nordic Semiconductor chip only the uart TX and RX lines are connected between the interface MCU and the target MCU. This means that there is no hardware flow control possible. This means that at higher serial speeds (baud rates above 9600) the Calliope mini may drop characters being sent to it.
+The Calliope mini presents itself as a USB disk when it is connected over USB and can be programmed through this interface. Furthermore, no matter what code you run on your Calliope mini you can always put a new program on using the USB connection. This is made possible by having a separate ‘interface chip’ on the Calliope mini dedicated to USB connections programming and debugging. The Interface MCU is a Freescale KL26Z. The chip that developers’ code runs on and that all the peripherals are connected to is called the ‘target MCU’. The Target MCU is a Nordic Semiconductor nRF51822. Due to the number of pins on the Nordic Semiconductor chip only the uart TX and RX lines are connected between the interface MCU and the target MCU. This means that there is no hardware flow control possible. This means that at higher serial speeds (baud rates above 9600) the Calliope mini may drop characters being sent to it.
+
+#### Bootloader
+
+The Calliope mini uses the default bootloader for the mini REV2 as available on [calliope.cc/en/start/tips](https://calliope.cc/en/start/tips).
+The Checksum for the file [jlink_ob_calliope_mini.hex](https://calliope.cc/media/pages/start/tipps/96fe22d2a5-1602240640/jlink_ob_calliope_mini.hex) is `441caf250939d9130c20a749936ae4df`
 
 #### 5.1.4 Python Script
      
