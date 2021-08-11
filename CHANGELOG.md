@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Tracking changes in master
 
 **Updates**
+- Closed issue #78: Testing.sh exits with notification if there are no testcase files
+- Closed issue #76: Inserted "5 second sleep phase" between testcases with unconnected and connected CalliopEO in testing.sh to avoid that the program accesses CalliopEO too early which can result in errors
+- Closed issue #74: Reduced data rate for burst.hex to avoid having corrupted .data files resulting in incorrect MD5 checksums
+- Closed issue #48: Handle "unstructured" data from CalliopEO without newlines
 - Replaced md5sum by custom-made `comp()` function in testcases 07a and 07b
 - Removed unneeded declaration of `tc_folder`
 - Added Cancel button to GUI
