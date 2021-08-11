@@ -19,6 +19,10 @@ TEST_RESULTS=""
 
 CALLIOPE_ATTACHED=""
 
+# This variable indicates if we need to wait a little bit after attaching
+# the CalliopEO (see issue #76)
+WAIT_AFTER_CALL_ATTACHED=1
+
 # Cd into the directory where testing.sh is located in the case
 # this script was called from somewhere else.
 cd $(dirname ${0})

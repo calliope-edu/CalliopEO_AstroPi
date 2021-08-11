@@ -26,6 +26,12 @@
 #   Remove created *.done, folder run_*/ and tmp files
 
 ###############################################################################
+# Import necessary functions
+###############################################################################
+source testcases/shfuncs/comp.sh
+source testcases/shfuncs/wait_for_calliope.sh
+
+###############################################################################
 # Variables and definitions for this testcase
 ###############################################################################
 hexfile="testcases/testfiles/900sec-counter.hex"
@@ -38,22 +44,20 @@ tmpdir="./tmp"
 ERRORS=0
 
 ###############################################################################
-# Import necessary functions
-###############################################################################
-source testcases/shfuncs/comp.sh
-
-###############################################################################
 # Information and instructions for the test operator
 ###############################################################################
 echo "Test: Handle transmission timeout"
 echo "---------------------------------"
 echo ""
-# Make sure, Calliope is disconnected from Astro Pi
+# Make sure, Calliope is connected to Astro Pi
 if [ "${CALLIOPE_ATTACHED}" != "yes" ]; then
     ans=""
     while [[ ! ${ans} =~ [Yy] ]]; do
         read -p "Confirm, Calliope Mini is attached to USB [y] " ans
     done
+    if [ ${WAIT_AFTER_CALL_ATTACHED} -eq 1 ]; then
+        wait_for_calliope
+    fi
     CALLIOPE_ATTACHED="yes"
 fi
 
@@ -149,7 +153,6 @@ else
     ERRORS=$((ERRORS+1))
 fi
 
-# Check md5sums for hex and data files
 run_folder=$(find . -type d -ipath "./run_*")
 echo -n "Check 5/6: Check .data file in ${run_folder} ... "
 # Compare .data file created in test with "template" data file in folder
