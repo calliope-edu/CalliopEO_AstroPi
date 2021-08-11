@@ -51,8 +51,10 @@ SERIAL_END = "@END@"
 SERIAL_TIMEOUT = 1 # s
 MAX_SERIAL_WAIT_REPLY = 10 # Max time in s to wait for answer
 MAX_RETRY_FLASHING = 3 # Max. number to retry flashing if no serial data
-MAX_SCRIPT_EXECUTION_TIME = 11100 # s
+MAX_CONNECTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
+
+MAX_LINE_LENGTH = 200 # Crop lines that are longer
 
 # Returns the port for the (first) Calliope mini or None
 def getMiniSerial():
@@ -90,6 +92,9 @@ def serialConnect(mini_port):
         ser.port = mini_port
         if not ser.is_open:
             ser.open()
+        # Flush incoming buffer of serial port as a preventive measure
+        # (see issue #74)
+        ser.reset_input_buffer()
         mini_connected = True
     except Exception as Err:
         print("Error connecting serial port: %s" % Err)
@@ -99,104 +104,133 @@ def serialConnect(mini_port):
     else:
         return None
 
-def safe_decode(bytes, encoding=DEFAULT_ENCODING):
-    try:
-        return bytes.decode(encoding).strip()
-    except:
-        return ""
+# Listens to serial port, sends SERIAL_START and waits for response and
+# data. Writes data with timestamps to file. Ends if timeout is reached,
+# maximum size of data is written to file or SERIAL_END is received.
+def readSerialData(ser, outFileName, fake_timestamp=False):
 
-#waits for SERIAL_START
-#if a timeout is reached the return value is False
-def waitSerialStart(ser):
-    serialStartConnect = time.time()
-    line = ""
-    serialConnected=False
+    # Initialize buffer for serial data
+    serial_buffer = ''
 
-    # Repeatedly send SERIAL_START and wait for response.
-    # Timeout after SERIAL_TIMEOUT
-    print("\r\n" + "Sending " + SERIAL_START)
-    while ((time.time() - serialStartConnect) < MAX_SERIAL_WAIT_REPLY):
-        ser.write((SERIAL_START + '\r\n').encode(DEFAULT_ENCODING))
-        line = safe_decode(ser.readline())
-        if SERIAL_START in line:
-            print("\r\n" + "Received " + SERIAL_START)
-            serialConnected = True
-            break # exit while loop
+    # Determine start/stop time for connection
+    connStartTime = datetime.now()
+    connEndTime = (connStartTime
+            + timedelta(seconds=MAX_CONNECTION_TIME))
+    connTimeoutNoResponse = (connStartTime
+            + timedelta(seconds=MAX_SERIAL_WAIT_REPLY))
 
-    return serialConnected
-
-#reads the data received from mini ans returns it
-#if SERIAL_END is received True is returnes indicating the end
-def readSerialUntilEnd(ser):
-    line = ""
-    while True:
-        line = safe_decode(ser.readline())
-        if SERIAL_END in line:
-            return True
-        else:
-            return line
-
-#waits for SERIAL_START and collects the data received from mini until SERIAL_END is received
-#if a timeout is received the return value is False
-def readSerialData(ser):
-    lines = []
-    #ans = waitSerialStart(ser)
-    scriptStartTime = datetime.now()
-    scriptEndTime = (scriptStartTime
-            + timedelta(seconds=MAX_SCRIPT_EXECUTION_TIME))
+    # Write info to STDOUT
     tformat="%Y/%m/%d-%H:%M:%S"
     print("\r\n"
             + "Start @ "
-            + scriptStartTime.strftime(tformat)
+            + connStartTime.strftime(tformat)
             + "; Will stop @ "
-            + scriptEndTime.strftime(tformat)
+            + connEndTime.strftime(tformat)
             )
-    # Received @START@?
-    if waitSerialStart(ser) == True:
-        while True:
-            ans = readSerialUntilEnd(ser)
-            # Received @END@?
-            if ans == True:
-                print("\r\n" + str(len(lines)) + " lines read")
-                return lines
-            else:
-                if ans != "":
+
+    # connTimeout can happen for two reasons:
+    #   1. Still receivedStart == False after MAX_SERIAL_WAIT_REPLY
+    #   2. receivedStart == True and serial connection established for
+    #      longer than connEndTime
+    connTimeout = False
+    receivedStart = False
+    # Variable dataSize is updated with the data in bytes written to outfile.
+    # If dataSize exceeds MAX_DATA_SIZE no more data is written to file and
+    # the function is exited.
+    dataSize = 0
+
+    # Main while loop
+    while (connTimeout == False):
+
+        # If receivedStart == False send SERIAL_START
+        if (receivedStart == False):
+            print("\r\n" + "Sending " + SERIAL_START)
+            ser.write((SERIAL_START + '\r\n').encode(DEFAULT_ENCODING))
+            time.sleep(1)
+
+        # Append incoming data from serial port to serial_buffer
+        if ser.in_waiting > 0:
+            try:
+                incoming = ser.read(ser.in_waiting).decode(DEFAULT_ENCODING)
+            except:
+                incoming = ''
+
+            serial_buffer += incoming
+
+            # Check if serial_buffer contains newline character. If so,
+            # extract the first line for further processing. The function
+            # .split('\n', 1) returns a list with one element if
+            # serial_buffer contains no newline character and a list with 2
+            # elements if there are newline characters.
+            buffer_split = serial_buffer.split('\n', 1)
+
+            # If serial_buffer contains no newline but the length exceeds
+            # MAX_LINE_LENGTH, than extract MAX_LINE_LENGTH from
+            # serial_buffer.
+            if (len(buffer_split) == 1 and len(serial_buffer) >
+                MAX_LINE_LENGTH):
+                buffer_split = [
+                    serial_buffer[:MAX_LINE_LENGTH],
+                    serial_buffer[MAX_LINE_LENGTH:],
+                    ]
+
+            if (len(buffer_split) == 2):
+                # This is the current line. The line does not end with
+                # newline
+                line = buffer_split[0].strip()
+
+                # If receivedStart == False check if the current line
+                # contains SERIAL_START and update receivedStart if
+                # necessary
+                if (receivedStart == False):
+                    # If receivedStart == False and line contains
+                    # SERIAL_START than set receivedStart to True and do
+                    # nothing else with line
+                    if (SERIAL_START in line):
+                        print("\r\n" + "Received " + SERIAL_START)
+                        receivedStart = True
+                else:
+                # receivedStart == True: Process line normally
+                    print("*",end="",flush=True)
+
+                    # If line contains SERIAL_END we exit the while loop
+                    if (SERIAL_END in line):
+                        break
+
                     # Add time stamp to beginning of line (Github issue #45).
                     # If --fake-timestamp is set, then set the time stamp to
                     # constant value 2000/01/01-00:00:00.000000
-                    if args.fake_timestamp:
+                    if (fake_timestamp == True):
                         ts = "2000/01/01-00:00:00.000000"
                     else:
                         ts = datetime.now().strftime("%Y/%m/%d-%H:%M:%S.%f")
-                    ans = ts + " " + ans
+                    line = ts + " " + line
 
-                    # Append the new line only if this will not exceed
-                    # the threshold MAX_DATA_SIZE
-                    if (
-                            charInLines(lines)
-                            + len(ans)
-                            + 1 # The newline character char of last line
-                            ) <= MAX_DATA_SIZE:
-                        lines.append(ans)
-                        print("*",end="",flush=True)
+                    # Output to file if updated dataSize plus length of lines
+                    # plus 1 (for newline) do not exceed MAX_DATA_SIZE
+                    if ((dataSize + len(line) + 1) <= MAX_DATA_SIZE):
+                        write2File(outFileName, line+'\n')
+                        dataSize += (len(line) + 1)
                     else:
+                        # Exit while loop
                         print("\r\n" + "Max file size achieved")
-                        print("\r\n" + str(len(lines)) + " lines read")
-                        return lines
-                if (datetime.now() > scriptEndTime):
-                    print("\r\n" + "Max script time achieved")
-                    print("\r\n" + str(len(lines)) + " lines read")
-                    return lines
-    else:
-        return False
+                        break
 
-# Count the total number of characters for all lines
-def charInLines(lines):
-    chars = 0
-    for line in lines:
-        # Add one character for the newline at the end of each line
-        chars += len(line) + 1
-    return chars
+                # Update serial_buffer
+                serial_buffer = buffer_split[1]
+
+        # Check time and update connTimeout if necessary
+        now = datetime.now()
+        # See if receivedStart == False and we are behind
+        # connTimeoutNoResponse
+        if (receivedStart == False and now > connTimeoutNoResponse):
+            connTimeout = True
+        # See if we are behind connEndTime
+        if (receivedStart == True and now > connEndTime):
+            print("\r\n" + "Max script time achieved")
+            connTimeout = True
+
+    return dataSize
 
 def listFolders(path):
     temp_list = []
@@ -274,11 +308,12 @@ def programmMini(hex):
     os.system(CMD_SYNC % TEMP_MOUNT_MINI)
     os.system(CMD_UNMOUNT % TEMP_MOUNT_MINI)
 
-def writeToFile(hex, data):
-    file = open(hex+".data","w")
-    for line in data:
-        file.write(line + "\n")
-    file.close()
+def write2File(outFileName, string):
+    # Open file in append mode
+    outfile = open(outFileName,"a")
+    # Write strings, NOT lines! Care yourself for newlines!
+    outfile.write(string)
+    outfile.close()
 
 ###################################################
 
@@ -291,8 +326,8 @@ def main(args):
         global MAX_DATA_SIZE
         MAX_DATA_SIZE = args.max_data_size
     if args.max_script_execution_time > 0:
-        global MAX_SCRIPT_EXECUTION_TIME
-        MAX_SCRIPT_EXECUTION_TIME = args.max_script_execution_time
+        global MAX_CONNECTION_TIME
+        MAX_CONNECTION_TIME = args.max_script_execution_time
 
     #check mini disk
     if not getMiniDisk():
@@ -366,9 +401,10 @@ def main(args):
                 sys.exit(13)
 
             print("reading data")
-            data = readSerialData(ser)
+            outFileName = hex + '.data'
+            dataSize = readSerialData(ser, outFileName, args.fake_timestamp)
 
-            if data == False:
+            if dataSize == 0:
                 if count_try_flashing >= MAX_RETRY_FLASHING:
                     #give up
                     break
@@ -384,8 +420,7 @@ def main(args):
                             )
                     continue
             else:
-                writeToFile(hex, data)
-                print("done")
+                print("\r\ndone")
                 print("############################################################################################################\r\n")
                 break
 
