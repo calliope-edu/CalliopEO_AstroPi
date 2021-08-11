@@ -1,6 +1,6 @@
 **CalliopEO**
 
-[README](README.md) | [Program Description](ProgramDescription.md) | [Testcases](testcases/testcases.md) | ***[CHANGELOG.md](CHANGELOG.md)***
+[README](README.md) | [Program Description](ProgramDescription.md) | [Testcases](testcases/testcases.md) | ***[Changelog](CHANGELOG.md)***
 # Changelog
 
 All notable changes to this project will be documented in this file.
