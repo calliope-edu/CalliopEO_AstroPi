@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 *none yet*
 
-## [1.1.1]()
+## [1.1.1](https://github.com/calliope-edu/CalliopEO_AstroPi/releases/tag/v1.1.1)
 
 **Fixes**
 - Fix broken links A2 & A3 in ProgramDescription
