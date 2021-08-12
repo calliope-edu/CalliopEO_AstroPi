@@ -169,6 +169,6 @@ The student experiments will be uploaded in the same way. Once programs that col
 ## A. Appendices
 
 - A.1 [Dokumentation of CalliopeEO Phyton Script](README.md)
-- A.2 [Example JavaScript code of the preinstalled file on the Calliope mini](testcaes/testfiles/30sec-iss-sensors.js)
-- A.3 [Example of saved Data file](testcaes/testfiles/30sec-iss-sensors.hex.data)
+- A.2 [Example JavaScript code of the preinstalled file on the Calliope mini](testcases/testfiles/30sec-iss-sensors.js)
+- A.3 [Example of saved Data file](testcases/testfiles/30sec-iss-sensors.hex.data)
 - A.4 [Minimum requirements](requirements.txt)
