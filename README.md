@@ -50,7 +50,7 @@ At any time a running session can be detached using the keyboard sequence `CTRL+
 ### Command Syntax of CalliopEO.py
 The syntax of the script `CalliopEO.py` is:
 ```
-$ python3 CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
+$ ./CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
 ```
 * `--max-data-size` is the maximum number of characters to be read from the Calliope Mini.
 * With `--max-script-execution-time` you can specify a maximum time to accept input from the Calliope Mini program before terminating the connection.
