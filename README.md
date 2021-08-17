@@ -22,7 +22,7 @@ Due to the movement of the ISS around the Earth a loss of signal (LOS) between a
 To establish a terminal session via `screen` that can be resumed after a LOS follow the following steps:
 ```
 # Establish a SSH connection to Astro Pi with the hostname or IP address <astropi> using a SSH-enabled user account on Astro Pi (assuming root:
-ssh root@<astropi>
+ssh <ssh-user>@<astropi>
 # Change to the user calliope and cd in it's home directory
 su calliope
 cd
