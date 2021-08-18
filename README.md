@@ -4,16 +4,16 @@
 # Readme
 
 ## Description
-CalliopEO is a Python script to facilitate interaction between a Raspberry Pi microcomputer and a [Calliope Mini microcontroller board](https://calliope.cc/). If executed, the script detects, if a Calliope Mini is attached to a USB board of the Raspbery Pi and determins the serial port to communicate with the Calliope Mini.
+CalliopEO is a Python script to facilitate interaction between the [Astro Pi microcomputer](https://astro-pi.org/) and the [CalliopEO Mini microcontroller board](https://calliope.cc/en/calliopeo). If executed, the script detects, if a CalliopEO Mini is attached to a USB board of the Astro Pi and determins the serial port to communicate with the CalliopEO.
 
-The directory, in which the `CalliopEO.py` script is located is called the main directory. Place any program(s) to be executed by the Calliope Mini as zipped HEX file(s) in this main directory. If executed the script will search for all zip archives, unpack the Calliope Mini program (HEX file) from the archive and flash the Calliope Mini with this program. After flashing, the Calliope Mini will reboot automatically and execute the program.
+The directory, in which the `CalliopEO.py` script is located is called the main directory. Place any program(s) to be executed by the CalliopEO as zipped HEX file(s) in this main directory. If executed the script will search for all zip archives, unpack the CalliopEO program (HEX file) from the archive and flash the CalliopEO with this program. After flashing, the CalliopEO will reboot automatically and execute the program.
 
-In the main directory a sub-folder named `run_YYYYMMDD-HHMMSS` will be created. The HEX files flashed and executed on the Calliope Mini will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
+In the main directory a sub-folder named `run_YYYYMMDD-HHMMSS` will be created. The HEX files flashed and executed on the CalliopEO will be copied to this folder along with any data sent back by the program (files will end with `.data`). The initial zip archive in the main folder is renamed (additional suffix `.done`) to exclude this file from being processed again.
 
-The `CalliopEO.py` script can collect data sent by the program on the Calliope Mini via the USB serial port. Therefore, prepare the Calliope Mini program to wait for the string `@START@`. Then, the Calliope Mini program should respond by sending `@START@` back to the `CalliopEO.py` script and only after this sending the data. After sending the data the Calliope Mini program should send the
+The `CalliopEO.py` script can collect data sent by the program on the CalliopEO via the USB serial port. Therefore, prepare the CalliopEO program to wait for the string `@START@`. Then, the CalliopEO program should respond by sending `@START@` back to the `CalliopEO.py` script and only after this sending the data. After sending the data the CalliopEO program should send the
 message `@END@`.
 
-Each line in the `.data` files will have a leading time stamp of the format `YYYY/MM/DD-HH/MM/SS.ssssss`. A boilerplate for the Calliope Mini programs is described below.
+Each line in the `.data` files will have a leading time stamp of the format `YYYY/MM/DD-HH/MM/SS.ssssss`. A boilerplate for the CalliopEO programs is described below.
 
 ## Execute
 ### Important considerations when using on Astro Pi onboard the ISS
@@ -21,7 +21,7 @@ Due to the movement of the ISS around the Earth a loss of signal (LOS) between a
 
 To establish a terminal session via `screen` that can be resumed after a LOS follow the following steps:
 ```
-# Establish a SSH connection to Astro Pi with the hostname or IP address <astropi> using a SSH-enabled user account on Astro Pi (assuming root:
+# Establish a SSH connection to Astro Pi with the hostname or IP address `<astropi>` using a SSH-enabled user account on Astro Pi `<ssh-user>`. Replace both `<astropi>` and `<ssh-user>` with the correct values:
 ssh <ssh-user>@<astropi>
 # Change to the user calliope and cd in it's home directory
 su calliope
@@ -52,16 +52,16 @@ The syntax of the script `CalliopEO.py` is:
 ```
 $ ./CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
 ```
-* `--max-data-size` is the maximum number of characters to be read from the Calliope Mini.
-* With `--max-script-execution-time` you can specify a maximum time to accept input from the Calliope Mini program before terminating the connection.
+* `--max-data-size` is the maximum number of characters to be read from the CalliopEO.
+* With `--max-script-execution-time` you can specify a maximum time to accept input from the CalliopEO program before terminating the connection.
 * `--fake-timestamp` adds to the beginning of each line a constant time stamp `2000/01/01-00:00:00.000000` instead of the current time stamp. This feature is primarily meant for testing purposes.
 
 ## Hardware Setup
-The Calliope Mini should be connected via USB to the Raspberry Pi.
+The CalliopEO should be connected via USB to the Astro Pi.
 ```
      +--------------+
      |              |      USB      o---o---o
-     | Raspberry Pi |===============| Call. |
+     |   Astro Pi   |===============| Call. |
      |              |               o---o---o
      +--------------+                
 ```
@@ -83,33 +83,33 @@ Sample testresults can be found in [./testresults](testresults).
 
 ## HEX Boilerplate
 
-For a sample implementation of the Boilerplate code for the Calliope mini please have a look at the [JS File](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.js), the [Compiled HEX ](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.hex) or edit it on [makecode.calliope.cc](https://makecode.calliope.cc/_KJT7WkEcwaDi). The .data file on the Raspberry Pi should look like this [this](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.hex.data)
+For a sample implementation of the Boilerplate code for the CalliopEO please have a look at the [JS File](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.js), the [Compiled HEX ](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.hex) or edit it on [makecode.calliope.cc](https://makecode.calliope.cc/_KJT7WkEcwaDi). The .data file on the Astro Pi should look like this [this](https://github.com/calliope-edu/CalliopEO_AstroPi/blob/06a4867b96a7cef7bf293340d21f18b37555aabc/testcases/testfiles/30sec-iss-sensors.hex.data)
 
 ## Software Installation
 ### Operating system
-The project is intended to be used with the ESA [Astro Pi IR](https://astro-pi.org/) onboard the International Space Station ISS. The Astro Pi SBCs are running a dedicated flavour of Raspberry Pi OS not available for the public. But this software can also be installed on the publicly available [Raspberry Pi OS](https://www.raspberrypi.org/software/) running on any Raspberry Pi. For CalliopEO, the "OS Lite" version without desktop is sufficient. Follow the standard installation procedure.
+The project is intended to be used with the ESA [Astro Pi IR](https://astro-pi.org/) onboard the International Space Station ISS. The Astro Pi SBCs are running a dedicated flavour of Raspberry Pi OS not available for the public. But this software can also be installed on the publicly available [Raspberry Pi OS](https://www.raspberrypi.org/software/) running on any Raspberry Pi, but the installation and operation is not covered by this document. 
 
 ### Installation using the setup.sh script
 To set up the environment for the `CalliopEO.py` script a setup script `setup.sh` was established. It automatically performs all necesaary steps to provide a fully functional environment.
 
-Before executing the setup script, connect the Calliope Mini to the Astro Pi/Raspberry Pi. Execute the setup script with the following command:
+Before executing the setup script, connect the CalliopEO to the Astro Pi. Execute the setup script with the following command:
 ```
 $ sudo setup.sh [username]
 ```
 `username` is the name of the user to be created (enter without any brackets!). If this optional parameter is not given, the default `calliope` is used.
 
 The setup script performs the following actions:
-* Create a dedicated user (default: `calliope`)
-* Add user to group `dialout` to be able to perform communication with the Calliope Mini over the serial port
+* Create a dedicated user (default: `calliope`). If the selected user already exists, `setup.sh` will exit.
+* Add user to group `dialout` to be able to perform communication with the CalliopEO over the serial port
 * Set password for the new user
-* Determine UUIDs for Calliope Mini's block devices and creating mount point in `/etc/fstab`. Later, this is used to mount the block devices for flashing the Calliope Mini. The mount point is defined in `/etc/fstab` in order to allow unprivileged users like `calliope` to mount/unmount the block device.
+* Determine UUIDs for CalliopEO's block devices and creating mount point in `/etc/fstab`. Later, this is used to mount the block devices for flashing the CalliopEO. The mount point is defined in `/etc/fstab` in order to allow unprivileged users like `calliope` to mount/unmount the block device.
 * Create the main directory below the user's home directory `~/calliopEO` and copy all necessary files to this directory, in particular the Python script `CalliopEO.py`.
 * Installing necessary Python modules from local wheel files. This is necessary due to security requirements set by ESA.
 
 ## De-Installation
 The system can be cleaned up from the files necessary and the system settings done exclusively for CalliopEO using the procedure described as below. For this procedure it is assumed, that the username for the CalliopEO user is `calliope`. Replace `calliope` by the appropriate username if an alternative username was selected during the setup process (see above).
 
-1. Login to the Raspberry Pi using a user different from `calliope`.
+1. Login to the Astro Pi using a SSH-enabled user different from `calliope`.
 2. Remove the user `calliope` with the command
 ```
 $ sudo userdel -r calliope
@@ -121,7 +121,7 @@ $ sudo cp /etc/fstab /etc/fstab.backup
 ```
 5. Open the file `/etc/fstab` in a text editor. Remove (or uncomment) mount point definitions in `/etc/fstab` for CalliopEO. The line(s) with the moint point definitions should look like the following:
 ```
-# Mount points for Calliope Mini
+# Mount points for CalliopEO
 /dev/disk/by-uuid/0123-4567 /home/calliope/mnt/mini vfat noauto,users 0 0
 ```
 6. Restart the operating system. The de-installation is complete.
