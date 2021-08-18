@@ -11,6 +11,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Tracking changes in master
 
 *none yet*
+## 1.2.0
+
+**New**
+- Checking now for necessary programs `lsblk`, `md5sum`, `sum` and `pip3` at installation
+- add check for programs `lsblk`, `md5sum`, `sum` and `pip3` to `testcase 01`
+- Exit setup.sh if login shell is provided on serial port (issue #86)
+
+**Updates**
+
+- Update testresults
+
+**Fixes**
+- replaced `Raspberry Pi` references by `Astro Pi`
+- replaced `CalliopEO` by `Calliope mini` in readme
+- Removed wheel for argparse because it is already installed on AstroPi-IR (issue #87)
+- Correct syntax for running `./CalliopEO.py`
+- removed root user refference in Readme
 
 ## [1.1.1](https://github.com/calliope-edu/CalliopEO_AstroPi/releases/tag/v1.1.1)
 
