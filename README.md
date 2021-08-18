@@ -22,7 +22,7 @@ Due to the movement of the ISS around the Earth a loss of signal (LOS) between a
 To establish a terminal session via `screen` that can be resumed after a LOS follow the following steps:
 ```
 # Establish a SSH connection to Astro Pi with the hostname or IP address <astropi> using a SSH-enabled user account on Astro Pi (assuming root:
-ssh root@<astropi>
+ssh <ssh-user>@<astropi>
 # Change to the user calliope and cd in it's home directory
 su calliope
 cd
@@ -50,7 +50,7 @@ At any time a running session can be detached using the keyboard sequence `CTRL+
 ### Command Syntax of CalliopEO.py
 The syntax of the script `CalliopEO.py` is:
 ```
-$ python3 CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
+$ ./CalliopEO.py [--max-data-size=bytes] [--max-script-execution-time=seconds] [--fake-timestamp]
 ```
 * `--max-data-size` is the maximum number of characters to be read from the Calliope Mini.
 * With `--max-script-execution-time` you can specify a maximum time to accept input from the Calliope Mini program before terminating the connection.

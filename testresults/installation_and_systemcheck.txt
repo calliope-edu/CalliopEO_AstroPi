@@ -1,11 +1,18 @@
-root@astropiir:~# cd /tmp/
-root@astropiir:/tmp# unzip CalliopEO_AstroPi-main.zip
-Archive:  CalliopEO_AstroPi-main.zip
-0c2176f98d202df7e6009ab31d01e66af65acec6
+root@astropiir:~# cd /tmp
+root@astropiir:/tmp# unzip CalliopEO_AstroPi-main\ \(7\).zip 
+Archive:  CalliopEO_AstroPi-main (7).zip
+c8411c08a47643fe2ea1314d44408cff0d74bb7e
    creating: CalliopEO_AstroPi-main/
   inflating: CalliopEO_AstroPi-main/.gitignore
+  inflating: CalliopEO_AstroPi-main/CHANGELOG.md
   inflating: CalliopEO_AstroPi-main/CalliopEO.py
+  inflating: CalliopEO_AstroPi-main/LICENSE
+  inflating: CalliopEO_AstroPi-main/ProgramDescription.md
   inflating: CalliopEO_AstroPi-main/README.md
+   creating: CalliopEO_AstroPi-main/assets/
+  inflating: CalliopEO_AstroPi-main/assets/select_testcases.png
+  inflating: CalliopEO_AstroPi-main/assets/software-flow.png
+  inflating: CalliopEO_AstroPi-main/assets/transmission.png
    creating: CalliopEO_AstroPi-main/modules/
   inflating: CalliopEO_AstroPi-main/modules/argparse-1.4.0-py2.py3-none-any.whl
   inflating: CalliopEO_AstroPi-main/modules/blkinfo-0.1.2-py3-none-any.whl
@@ -27,14 +34,25 @@ Archive:  CalliopEO_AstroPi-main.zip
   inflating: CalliopEO_AstroPi-main/testcases/09a_transmission-no-start.sh
   inflating: CalliopEO_AstroPi-main/testcases/09b_transmission-no-start.sh
   inflating: CalliopEO_AstroPi-main/testcases/10_multi.sh
+  inflating: CalliopEO_AstroPi-main/testcases/11_no-crlf.sh
+   creating: CalliopEO_AstroPi-main/testcases/shfuncs/
+  inflating: CalliopEO_AstroPi-main/testcases/shfuncs/comp.sh
+  inflating: CalliopEO_AstroPi-main/testcases/shfuncs/wait_for_calliope.sh
   inflating: CalliopEO_AstroPi-main/testcases/testcases.md
    creating: CalliopEO_AstroPi-main/testcases/testfiles/
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/05sec-counter.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/05sec-counter.hex.data
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/05sec-counter.js
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/15sec-burst-no-crlf.hex
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/15sec-burst-no-crlf.hex.data
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/15sec-burst-no-crlf.js
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-counter.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-counter.hex.data
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-counter.js
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.hex
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.hex.data
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.js
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.zip
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/900sec-counter.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/900sec-counter.hex.data.terminated35s
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/burst.hex
@@ -47,7 +65,8 @@ Archive:  CalliopEO_AstroPi-main.zip
   inflating: CalliopEO_AstroPi-main/testing.conf
   inflating: CalliopEO_AstroPi-main/testing.sh
    creating: CalliopEO_AstroPi-main/testresults/
-  inflating: CalliopEO_AstroPi-main/testresults/results.txt
+  inflating: CalliopEO_AstroPi-main/testresults/all_tests.txt
+  inflating: CalliopEO_AstroPi-main/testresults/installation_and_systemcheck.txt
 root@astropiir:/tmp# cd CalliopEO_AstroPi-main/
 root@astropiir:/tmp/CalliopEO_AstroPi-main# ./setup.sh
 -=# SETUP #=-
@@ -60,7 +79,7 @@ Calliope detected.
   UUID Flash: 089A-BCDE
 Copying files to /home/calliope/calliopEO
 Creating local mount points in /home/calliope/mnt/
-Adding mount point definitions to /etc/fstab
+Adding mount point definition to /etc/fstab
 Installing Python modules
 Looking in indexes: https://pypi.org/simple, https://www.piwheels.org/simple
 Processing ./calliopEO/modules/argparse-1.4.0-py2.py3-none-any.whl
@@ -78,10 +97,11 @@ Installing collected packages: pyserial
 Successfully installed pyserial-3.5
 Finished!
 root@astropiir:/tmp/CalliopEO_AstroPi-main# su calliope
-calliope@astropiir:/tmp/CalliopEO_AstroPi-main $ cd ~/calliopEO/
+calliope@astropiir:/tmp/CalliopEO_AstroPi-main $ cd
+calliope@astropiir:~ $ cd ./calliopEO/
 calliope@astropiir:~/calliopEO $ ./testing.sh
 ################## TESTING CALLIOPEO.PY ##################
-Test started: Wed 24 Feb 22:47:09 UTC 2021
+Test started: Wed 24 Feb 22:11:16 UTC 2021
 Selected Tests: "1"
 
 Start #1 ./testcases/01_collect-sysinfo.sh
@@ -191,8 +211,11 @@ Skipped #13 ./testcases/09b_transmission-no-start.sh
 Skipped #14 ./testcases/10_multi.sh
 
 
+Skipped #15 ./testcases/11_no-crlf.sh
 
-          Test ended: Wed 24 Feb 22:47:28 UTC 2021
+
+
+          Test ended: Wed 24 Feb 22:11:25 UTC 2021
 
           1 FINISHED
           1 PASSED
