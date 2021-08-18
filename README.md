@@ -2,7 +2,7 @@
 # Readme
 
 ## Description
-CalliopEO is a Python script to facilitate interaction between a Raspberry Pi microcomputer and a [Calliope Mini microcontroller board](https://calliope.cc/). If executed, the script detects, if a Calliope Mini is attached to a USB board of the Raspbery Pi and determins the serial port to communicate with the Calliope Mini.
+CalliopEO is a Python script to facilitate interaction between the [Astro Pi microcomputer](https://astro-pi.org/) and the [CalliopEO Mini microcontroller board](https://calliope.cc/en/calliopeo). If executed, the script detects, if a CalliopEO Mini is attached to a USB board of the Astro Pi and determins the serial port to communicate with the CalliopEO.
 
 ### Essential Branch
 

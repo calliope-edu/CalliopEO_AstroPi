@@ -5,6 +5,7 @@ echo
 # Define variables
 username="calliope" # name for user
 groups="dialout" # group(s) the user has to be added
+needed_progs="lsblk md5sum cmp pip3"
 
 if [ "${EUID}" -ne 0 ]; then
   echo "Please run as root. Exiting."
@@ -17,12 +18,34 @@ if [[ "${1}" != "" ]]; then
     username=${1}
 fi
 
-# If calliope user doesn't exist, create it
+# CalliopEO.py will not work, if the a login shell is provided on the serial
+# port. In case, login shell is configured over the serial port, exit
+# setup.sh with a message.
+if grep -E 'console=serial[[:digit:]]{1},[[:digit:]]+ ' /boot/cmdline.txt > /dev/null 2>&1; then
+    echo "Error: Login shell provided on serial port."
+    echo "Disable login shell over serial port, reboot and re-run setup.sh."
+    echo "Exiting."
+    exit 1
+fi
+
+# The CalliopEO software relies on some programs that have to be available on
+# the system. Check and exit if one of the programs does not exist
+# (see Github issue #91)
+for prog in ${needed_progs}; do
+    command -v ${prog} >/dev/null 2>&1 || { 
+        echo >&2 "Error: ${prog} required but it's not installed. Exiting."
+	exit 1
+    }
+done
+
+# If calliope user doesn't exist, create it. If the user already exists,
+# exit setup.sh (see Github issue #88)
 if ! id -u ${username} > /dev/null 2>&1; then
     echo "Creating user ${username}."
     useradd -m ${username}
 else
-    echo "User ${username} already exists."
+    echo "Error: User ${username} already exists. Exiting."
+    exit 1
 fi
 
 # Add user to groups in ${groups}. If user is already in the groups the
