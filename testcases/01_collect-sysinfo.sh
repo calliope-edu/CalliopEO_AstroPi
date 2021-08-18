@@ -29,7 +29,22 @@ if [[ -f "${os_release}" ]]; then
     done < ${os_release}
     echo ""
 fi
+
+echo "  Check for dependencies:"
+needed_progs="lsblk md5sum cmp pip3"
+for prog in ${needed_progs}; do
+    echo -n "    ${prog}: "
+    command -v ${prog} >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo -e "${G}present${NC}"
+    else
+	echo -e "${R}not present${NC}"
+	ERRORS=$((ERRORS+1))
+    fi
+done
+
 echo "  Python3 version: $(python3 --version)"
+
 pip3 list > ~/python3_modules.list.tmp
 echo "  Installed Python3 modules"
 while read line; do
