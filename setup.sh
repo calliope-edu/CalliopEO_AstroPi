@@ -5,6 +5,7 @@ echo
 # Define variables
 username="calliope" # name for user
 groups="dialout" # group(s) the user has to be added
+needed_progs="lsblk md5sum cmp pip3"
 
 if [ "${EUID}" -ne 0 ]; then
   echo "Please run as root. Exiting."
@@ -26,6 +27,16 @@ if grep -E 'console=serial[[:digit:]]{1},[[:digit:]]+ ' /boot/cmdline.txt > /dev
     echo "Exiting."
     exit 1
 fi
+
+# The CalliopEO software relies on some programs that have to be available on
+# the system. Check and exit if one of the programs does not exist
+# (see Github issue #91)
+for prog in ${needed_progs}; do
+    command -v ${prog} >/dev/null 2>&1 || { 
+        echo >&2 "Error: ${prog} required but it's not installed. Exiting."
+	exit 1
+    }
+done
 
 # If calliope user doesn't exist, create it. If the user already exists,
 # exit setup.sh (see Github issue #88)
