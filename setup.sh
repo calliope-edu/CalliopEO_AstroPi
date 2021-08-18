@@ -17,12 +17,14 @@ if [[ "${1}" != "" ]]; then
     username=${1}
 fi
 
-# If calliope user doesn't exist, create it
+# If calliope user doesn't exist, create it. If the user already exists,
+# exit setup.sh (see Github issue #88)
 if ! id -u ${username} > /dev/null 2>&1; then
     echo "Creating user ${username}."
     useradd -m ${username}
 else
-    echo "User ${username} already exists."
+    echo "Error: User ${username} already exists. Exiting."
+    exit 1
 fi
 
 # Add user to groups in ${groups}. If user is already in the groups the
