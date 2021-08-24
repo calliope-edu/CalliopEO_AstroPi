@@ -46,7 +46,6 @@ function sendInfo() {
 }
 input.onButtonEvent(Button.A, ButtonEvent.Click, function() {
     useDisplay = !(useDisplay)
-    led.enable(useDisplay)
 })
 serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function() {
     SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
@@ -54,14 +53,14 @@ serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function() {
         serial.writeLine("@START@")
         basic.clearScreen()
         sendInfo()
-        runProgram = true
-        startTime = control.millis()
         tick = control.millis() - startTime
+        startTime = tick
+        runProgram = true
     }
 })
 let tick_cache = 0
-let tick = 0
 let startTime = 0
+let tick = 0
 let SERIAL_RECEIVED = ""
 let useDisplay = false
 let testTCS34725 = false
@@ -71,8 +70,8 @@ let testMagnetometer = false
 let testAccelerometer = false
 let runProgram = false
     // Period to update measurements in ms. Should be higher than ~ 200 ms
-let updatePeriod = 1000
-runProgram = true
+let updatePeriod = 2000
+runProgram = false
 let counter = 0
 testAccelerometer = true
 testMagnetometer = false
@@ -80,9 +79,10 @@ testSCD30 = true
 testSI1145 = true
 testTCS34725 = true
 useDisplay = false
-led.enable(useDisplay)
+basic.showIcon(IconNames.Asleep, 1)
 basic.forever(function() {
     if (runProgram) {
+        led.enable(useDisplay)
         tick_cache = tick
         tick = control.millis() - startTime
         serial.writeValue("T4LL", tick - tick_cache)
@@ -122,7 +122,5 @@ basic.forever(function() {
         led.toggle(2, 2)
         counter += 1
         basic.pause(updatePeriod - (control.millis() - startTime - tick))
-    } else {
-        basic.showIcon(IconNames.Asleep, 1)
     }
 })
