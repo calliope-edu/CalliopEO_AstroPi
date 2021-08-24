@@ -18,16 +18,6 @@ if [[ "${1}" != "" ]]; then
     username=${1}
 fi
 
-# CalliopEO.py will not work, if the a login shell is provided on the serial
-# port. In case, login shell is configured over the serial port, exit
-# setup.sh with a message.
-if grep -E 'console=serial[[:digit:]]{1},[[:digit:]]+ ' /boot/cmdline.txt > /dev/null 2>&1; then
-    echo "Error: Login shell provided on serial port."
-    echo "Disable login shell over serial port, reboot and re-run setup.sh."
-    echo "Exiting."
-    exit 1
-fi
-
 # The CalliopEO software relies on some programs that have to be available on
 # the system. Check and exit if one of the programs does not exist
 # (see Github issue #91)
