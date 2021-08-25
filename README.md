@@ -23,9 +23,8 @@ To establish a terminal session via `screen` that can be resumed after a LOS fol
 ```
 # Establish a SSH connection to Astro Pi with the hostname or IP address `<astropi>` using a SSH-enabled user account on Astro Pi `<ssh-user>`. Replace both `<astropi>` and `<ssh-user>` with the correct values:
 ssh <ssh-user>@<astropi>
-# Change to the user calliope and cd in it's home directory
-su calliope
-cd
+# Change to the user calliope and change to it's home directory
+su - calliope
 # List all currently running screen sessions:
 screen -ls
 ```
