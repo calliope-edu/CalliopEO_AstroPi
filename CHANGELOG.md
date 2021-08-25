@@ -10,7 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Tracking changes in master
 
-*none yet*
+- Added `infinite-iss-sensors-2s` `.hex` and `.data`
+- Described more elegant way to change to user calliope
+- Removed configuration for serial port, see issue #86
+
 ## 1.2.0
 
 **New**
