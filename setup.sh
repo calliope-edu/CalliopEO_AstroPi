@@ -28,6 +28,25 @@ for prog in ${needed_progs}; do
     }
 done
 
+# Determine UUIDs
+uuid_mini=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Volume" | awk '{print $2}')
+uuid_flash=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Flash" | awk '{print $2}')
+
+# If the variables ${uuid_mini} and ${uuid_flash} are empty, some error
+# occured (Calliope Mini not atached to Rasperry Pi). In this exit with error
+# message
+if [[ "${uuid_mini}" == "" || "${uuid_flash}" == "" ]]; then
+    echo "Error detecting Calliope Mini. Exiting"
+    exit 1
+else
+    echo "Calliope detected."
+    echo "  UUID Mini:  ${uuid_mini}"
+    echo "  UUID Flash: ${uuid_flash}"
+fi
+
+# -----------------------------------------------------------------------------
+# Below this point the setup script perfoms changes to the system
+
 # If calliope user doesn't exist, create it. If the user already exists,
 # exit setup.sh (see Github issue #88)
 if ! id -u ${username} > /dev/null 2>&1; then
@@ -51,22 +70,6 @@ group_id=$(id -g ${username})
 read -p "Add/change password for ${username}? [yN]" ans
 if [[ ${ans} =~ [Yy]$ ]]; then
     passwd ${username}
-fi
-
-# Determine UUIDs
-uuid_mini=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Volume" | awk '{print $2}')
-uuid_flash=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Flash" | awk '{print $2}')
-
-# If the variables ${uuid_mini} and ${uuid_flash} are empty, some error
-# occured (Calliope Mini not atached to Rasperry Pi). In this exit with error
-# message
-if [[ "${uuid_mini}" == "" || "${uuid_flash}" == "" ]]; then
-    echo "Error detecting Calliope Mini. Exiting"
-    exit 1
-else
-    echo "Calliope detected."
-    echo "  UUID Mini:  ${uuid_mini}"
-    echo "  UUID Flash: ${uuid_flash}"
 fi
 
 # Copy all the files from the respository to the home directory of
