@@ -32,7 +32,7 @@ fi
 
 raspi_model="/sys/firmware/devicetree/base/model"
 if [[ -f "${raspi_model}" ]]; then
-    echo "  Model: $(cat ${raspi_model})"
+    echo "  Model: $(tr -d '\0' < ${raspi_model})"
 else
     echo "  Model: unknown"
 fi
