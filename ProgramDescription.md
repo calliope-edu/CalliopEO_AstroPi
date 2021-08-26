@@ -128,15 +128,15 @@ However, the minimum dependencies are documented in [requirements.txt](requireme
 
 The installation, execution and de-installation process is documented in the [Readme.md](README.md)
 
-### 5.1.6 The initial HEX file (30sec-iss-sensors.hex)
+### 5.1.6 The initial HEX file (infinite-iss-sensors-2s.hex)
 
-The initial HEX file provided with the upload of CalliopEO to the ISS is named `30sec-iss-sensors.hex`. The HEX file can be found in [./testcases/testfiles/](testcases/testfiles) and the source of the program can be found [here](testcases/testfiles/30sec-iss-sensors.js). The program is primarily meant to perform System Validation Tests to ensure propper functionality of hardware and software also remotely from Ground.
+The initial HEX file provided with the upload of CalliopEO to the ISS is named `infinite-iss-sensors-2s.hex`. The HEX file can be found in [./testcases/testfiles/](testcases/testfiles) and the source of the program can be found [here](testcases/testfiles/infinite-iss-sensors-2s.js). The program is primarily meant to perform System Validation Tests to ensure propper functionality of hardware and software also remotely from Ground.
 
-To execute `30sec-iss-sensors.hex` execute the following steps from the main directory (`~/calliopEO`):
+To execute `infinite-iss-sensors-2s.hex` execute the following steps from the main directory (`~/calliopEO`):
 
 ```
-# Copy the ZIp archive containing the 30sec-iss-sensors.hex to the main diretory
-cp testcases/testfiles/30sec-iss-sensors.zip .
+# Copy the Zip archive containing the infinite-iss-sensors-2s.hex to the main diretory
+cp testcases/testfiles/infinite-iss-sensors-2s.zip .
 # Execute the Python script
 ./CalliopEO.py
 ```
@@ -147,7 +147,7 @@ If `runMaxSeconds` is set to zero, the program runs infinite.
 
 Due to the time needed to poll every sensor/actuator and to output the result over the serial port do not set `updatePeriod` to values below ~ 300 ms. Values for `updatePeriod` lower than 1000 ms however can be used to set the CalliopEO into a burst mode e.g. for an electromagnetic compatibility test.
 
-To create a modified version of a HEX program derived from `30sec-iss-sensors.hex` copy/paste the content of the JavaScript source file [`30sec-iss-sensors.js`](testcases/testfiles/30sec-iss-sensors.js) to the Microsoft Mikrocode editor, apply the necessary changes and export the corresponding HEX file using the functions in Makecode. Create a ZIP archive from this HEX file, place it
+To create a modified version of a HEX program derived from `infinite-iss-sensors-2s.hex` copy/paste the content of the JavaScript source file [`infinite-iss-sensors-2s.js`](testcases/testfiles/infinite-iss-sensors-2s.js) to the Microsoft Mikrocode editor, apply the necessary changes and export the corresponding HEX file using the functions in Makecode. Create a ZIP archive from this HEX file, place it
 in the main diretory and execute `CalliopEO.py`.
 
 According to the current availability of drivers for the Calliope and the availability of sensors/actuators present on the CalliopEO hardware (some parts had to be removed or deactivated due to ISS safety regulations) the following sensors/actuators are supported:
@@ -169,6 +169,6 @@ The student experiments will be uploaded in the same way. Once programs that col
 ## A. Appendices
 
 - A.1 [Dokumentation of CalliopeEO Phyton Script](README.md)
-- A.2 [Example JavaScript code of the preinstalled file on the Calliope mini](testcases/testfiles/30sec-iss-sensors.js)
+- A.2 [Example JavaScript code of the preinstalled file on the Calliope mini](testcases/testfiles/infinite-iss-sensors-2s.js)
 - A.3 [Example of saved Data file](testcases/testfiles/30sec-iss-sensors.hex.data)
 - A.4 [Minimum requirements](requirements.txt)
