@@ -30,6 +30,14 @@ if [[ -f "${os_release}" ]]; then
     echo ""
 fi
 
+raspi_model="/sys/firmware/devicetree/base/model"
+if [[ -f "${raspi_model}" ]]; then
+    echo "  Model: $(tr -d '\0' < ${raspi_model})"
+else
+    echo "  Model: unknown"
+fi
+echo ""
+
 echo "  Check for dependencies:"
 needed_progs="lsblk md5sum cmp pip3"
 for prog in ${needed_progs}; do
