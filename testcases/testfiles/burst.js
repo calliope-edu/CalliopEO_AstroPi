@@ -1,6 +1,6 @@
 serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
     SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
-    if ("@START@" == SERIAL_RECEIVED.substr(0, 7) && !(runProgram)) {
+    if ("@START@" == SERIAL_RECEIVED.substr(0, 7)) {
         serial.writeLine("@START@")
         runProgram = true
         startTime = control.millis()
@@ -21,4 +21,3 @@ basic.forever(function () {
         control.waitMicros(100000)
     }
 })
-
