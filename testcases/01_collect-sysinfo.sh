@@ -33,6 +33,7 @@ fi
 raspi_model="/sys/firmware/devicetree/base/model"
 if [[ -f "${raspi_model}" ]]; then
     echo "  Model: $(tr -d '\0' < ${raspi_model})"
+    echo "  $(cat /proc/meminfo | grep MemTotal)"
 else
     echo "  Model: unknown"
 fi
