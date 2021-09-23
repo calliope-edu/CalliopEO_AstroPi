@@ -18,16 +18,6 @@ if [[ "${1}" != "" ]]; then
     username=${1}
 fi
 
-# CalliopEO.py will not work, if the a login shell is provided on the serial
-# port. In case, login shell is configured over the serial port, exit
-# setup.sh with a message.
-if grep -E 'console=serial[[:digit:]]{1},[[:digit:]]+ ' /boot/cmdline.txt > /dev/null 2>&1; then
-    echo "Error: Login shell provided on serial port."
-    echo "Disable login shell over serial port, reboot and re-run setup.sh."
-    echo "Exiting."
-    exit 1
-fi
-
 # The CalliopEO software relies on some programs that have to be available on
 # the system. Check and exit if one of the programs does not exist
 # (see Github issue #91)
@@ -37,6 +27,25 @@ for prog in ${needed_progs}; do
 	exit 1
     }
 done
+
+# Determine UUIDs
+uuid_mini=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Volume" | awk '{print $2}')
+uuid_flash=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Flash" | awk '{print $2}')
+
+# If the variables ${uuid_mini} and ${uuid_flash} are empty, some error
+# occured (Calliope Mini not atached to Rasperry Pi). In this exit with error
+# message
+if [[ "${uuid_mini}" == "" || "${uuid_flash}" == "" ]]; then
+    echo "Error detecting Calliope Mini. Exiting"
+    exit 1
+else
+    echo "Calliope detected."
+    echo "  UUID Mini:  ${uuid_mini}"
+    echo "  UUID Flash: ${uuid_flash}"
+fi
+
+# -----------------------------------------------------------------------------
+# Below this point the setup script perfoms changes to the system
 
 # If calliope user doesn't exist, create it. If the user already exists,
 # exit setup.sh (see Github issue #88)
@@ -61,22 +70,6 @@ group_id=$(id -g ${username})
 read -p "Add/change password for ${username}? [yN]" ans
 if [[ ${ans} =~ [Yy]$ ]]; then
     passwd ${username}
-fi
-
-# Determine UUIDs
-uuid_mini=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Volume" | awk '{print $2}')
-uuid_flash=$(lsblk -o MODEL,UUID | grep -i "MSD[ -_]Flash" | awk '{print $2}')
-
-# If the variables ${uuid_mini} and ${uuid_flash} are empty, some error
-# occured (Calliope Mini not atached to Rasperry Pi). In this exit with error
-# message
-if [[ "${uuid_mini}" == "" || "${uuid_flash}" == "" ]]; then
-    echo "Error detecting Calliope Mini. Exiting"
-    exit 1
-else
-    echo "Calliope detected."
-    echo "  UUID Mini:  ${uuid_mini}"
-    echo "  UUID Flash: ${uuid_flash}"
 fi
 
 # Copy all the files from the respository to the home directory of

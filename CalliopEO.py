@@ -54,7 +54,7 @@ MAX_RETRY_FLASHING = 3 # Max. number to retry flashing if no serial data
 MAX_CONNECTION_TIME = 11100 # s
 MAX_DATA_SIZE = 20 * 1024 * 1024 # Bytes
 
-MAX_LINE_LENGTH = 200 # Crop lines that are longer
+MAX_LINE_LENGTH = 1000 # Crop lines that are longer
 
 # Returns the port for the (first) Calliope mini or None
 def getMiniSerial():
