@@ -21,6 +21,9 @@ Start #1 ./testcases/01_collect-sysinfo.sh
     SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
     BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
 
+  Model: Raspberry Pi 3 Model B Rev 1.2
+  MemTotal:         893612 kB
+
   Check for dependencies:
     lsblk: present
     md5sum: present
