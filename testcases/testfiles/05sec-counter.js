@@ -1,24 +1,13 @@
-let y = 0
-let x = 0
-let ledCounter = 0
-let counter = 0
-let SERIAL_RECEIVED = ""
-let startTime = 0
-let runProgram = false
-let runMaxSeconds = 5 // runMaxSeconds is the maximum time in seconds the program is allowed to run.
-
-basic.showIcon(IconNames.Asleep)
-
-function checkTimeout() {
+function checkTimeout () {
     if (control.millis() >= startTime + runMaxSeconds * 1000) {
         runProgram = false
         basic.showIcon(IconNames.Yes)
         serial.writeLine("@END@")
     }
 }
-serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function() {
+serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
     SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
-    if ("@START@" == SERIAL_RECEIVED.substr(0, 7) && !(runProgram)) {
+    if ("@START@" == SERIAL_RECEIVED.substr(0, 7)) {
         serial.writeLine("@START@")
         basic.clearScreen()
         counter = 0
@@ -26,8 +15,19 @@ serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function() {
         startTime = control.millis()
     }
 })
-
-basic.forever(function() {
+let y = 0
+let x = 0
+let ledCounter = 0
+let counter = 0
+let SERIAL_RECEIVED = ""
+let startTime = 0
+let runProgram = false
+let runMaxSeconds = 0
+// runMaxSeconds is the maximum time in seconds the program is allowed to run.
+runMaxSeconds = 5
+runProgram = false
+basic.showIcon(IconNames.Asleep)
+basic.forever(function () {
     if (runProgram) {
         serial.writeLine("" + (counter))
         ledCounter = counter % 25

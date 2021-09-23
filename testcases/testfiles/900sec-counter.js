@@ -24,7 +24,7 @@ let startTime = 0
 let runProgram = false
 let runMaxSeconds = 0
 // runMaxSeconds is the maximum time in seconds the program is allowed to run.
-runMaxSeconds = 30
+runMaxSeconds = 900
 runProgram = false
 basic.showIcon(IconNames.Asleep)
 basic.forever(function () {

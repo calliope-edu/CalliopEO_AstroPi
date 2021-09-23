@@ -1,4 +1,4 @@
-ifunction checkTimeout () {
+function checkTimeout () {
     if (control.millis() >= startTime + runMaxSeconds * 1000) {
         runProgram = false
         basic.showIcon(IconNames.Yes)
@@ -7,7 +7,7 @@ ifunction checkTimeout () {
 }
 serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
     SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
-    if ("@START@" == SERIAL_RECEIVED.substr(0, 7) && !(runProgram)) {
+    if ("@START@" == SERIAL_RECEIVED.substr(0, 7)) {
         serial.writeLine("@START@")
         basic.clearScreen()
         counter = 0
@@ -37,4 +37,3 @@ basic.forever(function () {
         checkTimeout()
     }
 })
-

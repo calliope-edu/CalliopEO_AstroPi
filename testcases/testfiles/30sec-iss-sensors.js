@@ -9,7 +9,7 @@ function checkTimeout () {
 }
 serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
     SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
-    if ("@START@" == SERIAL_RECEIVED.substr(0, 7) && !(runProgram)) {
+    if ("@START@" == SERIAL_RECEIVED.substr(0, 7)) {
         serial.writeLine("@START@")
         basic.clearScreen()
         runProgram = true
@@ -90,7 +90,7 @@ basic.forever(function () {
             }
         }
         while (control.millis() - tick < updatePeriod) {
-
+        	
         }
         ledCounter = counter % 25
         ledX = ledCounter % 5
@@ -101,4 +101,3 @@ basic.forever(function () {
         checkTimeout()
     }
 })
-
