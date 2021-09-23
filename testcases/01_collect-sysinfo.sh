@@ -30,6 +30,15 @@ if [[ -f "${os_release}" ]]; then
     echo ""
 fi
 
+raspi_model="/sys/firmware/devicetree/base/model"
+if [[ -f "${raspi_model}" ]]; then
+    echo "  Model: $(tr -d '\0' < ${raspi_model})"
+    echo "  $(cat /proc/meminfo | grep MemTotal)"
+else
+    echo "  Model: unknown"
+fi
+echo ""
+
 echo "  Check for dependencies:"
 needed_progs="lsblk md5sum cmp pip3"
 for prog in ${needed_progs}; do
@@ -51,6 +60,18 @@ while read line; do
     echo "    ${line}"
 done < ~/python3_modules.list.tmp
 rm ~/python3_modules.list.tmp
+echo ""
+
+# Serial port and getty service config (Github issue #100)
+ser_getty="serial-getty@ttyAMA0.service"
+rpi_cnf="raspi-config nonint get_serial"
+echo "  ${ser_getty} status: $(systemctl is-active ${ser_getty})"
+echo "  ${ser_getty} enabled: $(systemctl is-enabled ${ser_getty})"
+echo "  /boot/cmdline.txt:"
+echo "    $(cat /boot/cmdline.txt)"
+echo "  ${rpi_cnf}: $(${rpi_cnf})"
+echo "  ${rpi_cnf}_hw: $(${rpi_cnf}_hw)"
+echo ""
 
 # Track testcase result
 if [[ ${ERRORS} -eq 0 ]]; then
