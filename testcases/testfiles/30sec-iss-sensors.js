@@ -1,103 +1,122 @@
-function checkTimeout () {
+function checkTimeout() {
     if (runMaxSeconds != 0) {
         if (control.millis() >= startTime + runMaxSeconds * 1000) {
             runProgram = false
-            basic.showIcon(IconNames.Yes)
-            serial.writeLine("@END@")
+            serial.writeLine(stopString)
+            basic.pause(1000)
         }
     }
 }
-serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function () {
-    SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
-    if ("@START@" == SERIAL_RECEIVED.substr(0, 7)) {
-        serial.writeLine("@START@")
+input.onButtonEvent(Button.AB, ButtonEvent.Click, function() {
+    input.calibrateCompass()
+})
+input.onButtonEvent(Button.A, ButtonEvent.Click, function() {
+    useDisplay = !(useDisplay)
+    if (!(useDisplay)) {
         basic.clearScreen()
-        runProgram = true
-        startTime = control.millis()
     }
 })
+serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function() {
+    SERIAL_RECEIVED = serial.readUntil(serial.delimiters(Delimiters.NewLine))
+    if (startString == SERIAL_RECEIVED.substr(0, startString.length)) {
+        serial.writeLine(startString)
+        basic.pause(1000)
+        basic.clearScreen()
+        startTime = control.millis()
+        tick = control.millis() - startTime
+        stringMini = ";" + "Temp mini (Degrees)" + (";" + "Light Intensity mini")
+        if (testAccelerometer == true) {
+            stringAccelerometer = ";" + "Accelerometer X (mg)" + (";" + "Accelerometer Y (mg)") + (";" + "Accelerometer Z (mg)") + (";" + "Accelerometer total (mg)")
+        }
+        if (testMagnetometer == true) {
+            stringMagnetometer = ";" + "Magnetormeter X (µT)" + (";" + "Magnetormeter Y (µT)") + (";" + "Magnetormeter Z (µT)") + (";" + "Magnetormeter total (µT)")
+        }
+        if (testSCD30 == true) {
+            stringSCD30 = ";" + "Temp SCD30 (Degrees)" + (";" + "Humidity (%)") + (";" + "CO2 (ppm)")
+        }
+        if (testSI1145 == true) {
+            stringSI1145 = ";" + "IR itensity" + (";" + "Light Intensity SI1145") + (";" + "UV Index")
+        }
+        if (testTCS34725 == true) {
+            stringTCS34725 = ";" + "Red" + (";" + "Green") + (";" + "Blue") + (";" + "White")
+        }
+        serial.writeLine("" + stringMini + stringAccelerometer + stringMagnetometer + stringSCD30 + stringSI1145 + stringTCS34725)
+        runProgram = true
+    }
+})
+let counter = 0
 let tick = 0
 let SERIAL_RECEIVED = ""
 let startTime = 0
+let stringTCS34725 = ""
+let stringSI1145 = ""
+let stringSCD30 = ""
+let stringMagnetometer = ""
+let stringAccelerometer = ""
+let stringMini = ""
+let useDisplay = false
+let testTCS34725 = false
+let testSI1145 = false
+let testSCD30 = false
+let testMagnetometer = false
+let testAccelerometer = false
 let runProgram = false
 let runMaxSeconds = 0
-// runMaxSeconds is the maximum time in seconds the program is allowed to run.
+let stopString = ""
+let startString = ""
+startString = "@START@"
+stopString = "@END@"
+    // runMaxSeconds is the maximum time in seconds the program is allowed to run.
 runMaxSeconds = 30
-// Period to update measurements in ms. Should be higher than ~ 200 ms
-let updatePeriod = 1000
 runProgram = false
-let counter = 0
-let ledCounter = 0
-let ledX = 0
-let ledY = 0
-let testAccelerometer = true
-let testMagnetometer = false
-let testSCD30 = true
-let testSI1145 = true
-let testTCS34725 = true
-let testButtons = true
-basic.showIcon(IconNames.Asleep)
-basic.forever(function () {
+    // Period to update measurements in ms. Should be higher than ~ 200 ms
+let updatePeriod = 2000
+testAccelerometer = true
+testMagnetometer = true
+testSCD30 = true
+testSI1145 = true
+testTCS34725 = true
+useDisplay = false
+stringMini = ""
+stringAccelerometer = ""
+stringMagnetometer = ""
+stringSCD30 = ""
+stringSI1145 = ""
+stringTCS34725 = ""
+input.assumeCalibrationCompass()
+basic.forever(function() {
     if (runProgram) {
-        tick = control.millis()
-        serial.writeLine("Loop #" + counter)
-        serial.writeLine("  Testing Calliope on-board sensors . . .")
-        serial.writeLine("    Temp: " + input.temperature() + " degrees")
-        serial.writeLine("    Light Intensity: " + input.lightLevel())
+        tick = control.millis() - startTime
+        stringMini = ";" + input.temperature() + (";" + input.lightLevel())
         if (testAccelerometer == true) {
-            serial.writeLine("    Acc x: " + input.acceleration(Dimension.X) + " mg")
-            serial.writeLine("    Acc y: " + input.acceleration(Dimension.Y) + " mg")
-            serial.writeLine("    Acc z: " + input.acceleration(Dimension.Z) + " mg")
-            serial.writeLine("    Acc total: " + input.acceleration(Dimension.Strength) + " mg")
+            stringAccelerometer = ";" + input.acceleration(Dimension.X) + (";" + input.acceleration(Dimension.Y)) + (";" + input.acceleration(Dimension.Z)) + (";" + input.acceleration(Dimension.Strength))
         }
         if (testMagnetometer == true) {
-            serial.writeLine("    Mag x: " + input.magneticForce(Dimension.X) + " µT")
-            serial.writeLine("    Mag y: " + input.magneticForce(Dimension.Y) + " µT")
-            serial.writeLine("    Mag z: " + input.magneticForce(Dimension.Z) + " µT")
-            serial.writeLine("    Mag total: " + input.magneticForce(Dimension.Strength) + " µT")
+            stringMagnetometer = ";" + input.magneticForce(Dimension.X) + (";" + input.magneticForce(Dimension.Y)) + (";" + input.magneticForce(Dimension.Z)) + (";" + input.magneticForce(Dimension.Strength))
         }
         if (testSCD30 == true) {
-            serial.writeLine("  Testing SCD30 . . .")
-            serial.writeLine("    Sensor version: " + SCD30.getVersion())
-            serial.writeLine("    Temp: " + SCD30.readTemperature() + " degrees")
-            serial.writeLine("    Humidity: " + SCD30.readHumidity() + " %")
-            serial.writeLine("    CO2: " + SCD30.readCO2() + " ppm")
+            stringSCD30 = ";" + SCD30.readTemperature() + (";" + SCD30.readHumidity()) + (";" + SCD30.readCO2())
         }
         if (testSI1145 == true) {
-            serial.writeLine("  Testing SI1145 . . .")
-            serial.writeLine("    IR intensity: " + SI1145.readInfraRed())
-            serial.writeLine("    Light intensity: " + SI1145.readLight())
-            serial.writeLine("    UV index: " + SI1145.readUltraVioletIndex())
+            stringSI1145 = ";" + SI1145.readInfraRed() + (";" + SI1145.readLight()) + (";" + SI1145.readUltraVioletIndex())
         }
         if (testTCS34725 == true) {
-            serial.writeLine("  Testing TCS34725 . . .")
-            serial.writeLine("    Red: " + TCS3414.readRed())
-            serial.writeLine("    Green: " + TCS3414.readGreen())
-            serial.writeLine("    Blue: " + TCS3414.readBlue())
-            serial.writeLine("    White: " + TCS3414.readClear())
-            if (testButtons == true) {
-                serial.writeLine("  Testing Buttons . . .")
-                if (input.buttonIsPressed(Button.A)) {
-                    serial.writeLine("    Button A pressed")
-                } else {
-                    serial.writeLine("    Button A not pressed")
-                }
-                if (input.buttonIsPressed(Button.B)) {
-                    serial.writeLine("    Button B pressed")
-                } else {
-                    serial.writeLine("    Button B not pressed")
-                }
-            }
+            stringTCS34725 = ";" + TCS3414.readRed() + (";" + TCS3414.readGreen()) + (";" + TCS3414.readBlue()) + (";" + TCS3414.readClear())
         }
-        while (control.millis() - tick < updatePeriod) {
-        	
+        serial.writeLine("" + stringMini + stringAccelerometer + stringMagnetometer + stringSCD30 + stringSI1145 + stringTCS34725)
+        counter += 1
+        if (useDisplay) {
+            led.toggle(2, 2)
+        } else {
+            basic.clearScreen()
         }
-        ledCounter = counter % 25
-        ledX = ledCounter % 5
-        ledY = (ledCounter - ledX) / 5
-        counter = counter + 1
-        led.toggle(ledX, ledY)
-        serial.writeLine("")
+        basic.pause(updatePeriod - (control.millis() - startTime - tick))
         checkTimeout()
+    } else {
+        if (useDisplay) {
+            basic.showIcon(IconNames.Asleep)
+        } else {
+            basic.clearScreen()
+        }
     }
 })

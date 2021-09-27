@@ -1,3 +1,12 @@
+function checkTimeout() {
+    if (runMaxSeconds != 0) {
+        if (control.millis() >= startTime + runMaxSeconds * 1000) {
+            runProgram = false
+            serial.writeLine(stopString)
+            basic.pause(1000)
+        }
+    }
+}
 input.onButtonEvent(Button.AB, ButtonEvent.Click, function() {
     input.calibrateCompass()
 })
@@ -37,8 +46,8 @@ serial.onDataReceived(serial.delimiters(Delimiters.NewLine), function() {
 })
 let counter = 0
 let tick = 0
-let startTime = 0
 let SERIAL_RECEIVED = ""
+let startTime = 0
 let stringTCS34725 = ""
 let stringSI1145 = ""
 let stringSCD30 = ""
@@ -52,8 +61,13 @@ let testSCD30 = false
 let testMagnetometer = false
 let testAccelerometer = false
 let runProgram = false
+let runMaxSeconds = 0
+let stopString = ""
 let startString = ""
 startString = "@START@"
+stopString = "@END@"
+    // runMaxSeconds is the maximum time in seconds the program is allowed to run.
+runMaxSeconds = 0
 runProgram = false
     // Period to update measurements in ms. Should be higher than ~ 200 ms
 let updatePeriod = 2000
@@ -97,6 +111,7 @@ basic.forever(function() {
             basic.clearScreen()
         }
         basic.pause(updatePeriod - (control.millis() - startTime - tick))
+        checkTimeout()
     } else {
         if (useDisplay) {
             basic.showIcon(IconNames.Asleep)
