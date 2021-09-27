@@ -159,7 +159,7 @@ According to the current availability of drivers for the Calliope and the availa
 * SI1145 IR intensity, light intensity and UV index
 * TCS34725 red, green, blue and white color values
 * State of CalliopEO buttons A and B (pressed/not pressed)
-* Test of the CalliopEO 5x5 LED matrix. In every cycle one more LED is set on of off.
+* Test of the CalliopEO 5x5 LED matrix. The LED in the center changes state in each interval.
 
 ### 5.2. Data transmission
 
@@ -171,4 +171,4 @@ The student experiments will be uploaded in the same way. Once programs that col
 - A.1 [Dokumentation of CalliopeEO Phyton Script](README.md)
 - A.2 [Example JavaScript code of the preinstalled file on the Calliope mini](testcases/testfiles/30sec-iss-sensors.js)
 - A.3 [Example of saved Data file](testcases/testfiles/30sec-iss-sensors.hex.data)
-- A.4 [Minimum requirements](requirements.txt)
+- A.4 [Minimum requirements](requirements.txt)
