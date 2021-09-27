@@ -1,5 +1,5 @@
 ################## TESTING CALLIOPEO.PY ##################
-Test started: Wed 24 Feb 20:19:14 UTC 2021
+Test started: Wed 24 Feb 09:51:51 UTC 2021
 Selected Tests: "1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15"
 
 Start #1 ./testcases/01_collect-sysinfo.sh
@@ -73,6 +73,14 @@ Start #1 ./testcases/01_collect-sysinfo.sh
     statusserver    2.0.0
     stealthmode     1.1.0
     ws4py           0.5.1
+
+  serial-getty@ttyAMA0.service status: active
+  serial-getty@ttyAMA0.service enabled: enabled-runtime
+  /boot/cmdline.txt:
+    console=serial0,115200 console=tty1 root=PARTUUID=aeee2bfb-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait ipv6.disable=1
+  raspi-config nonint get_serial: 0
+  raspi-config nonint get_serial_hw: 0
+
 Testcase passed.
 ---------------------------------
 Finished #1 ./testcases/01_collect-sysinfo.sh
@@ -116,14 +124,14 @@ Test: Single, nominal ZIP archive provided
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-201944/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095223/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:20:00; Will stop @ 2021/02/24-23:25:00
+Start @ 2021/02/24-09:52:39; Will stop @ 2021/02/24-12:57:39
 
 Sending @START@
 
@@ -135,7 +143,7 @@ done
 Check 1/4: Return code of script is 0 ... PASSED
 Check 2/4: ZIP archive renamed to .done ... PASSED
 Check 3/4: Folder run_* created ... PASSED
-Check 4/4: MD5 checksum in folder ./run_20210224-201944 ... PASSED
+Check 4/4: MD5 checksum in folder ./run_20210224-095223 ... PASSED
 Testcase passed.
 ---------------------------------
 Finished #4 ./testcases/04_transmission-5s.sh
@@ -150,14 +158,14 @@ Test: Provide two ZIP archive, the last one corrupted
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202008/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095247/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:20:24; Will stop @ 2021/02/24-23:25:24
+Start @ 2021/02/24-09:53:03; Will stop @ 2021/02/24-12:58:03
 
 Sending @START@
 
@@ -166,14 +174,14 @@ Received @START@
 done
 ############################################################################################################
 
-programming: /home/calliope/calliopEO/run_20210224-202008/02.hex
+programming: /home/calliope/calliopEO/run_20210224-095247/02.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:20:40; Will stop @ 2021/02/24-23:25:40
+Start @ 2021/02/24-09:53:19; Will stop @ 2021/02/24-12:58:19
 
 Sending @START@
 
@@ -187,7 +195,7 @@ Check 2/6: ZIP archive renamed to .done ... PASSED
 Check 3/6: Folder run_* created ... PASSED
 Check 4/6: Created two .data files ... PASSED
 Check 5/6: The two .data files have same content ... PASSED
-Check 6/6: MD5 checksum in folder ./run_20210224-202008 ... PASSED
+Check 6/6: MD5 checksum in folder ./run_20210224-095247 ... PASSED
 Testcase passed.
 ---------------------------------
 Finished #5 ./testcases/05_corrupted_hex.sh
@@ -221,14 +229,14 @@ Error while unpacking /home/calliope/calliopEO/02.zip: /home/calliope/calliopEO/
 Unpacked /home/calliope/calliopEO/03.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202052/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095331/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:21:09; Will stop @ 2021/02/24-23:26:09
+Start @ 2021/02/24-09:53:47; Will stop @ 2021/02/24-12:58:47
 
 Sending @START@
 
@@ -237,14 +245,14 @@ Received @START@
 done
 ############################################################################################################
 
-programming: /home/calliope/calliopEO/run_20210224-202052/02.hex
+programming: /home/calliope/calliopEO/run_20210224-095331/02.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:21:30; Will stop @ 2021/02/24-23:26:30
+Start @ 2021/02/24-09:54:09; Will stop @ 2021/02/24-12:59:09
 
 Sending @START@
 
@@ -257,7 +265,7 @@ Check 1/5: Return code is 0 ... PASSED
 Check 2/5: ZIP archive renamed to .failed ... PASSED
 Check 3/5: Folder run_* created ... PASSED
 Check 4/5: Created two .data files ... PASSED
-Check 5/5: MD5 checksum in folder ./run_20210224-202052 ... PASSED
+Check 5/5: MD5 checksum in folder ./run_20210224-095331 ... PASSED
 Testcase passed.
 ---------------------------------
 Finished #7 ./testcases/06b_corrupted-zip.sh
@@ -272,14 +280,14 @@ Test: Handle transmission timeout
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202139/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095417/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:21:54; Will stop @ 2021/02/24-20:22:29
+Start @ 2021/02/24-09:54:32; Will stop @ 2021/02/24-09:55:07
 
 Sending @START@
 
@@ -294,7 +302,7 @@ Check 1/6: Return code is 0 ... PASSED
 Check 2/6: ZIP archive renamed to .done ... PASSED
 Check 3/6: Folder run_* created ... PASSED
 Check 4/6: Created two .data files ... PASSED
-Check 5/6: Check .data file in ./run_20210224-202139 ... PASSED
+Check 5/6: Check .data file in ./run_20210224-095417 ... PASSED
 Check 6/6: Transmission terminated in time ... PASSED
 Testcase passed.
 ---------------------------------
@@ -310,14 +318,14 @@ Test: Continue with next hex after timeout
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202232/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095511/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:22:48; Will stop @ 2021/02/24-20:23:23
+Start @ 2021/02/24-09:55:26; Will stop @ 2021/02/24-09:56:01
 
 Sending @START@
 
@@ -328,14 +336,14 @@ Max script time achieved
 done
 ############################################################################################################
 
-programming: /home/calliope/calliopEO/run_20210224-202232/02.hex
+programming: /home/calliope/calliopEO/run_20210224-095511/02.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:23:38; Will stop @ 2021/02/24-20:24:13
+Start @ 2021/02/24-09:56:17; Will stop @ 2021/02/24-09:56:52
 
 Sending @START@
 
@@ -348,7 +356,7 @@ Check 1/5: Return code is 0 ... PASSED
 Check 2/5: ZIP archive renamed to .done ... PASSED
 Check 3/5: Folder run_* created ... PASSED
 Check 4/5: Created two .data files ... PASSED
-Check 5/5: Check .data file in ./run_20210224-202232 ... PASSED
+Check 5/5: Check .data file in ./run_20210224-095511 ... PASSED
 Testcase passed.
 ---------------------------------
 Finished #9 ./testcases/07b_transm-timeout.sh
@@ -363,14 +371,14 @@ Test: Handle data limit threshold
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202348/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095625/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:24:03; Will stop @ 2021/02/24-23:29:03
+Start @ 2021/02/24-09:56:41; Will stop @ 2021/02/24-13:01:41
 
 Sending @START@
 
@@ -385,7 +393,7 @@ Check 1/6: Return code is 0 ... PASSED
 Check 2/6: ZIP archive renamed to .done ... PASSED
 Check 3/6: Folder run_* created ... PASSED
 Check 4/6: Created two .data files ... PASSED
-Check 5/6: MD5 checksum in folder ./run_20210224-202348 ... PASSED
+Check 5/6: MD5 checksum in folder ./run_20210224-095625 ... PASSED
 Check 6/6: First .data meets the size threshold (8000 bytes) ... PASSED
 Testcase passed.
 ---------------------------------
@@ -401,14 +409,14 @@ Test: Handle data limit treshold
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202427/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095704/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:24:42; Will stop @ 2021/02/24-23:29:42
+Start @ 2021/02/24-09:57:20; Will stop @ 2021/02/24-13:02:20
 
 Sending @START@
 
@@ -419,14 +427,14 @@ Max file size achieved
 done
 ############################################################################################################
 
-programming: /home/calliope/calliopEO/run_20210224-202427/02.hex
+programming: /home/calliope/calliopEO/run_20210224-095704/02.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:25:18; Will stop @ 2021/02/24-23:30:18
+Start @ 2021/02/24-09:57:56; Will stop @ 2021/02/24-13:02:56
 
 Sending @START@
 
@@ -439,7 +447,7 @@ Check 1/6: Return code is 0 ... PASSED
 Check 2/6: ZIP archive renamed to .done ... PASSED
 Check 3/6: Folder run_* created ... PASSED
 Check 4/6: Created two .data files ... PASSED
-Check 5/6: MD5 checksum in folder ./run_20210224-202427 ... PASSED
+Check 5/6: MD5 checksum in folder ./run_20210224-095704 ... PASSED
 Check 6/6: First .data meets the size threshold (8000 bytes) ... PASSED
 Testcase passed.
 ---------------------------------
@@ -455,14 +463,14 @@ Test: Hex File without sending @START@, but send other data.
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202527/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095804/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:25:43; Will stop @ 2021/02/24-23:30:43
+Start @ 2021/02/24-09:58:21; Will stop @ 2021/02/24-13:03:21
 
 Sending @START@
 
@@ -485,14 +493,14 @@ Sending @START@
 Sending @START@
 
 Something went wrong. Retrying flashing (2/3)
-programming: /home/calliope/calliopEO/run_20210224-202527/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095804/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:26:09; Will stop @ 2021/02/24-23:31:09
+Start @ 2021/02/24-09:58:47; Will stop @ 2021/02/24-13:03:47
 
 Sending @START@
 
@@ -515,14 +523,14 @@ Sending @START@
 Sending @START@
 
 Something went wrong. Retrying flashing (3/3)
-programming: /home/calliope/calliopEO/run_20210224-202527/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095804/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:26:35; Will stop @ 2021/02/24-23:31:35
+Start @ 2021/02/24-09:59:13; Will stop @ 2021/02/24-13:04:13
 
 Sending @START@
 
@@ -546,7 +554,7 @@ Sending @START@
 Check 1/5: Return code of script is 0 ... PASSED
 Check 2/5: ZIP archive renamed to .done ... PASSED
 Check 3/5: Folder run_* created ... PASSED
-Check 4/5: MD5 checksum in folder ./run_20210224-202527 ... PASSED
+Check 4/5: MD5 checksum in folder ./run_20210224-095804 ... PASSED
 Check 5/5: Created no .data files ... PASSED
 Testcase passed.
 ---------------------------------
@@ -562,14 +570,14 @@ Test: Hex File without sending @START@, but send other data.
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202648/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095926/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:27:04; Will stop @ 2021/02/24-23:32:04
+Start @ 2021/02/24-09:59:42; Will stop @ 2021/02/24-13:04:42
 
 Sending @START@
 
@@ -592,14 +600,14 @@ Sending @START@
 Sending @START@
 
 Something went wrong. Retrying flashing (2/3)
-programming: /home/calliope/calliopEO/run_20210224-202648/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095926/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:27:31; Will stop @ 2021/02/24-23:32:31
+Start @ 2021/02/24-10:00:08; Will stop @ 2021/02/24-13:05:08
 
 Sending @START@
 
@@ -622,14 +630,14 @@ Sending @START@
 Sending @START@
 
 Something went wrong. Retrying flashing (3/3)
-programming: /home/calliope/calliopEO/run_20210224-202648/01.hex
+programming: /home/calliope/calliopEO/run_20210224-095926/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:27:57; Will stop @ 2021/02/24-23:32:57
+Start @ 2021/02/24-10:00:35; Will stop @ 2021/02/24-13:05:35
 
 Sending @START@
 
@@ -650,14 +658,14 @@ Sending @START@
 Sending @START@
 
 Sending @START@
-programming: /home/calliope/calliopEO/run_20210224-202648/02.hex
+programming: /home/calliope/calliopEO/run_20210224-095926/02.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:28:22; Will stop @ 2021/02/24-23:33:22
+Start @ 2021/02/24-10:01:00; Will stop @ 2021/02/24-13:06:00
 
 Sending @START@
 
@@ -669,7 +677,7 @@ done
 Check 1/5: Return code of script is 0 ... PASSED
 Check 2/5: ZIP archive renamed to .done ... PASSED
 Check 3/5: Folder run_* created ... PASSED
-Check 4/5: MD5 checksum in folder ./run_20210224-202648 ... PASSED
+Check 4/5: MD5 checksum in folder ./run_20210224-095926 ... PASSED
 Check 5/5: Created one .data files ... PASSED
 Testcase passed.
 ---------------------------------
@@ -686,14 +694,14 @@ Unpacked /home/calliope/calliopEO/01.zip
 Unpacked /home/calliope/calliopEO/02.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202832/01.hex
+programming: /home/calliope/calliopEO/run_20210224-100109/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:28:47; Will stop @ 2021/02/24-23:33:47
+Start @ 2021/02/24-10:01:25; Will stop @ 2021/02/24-13:06:25
 
 Sending @START@
 
@@ -702,14 +710,14 @@ Received @START@
 done
 ############################################################################################################
 
-programming: /home/calliope/calliopEO/run_20210224-202832/02.hex
+programming: /home/calliope/calliopEO/run_20210224-100109/02.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:29:09; Will stop @ 2021/02/24-23:34:09
+Start @ 2021/02/24-10:01:46; Will stop @ 2021/02/24-13:06:46
 
 Sending @START@
 
@@ -718,14 +726,14 @@ Received @START@
 done
 ############################################################################################################
 
-programming: /home/calliope/calliopEO/run_20210224-202832/03.hex
+programming: /home/calliope/calliopEO/run_20210224-100109/03.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:29:30; Will stop @ 2021/02/24-23:34:30
+Start @ 2021/02/24-10:02:07; Will stop @ 2021/02/24-13:07:07
 
 Sending @START@
 
@@ -738,7 +746,7 @@ Check 1/5: Return code of script is 0 ... PASSED
 Check 2/5: ZIP archive renamed to .done ... PASSED
 Check 3/5: Folder run_* created ... PASSED
 Check 4/5: Created three .data files ... PASSED
-Check 5/5: MD5 checksum in folder ./run_20210224-202832 ... PASSED
+Check 5/5: MD5 checksum in folder ./run_20210224-100109 ... PASSED
 Testcase passed.
 ---------------------------------
 Finished #14 ./testcases/10_multi.sh
@@ -753,14 +761,14 @@ Test: Handle data without newline
 Unpacked /home/calliope/calliopEO/01.zip
 
 
-programming: /home/calliope/calliopEO/run_20210224-202937/01.hex
+programming: /home/calliope/calliopEO/run_20210224-100214/01.hex
 done
 open serial port
 Calliope Mini found on /dev/ttyACM0  ..........
 done
 reading data
 
-Start @ 2021/02/24-20:29:53; Will stop @ 2021/02/24-23:34:53
+Start @ 2021/02/24-10:02:30; Will stop @ 2021/02/24-13:07:30
 
 Sending @START@
 
@@ -773,16 +781,15 @@ Check 1/6: Return code is 0 ... PASSED
 Check 2/6: ZIP archive renamed to .done ... PASSED
 Check 3/6: Folder run_* created ... PASSED
 Check 4/6: Created .data files ... PASSED
-Check 5/6: MD5 checksum in folder ./run_20210224-202937 ... PASSED
+Check 5/6: MD5 checksum in folder ./run_20210224-100214 ... PASSED
 Testcase passed.
 ---------------------------------
 Finished #15 ./testcases/11_no-crlf.sh
 
 
 
-          Test ended: Wed 24 Feb 20:30:05 UTC 2021
+          Test ended: Wed 24 Feb 10:02:42 UTC 2021
 
           15 FINISHED
           15 PASSED
           0 NOT PASSED
-

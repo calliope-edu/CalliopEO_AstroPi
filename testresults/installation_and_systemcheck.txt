@@ -1,7 +1,31 @@
-root@astropiir:~# cd /tmp
-root@astropiir:/tmp# unzip CalliopEO_AstroPi-main\ \(7\).zip 
-Archive:  CalliopEO_AstroPi-main (7).zip
-c8411c08a47643fe2ea1314d44408cff0d74bb7e
+Authorized uses only. All activity may be monitored and reported.
+
+               ESA Payload                 Powered by Raspberry Pi 
+
+            %%%%%%%%%%%%%%%%               .%.%.%.%.      .%.%.%.%. 
+        %%%%%%%%%%%%%%%%%%%%%%%%          % \\\\\\\\\    ///////// %
+     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        % \\\\  \\\\////  //// %
+   %%%%%%%%%%%%%%%%%%%%%%@@@@@@@%%%%        % \\\\\\     /////// %
+  %%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@@@@%        % @@@  @@@@@@  @@@ %
+ %%%%%%%%%%%%%%%%%@@@@@@%%%%%%%%@@@@@%      % @@              @@ %
+ %%%%%%%@@@@%%%%%%@@@@@@%%%%%%%%%@@@@@    .%    @@@@@@  @@@@@@    %.
+ %%%%%%@@@@@@%%%%%@@@@@%%@@@@@@@@@@@@@   % @@@ @@@@@@@  @@@@@@@ @@@ %
+ %%%%%%%@@@@%%%%%%@@@@@@%%%%%%%%%%%%%%   % @@   @@@@      @@@@   @@ %
+  %%%%%%%%%%%%%%%%%@@@@@@%%%%%%%%%%%%     %          @@@@          %
+   %%%%%%%%%%%%%%%%%%@@@@@@%%%%%%%%%       % @@@@   @@@@@@   @@@@ %
+    %%%%%%%%%%%%%%%%%%%@@@@@@@@@@@@         % @@@@@  @@@@  @@@@@ %
+     %%%%%%%%%%%%%%%%%%%%%%%@@@@@@           '%% @@        @@ %%'
+        %%%%%%%%%%%%%%%%%%%%%%%                 '%%. @@@@ .%%'
+            %%%%%%%%%%%%%%%%                        '%%%%'
+
+Last login: Wed Feb 24 19:22:59 2021 from 192.168.1.13
+root@astropiir:~# userdel -r calliope
+userdel: calliope mail spool (/var/mail/calliope) not found
+root@astropiir:~# nano /etc/fstab
+root@astropiir:/# cd /tmp/
+root@astropiir:/tmp# unzip CalliopEO_AstroPi-main.zip 
+Archive:  CalliopEO_AstroPi-main.zip
+3dc4589402e165d77bc9355dcd608861bdaaaac4
    creating: CalliopEO_AstroPi-main/
   inflating: CalliopEO_AstroPi-main/.gitignore
   inflating: CalliopEO_AstroPi-main/CHANGELOG.md
@@ -12,9 +36,8 @@ c8411c08a47643fe2ea1314d44408cff0d74bb7e
    creating: CalliopEO_AstroPi-main/assets/
   inflating: CalliopEO_AstroPi-main/assets/select_testcases.png
   inflating: CalliopEO_AstroPi-main/assets/software-flow.png
-  inflating: CalliopEO_AstroPi-main/assets/transmission.png
+  inflating: CalliopEO_AstroPi-main/assets/transmission.png  
    creating: CalliopEO_AstroPi-main/modules/
-  inflating: CalliopEO_AstroPi-main/modules/argparse-1.4.0-py2.py3-none-any.whl
   inflating: CalliopEO_AstroPi-main/modules/blkinfo-0.1.2-py3-none-any.whl
   inflating: CalliopEO_AstroPi-main/modules/pyserial-3.5-py2.py3-none-any.whl
  extracting: CalliopEO_AstroPi-main/requirements.txt
@@ -52,12 +75,16 @@ c8411c08a47643fe2ea1314d44408cff0d74bb7e
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.hex.data
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.js
-  inflating: CalliopEO_AstroPi-main/testcases/testfiles/30sec-iss-sensors.zip
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/900sec-counter.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/900sec-counter.hex.data.terminated35s
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/900sec-counter.js
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/burst.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/burst.hex.data
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/burst.js
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/infinite-iss-sensors-2s.hex
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/infinite-iss-sensors-2s.hex.data.terminated35s
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/infinite-iss-sensors-2s.js
+  inflating: CalliopEO_AstroPi-main/testcases/testfiles/infinite-iss-sensors-2s.zip
  extracting: CalliopEO_AstroPi-main/testcases/testfiles/its.garbage.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/no-start.hex
   inflating: CalliopEO_AstroPi-main/testcases/testfiles/no-start.js
@@ -71,20 +98,20 @@ root@astropiir:/tmp# cd CalliopEO_AstroPi-main/
 root@astropiir:/tmp/CalliopEO_AstroPi-main# ./setup.sh
 -=# SETUP #=-
 
-Creating user calliope.
-Assign user calliope to group(s): dialout
-Add/change password for calliope? [yN]
 Calliope detected.
   UUID Mini:  0123-4567
   UUID Flash: 089A-BCDE
+Creating user calliope.
+Assign user calliope to group(s): dialout
+Add/change password for calliope? [yN]y
+New password:
+BAD PASSWORD: The password contains less than 1 uppercase letters
+Retype new password:
+passwd: password updated successfully
 Copying files to /home/calliope/calliopEO
 Creating local mount points in /home/calliope/mnt/
 Adding mount point definition to /etc/fstab
 Installing Python modules
-Looking in indexes: https://pypi.org/simple, https://www.piwheels.org/simple
-Processing ./calliopEO/modules/argparse-1.4.0-py2.py3-none-any.whl
-Installing collected packages: argparse
-Successfully installed argparse-1.4.0
 Looking in indexes: https://pypi.org/simple, https://www.piwheels.org/simple
 Processing ./calliopEO/modules/blkinfo-0.1.2-py3-none-any.whl
 Installing collected packages: blkinfo
@@ -97,11 +124,10 @@ Installing collected packages: pyserial
 Successfully installed pyserial-3.5
 Finished!
 root@astropiir:/tmp/CalliopEO_AstroPi-main# su calliope
-calliope@astropiir:/tmp/CalliopEO_AstroPi-main $ cd
-calliope@astropiir:~ $ cd ./calliopEO/
+calliope@astropiir:/tmp/CalliopEO_AstroPi-main $ cd ~/calliopEO/
 calliope@astropiir:~/calliopEO $ ./testing.sh
 ################## TESTING CALLIOPEO.PY ##################
-Test started: Wed 24 Feb 22:11:16 UTC 2021
+Test started: Wed 24 Feb 09:46:20 UTC 2021
 Selected Tests: "1"
 
 Start #1 ./testcases/01_collect-sysinfo.sh
@@ -123,6 +149,14 @@ Start #1 ./testcases/01_collect-sysinfo.sh
     SUPPORT_URL="http://www.raspbian.org/RaspbianForums"
     BUG_REPORT_URL="http://www.raspbian.org/RaspbianBugs"
 
+  Model: Raspberry Pi 3 Model B Rev 1.2
+  MemTotal:         893612 kB
+
+  Check for dependencies:
+    lsblk: present
+    md5sum: present
+    cmp: present
+    pip3: present
   Python3 version: Python 3.7.3
   Installed Python3 modules
     Package         Version
@@ -167,6 +201,14 @@ Start #1 ./testcases/01_collect-sysinfo.sh
     statusserver    2.0.0
     stealthmode     1.1.0
     ws4py           0.5.1
+
+  serial-getty@ttyAMA0.service status: active
+  serial-getty@ttyAMA0.service enabled: enabled-runtime
+  /boot/cmdline.txt:
+    console=serial0,115200 console=tty1 root=PARTUUID=aeee2bfb-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait ipv6.disable=1
+  raspi-config nonint get_serial: 0
+  raspi-config nonint get_serial_hw: 0
+
 Testcase passed.
 ---------------------------------
 Finished #1 ./testcases/01_collect-sysinfo.sh
@@ -215,11 +257,8 @@ Skipped #15 ./testcases/11_no-crlf.sh
 
 
 
-          Test ended: Wed 24 Feb 22:11:25 UTC 2021
+          Test ended: Wed 24 Feb 09:46:29 UTC 2021
 
           1 FINISHED
           1 PASSED
           0 NOT PASSED
-
-
-calliope@astropiir:~/calliopEO $
