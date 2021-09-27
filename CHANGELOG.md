@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `infinite-iss-sensors-2s` `.hex` and `.data`
 - Described more elegant way to change to user calliope
 - Removed configuration for serial port, see issue #86
+- provide result of iss sensors as csv
+- increase MAX_LINE_LENGTH to 1000
+- Switch display on and of with A button in iss-sensors.hex
+- use compass in iss-sensors.hex without calibration
+- optional calibration of compas by pressing A+B in iss-sensors.hex
+- update .data files
+- update testresults
 
 ## 1.2.0
 
