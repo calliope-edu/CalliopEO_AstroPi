@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Tracking changes in master
 
+*no changes yet*
+
+## 1.3.0
+
 - Added `infinite-iss-sensors-2s` `.hex` and `.data`
 - Described more elegant way to change to user calliope
 - Removed configuration for serial port, see issue #86
@@ -29,7 +33,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exit setup.sh if login shell is provided on serial port (issue #86)
 
 **Updates**
-
 - Update testresults
 
 **Fixes**
